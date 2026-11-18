@@ -1,7 +1,9 @@
-import { T, LI, K, KG, ST, SC, H, R } from '../../data/index.js'
+import { T, LI, KG, ST, SC, H, R } from '../../data/index.js'
+import { currentKanji } from '../kanji-store.js'
 import { say } from '../audio.js'
 import { xpOnce, notifyXp } from '../progress.js'
 import { state, hooks, $, sh } from '../state.js'
+import { mountStrokeAnimation } from './stroke-anim.js'
 
 /* ---------- geometry helpers ---------- */
 
@@ -93,29 +95,15 @@ export function kClose() {
 
 /* ---------- stroke order animation ---------- */
 
+/** Legacy sync placeholder; prefer mountStrokeAnimation (KanjiVG) via kPlay / showKanaStroke. */
 export function strokeSVG(c) {
-  const p = ST[c]
-  if (!p)
-    return (
-      '<p class="sub" style="max-width:240px">Ordem dos traços: ainda não há modelo animado para este kanji (' +
-      (SC[c] || '?') +
-      ' traços). Regra geral: de cima para baixo e da esquerda para a direita.</p><a href="https://jisho.org/search/' +
-      encodeURIComponent(c) +
-      '%20%23kanji" target="_blank" rel="noopener" style="color:var(--ac)" onclick="event.stopPropagation()">Ver ordem dos traços no Jisho ↗</a>'
-    )
-  let s =
-    "<svg viewBox='0 0 100 100' width='200' height='200' style='background:var(--bg);border:1px solid var(--bd);border-radius:12px'><path d='M50 0V100M0 50H100' stroke='var(--bd)' stroke-dasharray='3 3'/>"
-  const U = {}
-  p.forEach((d, i) => {
-    const m = d.match(/M([\d.]+) ([\d.]+)/)
-    const key = m[1] + ',' + m[2]
-    const dup = U[key]
-    U[key] = 1
-    s += `<path d='${d}' fill='none' stroke='var(--tx)' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' pathLength='1' style='stroke-dasharray:1;stroke-dashoffset:1;animation:dr .6s ${i * 0.8}s forwards'/><text x='${
-      dup ? +m[1] + 6 : Math.max(2, m[1] - 9)
-    }' y='${dup ? +m[2] + 16 : Math.max(10, +m[2] - 3)}' font-size='11' fill='var(--ac)' style='opacity:0;animation:fi .2s ${i * 0.8}s forwards'>${i + 1}</text>`
-  })
-  return s + '</svg>'
+  return `<div id="ksv-fallback"><p class="sub">Carregando traços de ${c}…</p></div>`
+}
+
+export async function showCharStroke(hostOrSelector, ch) {
+  const host = typeof hostOrSelector === 'string' ? $(hostOrSelector) : hostOrSelector
+  if (!host) return false
+  return mountStrokeAnimation(host, ch, { size: 220 })
 }
 
 /* ---------- kanji practice (trace) / test ---------- */
@@ -127,7 +115,9 @@ const SVG_STYLE =
 
 export function practiceView() {
   const { ki } = state
-  const c = K[ki][0]
+  const list = currentKanji()
+  const c = list[ki]?.[0]
+  if (!c) return ''
   const p = ST[c]
   if (state.kdoneFor !== ki) {
     state.kdone = []
@@ -153,14 +143,16 @@ export function practiceView() {
 
 export function testView() {
   const { ki, kres, kscore, L } = state
-  const k = K[ki]
+  const k = currentKanji()[ki]
+  if (!k) return ''
   const c = k[0]
   const p = ST[c]
   const t = T[L]
+  const strokes = k.strokes || SC[c] || '?'
   let s = `<div style='text-align:center'><p class='sub'>Pontos: ${kscore.ok}/${kscore.n}</p><p style='margin:6px 0'>Escreva o kanji, sem olhar:<br><b style='font-size:1.3rem'>${
     k[LI[L]]
   }</b><br><small style='color:var(--mu)'>${t.on}: ${k[4]} · ${t.kun}: ${k[5]}</small><br><small style='color:var(--mu)'>${
-    SC[c] || '?'
+    strokes
   } traços</small></p><svg id='psv' viewBox='0 0 100 100' width='260' height='260' style='${SVG_STYLE}' ${SVG_EV}><path d='M50 0V100M0 50H100' stroke='var(--bd)' stroke-dasharray='3 3'/>`
   if (kres) {
     s += `<text x='50' y='78' font-size='80' text-anchor='middle' fill='var(--tx)' opacity='.15'>${c}</text>`
@@ -218,7 +210,8 @@ export function pU() {
     prac()
     return
   }
-  const c = K[state.ki][0]
+  const c = currentKanji()[state.ki]?.[0]
+  if (!c) return
   const p = ST[c]
   const d = pathOf(a)
   if (state.kt) {
@@ -265,7 +258,8 @@ export function pU() {
     state.kmsg = 'Traço ' + state.kdone.length + ' de ' + n + ' (a ordem não é verificada neste kanji).'
   }
   prac()
-  if (state.kdone.length && state.kdone.length === SC[c]) notifyXp(xpOnce('kg' + c, 15))
+  const need = SC[c] || currentKanji()[state.ki]?.strokes || 0
+  if (need && state.kdone.length && state.kdone.length === need) notifyXp(xpOnce('kg' + c, 15))
 }
 
 export function pUndo() {
@@ -293,7 +287,8 @@ export function tClear() {
 }
 
 export function kNew() {
-  state.ki = Math.floor(Math.random() * K.length)
+  const n = currentKanji().length || 1
+  state.ki = Math.floor(Math.random() * n)
   state.kdone = []
   state.kpts = []
   state.kres = null
@@ -313,7 +308,9 @@ export function tSelf(v) {
 }
 
 export function tCheck() {
-  const c = K[state.ki][0]
+  const row = currentKanji()[state.ki]
+  const c = row?.[0]
+  if (!c) return
   const p = ST[c]
   if (!state.kdone.length) return
   let good
@@ -330,7 +327,7 @@ export function tCheck() {
       ? 'Perfeito! 🎉 Todos os traços na ordem certa.'
       : `Traços certos: ${okc}/${p.length} (você fez ${state.kdone.length}). Em tracejado, o modelo.`
   } else {
-    const n = SC[c] || 0
+    const n = SC[c] || row.strokes || 0
     good = state.kpts.map((a) => dirOK(a) && strokePrec(a, c) >= 0.7)
     state.cov = coverage(c)
     const okc = good.filter(Boolean).length

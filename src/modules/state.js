@@ -20,6 +20,8 @@ export const state = {
   learnI: null,
 
   // kanji
+  kanjiLevel: 'n5',
+  kanaStrokeMode: false,
   kmode: 'list',
   ki: 0,
   kfl: false,

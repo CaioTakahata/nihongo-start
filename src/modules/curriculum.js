@@ -82,7 +82,7 @@ export function trailListView(levelId) {
   if (!isLevelOpen(levelId)) {
     return `<div class="panel" style="text-align:left"><b>Trilha ${levelId.toUpperCase()}</b><p class="sub">Em breve.</p></div>`
   }
-  return `<div class="panel" style="text-align:left"><b>Trilha ${levelId.toUpperCase()}</b><p class="sub">Complete cada fase com 70% ou mais para liberar a próxima. Cada fase mistura vocabulário, audição, leitura e gramática. No fim, pratique a escrita.</p>${phases
+  return `<div class="panel" style="text-align:left"><b>Trilha ${levelId.toUpperCase()}</b><p class="sub">${phases.length} fases · complete com 70% ou mais para liberar a próxima. Role até o fim da lista para ver todas.</p>${phases
     .map((p, i) => {
       const done = isPhaseDone(i)
       const open = isPhaseOpen(i)

@@ -5,14 +5,18 @@ App web para aprender japonês (JLPT N5 → N1). Stack: Vite + JavaScript vanill
 **Repositório:** https://github.com/CaioTakahata/nihongo-start  
 **Site (GitHub Pages):** https://caiotakahata.github.io/nihongo-start/ (após o workflow de deploy estar ativo)
 
-## Rodar localmente
+## Rodar localmente (teste antes do GitHub)
+
+Use sempre o servidor local para validar mudanças **antes** do `git push`:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Build de produção:
+Abra http://127.0.0.1:5173/ — alterações em `src/` atualizam na hora.
+
+Build / preview de produção:
 
 ```bash
 npm run build

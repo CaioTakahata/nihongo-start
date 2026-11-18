@@ -5,7 +5,8 @@ import { loadProgress, renderXpBar } from './progress.js'
 import { state, hooks, $ } from './state.js'
 import { exView, exStart, exAns, exNext, exQuit, exSay } from './practice/exercises.js'
 import { kanaGrid } from './practice/kana-grid.js'
-import { kanjiList, kC, kOpen, kClose, kMode, kFlip, kGo, kRand, kPlay, kSay } from './practice/kanji.js'
+import { kanjiList, kC, kOpen, kClose, kMode, kFlip, kGo, kRand, kPlay, kSay, setKLevel } from './practice/kanji.js'
+import { toggleKanaStrokeMode, showKanaStroke } from './practice/kana-grid.js'
 import { quizView, newQ, setQset } from './practice/quiz.js'
 import { trailView, trStart, trGo, trWrite, learnAll, learnClose } from './practice/trail.js'
 import {
@@ -100,6 +101,9 @@ function exposeWindowHandlers() {
     kRand,
     kPlay,
     kSay,
+    setKLevel,
+    showKanaStroke,
+    toggleKanaStrokeMode,
     // writing: kanji
     pD,
     pM,
@@ -155,6 +159,18 @@ function wireDelegation() {
       state.levelId = b.dataset.level
       state.kcat = -1
       render()
+      return
+    }
+    if ((b = el.closest('[data-klevel]'))) {
+      setKLevel(b.dataset.klevel)
+      return
+    }
+    if (el.closest('[data-kana-stroke-toggle]')) {
+      toggleKanaStrokeMode()
+      return
+    }
+    if ((b = el.closest('[data-kana-stroke]'))) {
+      showKanaStroke(decodeURIComponent(b.dataset.kanaStroke))
     }
   })
 }

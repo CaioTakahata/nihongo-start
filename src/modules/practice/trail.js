@@ -1,4 +1,6 @@
-import { H, R, KG, K, PH } from '../../data/index.js'
+import { H, R, KG, PH } from '../../data/index.js'
+import { getKanjiList } from '../../data/kanji/index.js'
+import { setKanjiLevel } from '../kanji-store.js'
 import { say } from '../audio.js'
 import { trailListView } from '../curriculum.js'
 import { notifyXp, renderXpBar, setTrailBest, xpOnce } from '../progress.js'
@@ -110,7 +112,9 @@ export function trWrite() {
     kwOpen(PH[i].kg, 't')
     return
   }
-  kOpen(Math.floor(Math.random() * K.length))
+  setKanjiLevel('n5')
+  const kn = getKanjiList('n5')
+  kOpen(Math.floor(Math.random() * kn.length))
   kMode(1)
 }
 
@@ -133,7 +137,20 @@ export function learnView() {
       G.k.length,
     )},1fr)'>` +
     [...G.k]
-      .map((k) => `<button class='cell' data-say='${encodeURIComponent(k)}'><b>${k}</b><span>${KR[k]}</span></button>`)
+      .map(
+        (k) =>
+          `<button class='cell' data-say='${encodeURIComponent(k)}'><b>${k}</b><span>${KR[k]}</span></button>`,
+      )
+      .join('') +
+    `</div><p class='sub'>Toque para ouvir. Use “Ordem dos traços” para animação KanjiVG.</p><div class='grid' style='grid-template-columns:repeat(${Math.min(
+      5,
+      G.k.length,
+    )},1fr);margin-bottom:8px'>` +
+    [...G.k]
+      .map(
+        (k) =>
+          `<button class='cell' data-kana-stroke='${encodeURIComponent(k)}'><b>✍</b><span>${k}</span></button>`,
+      )
       .join('') +
     `</div><p><button onclick='learnAll()'>🐢 Ouvir todos devagar</button> <button onclick='kwOpen(${PH[learnI].kg},"p")'>✍ Aprender a escrever</button> <button onclick='kwOpen(${PH[learnI].kg},"t")'>📝 Testar escrita</button></p><h3 style='margin:14px 0 4px'>Palavras com estes sons</h3>` +
     W.map(

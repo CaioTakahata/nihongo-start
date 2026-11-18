@@ -32,13 +32,13 @@
 
 - [x] 5.1 Inicializar repositório Git, fazer commit inicial do scaffold/app e verificar `git status` limpo após o commit
 - [x] 5.2 Criar repositório no GitHub, configurar `remote origin` e push do branch `main`; verificar que o código aparece no GitHub
-- [ ] 5.3 Adicionar workflow GitHub Actions de build + deploy para GitHub Pages a partir de `dist/`; verificar que o workflow conclui com sucesso e a URL pública carrega o app
-- [ ] 5.4 Documentar no README o fluxo “alterar → commit → push → testar na URL”; verificar que um push de mudança trivial (ex.: texto do subtítulo) reflete na Pages após o deploy
+- [x] 5.3 Adicionar workflow GitHub Actions de build + deploy para GitHub Pages a partir de `dist/`; verificar que o workflow conclui com sucesso e a URL pública carrega o app
+- [x] 5.4 Documentar no README o fluxo “alterar → commit → push → testar na URL”; verificar que um push de mudança trivial (ex.: texto do subtítulo) reflete na Pages após o deploy
 
 ## 6. Integração e smoke
 
 - [ ] 6.1 Rodar checklist manual na URL publicada: Trilha, Curso, Hiragana, Katakana, Kanji, Quiz, Exercícios, Tips, troca de idioma da shell; verificar ausência de erros bloqueantes no console
-- [ ] 6.2 Confirmar `npm run build` local e o job de CI em verde no último commit de `main`
+- [x] 6.2 Confirmar `npm run build` local e o job de CI em verde no último commit de `main`
 
 ## Workflow follow-up
 
