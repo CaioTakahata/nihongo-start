@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nihongo Start – Hiragana, Katakana, Kanji</title>
+<style>
+:root{--bg:#faf7f2;--card:#fff;--tx:#222;--mu:#6b6b6b;--ac:#c8372d;--bd:#e6dfd3;--ok:#2e7d32;--no:#c62828;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17161a;--card:#222126;--tx:#f1eee8;--mu:#a49f96;--ac:#ff6b5e;--bd:#37353c;--ok:#7bd88f;--no:#ff8a80}}
+:root[data-theme="dark"]{--bg:#17161a;--card:#222126;--tx:#f1eee8;--mu:#a49f96;--ac:#ff6b5e;--bd:#37353c;--ok:#7bd88f;--no:#ff8a80}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+main{max-width:860px;margin:0 auto;padding:16px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-size:1.4rem;margin:0}
+.sub{color:var(--mu);margin:2px 0 14px;font-size:.95rem}
+select,button{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 12px;cursor:pointer}
+nav{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px}
+nav button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.cell{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 4px;text-align:center}
+.cell b{display:block;font-size:2rem;font-weight:500;font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif}
+.cell span{color:var(--mu);font-size:.85rem}
+.empty{visibility:hidden}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.k{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px}
+.k b{font-size:2.4rem;font-weight:500;float:right;margin-left:8px;color:var(--ac);font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif}
+.k small{color:var(--mu);display:block}
+.panel{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px;text-align:center}
+.big{font-size:5rem;line-height:1.1;font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.opts button{padding:12px}
+.ok{border-color:var(--ok)!important;color:var(--ok)}
+.no{border-color:var(--no)!important;color:var(--no)}
+ul.tips{text-align:left;padding-left:20px}
+.note{color:var(--mu);font-size:.85rem;margin-top:14px}
+.fc{position:relative;width:min(100%,320px);height:390px;margin:0 auto 12px;perspective:1000px;cursor:pointer}
+.fcf,.fcb{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transition:transform .6s;background:var(--card);border:1px solid var(--bd);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px}
+.fcb{transform:rotateY(-180deg)}
+.fc.fl .fcf{transform:rotateY(180deg)}
+.fc.fl .fcb{transform:rotateY(0)}
+@keyframes dr{to{stroke-dashoffset:0}}
+@keyframes fi{to{opacity:1}}
+svg text{font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic","Meiryo",sans-serif}
+</style>
+</head>
+<body>
+<main>
+<header>
+ <h1>日本語 Nihongo Start</h1>
+ <select id="lang" aria-label="Language"><option value="pt">Português</option><option value="en">English</option><option value="es">Español</option></select>
+</header>
+<p class="sub" id="sub"></p>
+<nav id="nav"></nav>
+<section id="view"></section>
+<p class="note" id="note"></p>
+</main>
+<script>
+const T={
+pt:{sub:"Aprenda a escrever e ler japonês passo a passo.",hira:"Hiragana",kata:"Katakana",kanji:"Kanji",quiz:"Quiz",tips:"Dicas",on:"On’yomi",kun:"Kun’yomi",tap:"Toque em um caractere para ouvir.",score:"Pontos",next:"Próxima",set:"Treinar",note:"Base editável: adicione novos idiomas no objeto T e novos kanji na lista K.",
+tl:["Aprenda 5 caracteres por dia, em fileiras (a, ka, sa…).","Escreva à mão seguindo a ordem dos traços: de cima para baixo, da esquerda para a direita.","Crie histórias para memorizar (ex.: さ parece uma pessoa sentada).","Revise com o quiz todos os dias, em sessões curtas.","Depois dos kana, leia palavras simples e aprenda kanji com palavras, não isolados."]},
+en:{sub:"Learn to read and write Japanese step by step.",hira:"Hiragana",kata:"Katakana",kanji:"Kanji",quiz:"Quiz",tips:"Tips",on:"On’yomi",kun:"Kun’yomi",tap:"Tap a character to hear it.",score:"Score",next:"Next",set:"Practice",note:"Editable base: add languages to object T and kanji to list K.",
+tl:["Learn 5 characters a day, row by row (a, ka, sa…).","Write by hand following stroke order: top to bottom, left to right.","Make up stories to remember them (e.g. さ looks like a person sitting).","Review with the quiz daily in short sessions.","After kana, read simple words and learn kanji inside words, not in isolation."]},
+es:{sub:"Aprende a leer y escribir japonés paso a paso.",hira:"Hiragana",kata:"Katakana",kanji:"Kanji",quiz:"Quiz",tips:"Consejos",on:"On’yomi",kun:"Kun’yomi",tap:"Toca un carácter para oírlo.",score:"Puntos",next:"Siguiente",set:"Practicar",note:"Base editable: añade idiomas al objeto T y kanji a la lista K.",
+tl:["Aprende 5 caracteres al día, fila por fila (a, ka, sa…).","Escribe a mano siguiendo el orden de trazos: de arriba abajo, de izquierda a derecha.","Inventa historias para recordarlos (p. ej. さ parece una persona sentada).","Repasa con el quiz cada día en sesiones cortas.","Tras los kana, lee palabras simples y aprende kanji dentro de palabras, no aislados."]}};
+const H="あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん".split("");
+const R="a i u e o ka ki ku ke ko sa shi su se so ta chi tsu te to na ni nu ne no ha hi fu he ho ma mi mu me mo ya yu yo ra ri ru re ro wa wo n".split(" ");
+const Kt=H.map(c=>String.fromCharCode(c.charCodeAt(0)+96));
+// [kanji, pt, en, es, on, kun]
+const K=[["日","dia, sol","day, sun","día, sol","ニチ","ひ"],["月","lua, mês","moon, month","luna, mes","ゲツ","つき"],["火","fogo","fire","fuego","カ","ひ"],["水","água","water","agua","スイ","みず"],["木","árvore","tree","árbol","モク","き"],["金","ouro, dinheiro","gold, money","oro, dinero","キン","かね"],["土","terra","earth","tierra","ド","つち"],["人","pessoa","person","persona","ジン","ひと"],["大","grande","big","grande","ダイ","おお"],["小","pequeno","small","pequeño","ショウ","ちい"],["山","montanha","mountain","montaña","サン","やま"],["川","rio","river","río","セン","かわ"],["口","boca","mouth","boca","コウ","くち"],["目","olho","eye","ojo","モク","め"],["手","mão","hand","mano","シュ","て"],["一","um","one","uno","イチ","ひと"],["二","dois","two","dos","ニ","ふた"],["三","três","three","tres","サン","みっ"],["学","estudar","study","estudiar","ガク","まな"],["生","vida, nascer","life, be born","vida, nacer","セイ","い・う"]];
+const LI={pt:1,en:2,es:3};
+let L="pt",tab="trail",qset="hira",score=0,total=0,q=null;
+const $=s=>document.querySelector(s);
+let SPD=1;const say=(t,r)=>{try{const u=new SpeechSynthesisUtterance(t);u.lang="ja-JP";u.rate=r||SPD;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}};
+function kanaGrid(arr){
+ // layout rows of 5; ya yu yo and wa wo n use gaps
+ const rows=[[0,5],[5,10],[10,15],[15,20],[20,25],[25,30],[30,35],[35,38],[38,43],[43,46]];
+ let h='<p class="note" style="margin:0 0 10px">'+T[L].tap+'</p><div class="grid">';
+ rows.forEach(([a,b])=>{
+  const sl=arr.slice(a,b);
+  const pad=a===35?[0,'x',1,'x',2]:a===43?[0,'x','x',1,2]:a===45?[]:null;
+  if(a===30){} 
+  let cells=sl.map((c,i)=>[c,R[a+i]]);
+  if(a===35)cells=[cells[0],null,cells[1],null,cells[2]];
+  if(a===43)cells=[cells[0],cells[1],cells[2],null,null].slice(0,5);
+  if(a===38)cells=sl.map((c,i)=>[c,R[a+i]]);
+  cells.forEach(x=>{h+=x?`<button class="cell" onclick="say('${x[0]}')"><b>${x[0]}</b><span>${x[1]}</span></button>`:'<div class="cell empty"></div>'});
+ });
+ return h+'</div>';
+}
+function render(){
+ const t=T[L];
+ $("#sub").textContent=t.sub;$("#note").textContent=t.note;
+ $("#nav").innerHTML=["trail","course","hira","kata","kanji","quiz","ex","tips"].map(k=>`<button class="${k===tab?'on':''}" onclick="tab='${k}';render()">${t[k]||(k==='ex'?'Exercícios':k==='trail'?'🗺 Trilha':CL[L])}</button>`).join("");
+ let v="";
+ if(tab==="trail")v=trailView();
+ else if(tab==="course")v=courseView();
+ else if(tab==="ex")v=exView();
+ else if(tab==="hira")v=kanaGrid(H);
+ else if(tab==="kata")v=kanaGrid(Kt);
+ else if(tab==="kanji"&&kmode==="cards")v=kanjiTop()+cardView()+"<div id='pw'>"+(kp?practiceView():'')+"</div>";
+ else if(tab==="kanji")v=kanjiList();
+ else if(tab==="kanji_old")v='<div class="kgrid">'+K.map((k,i)=>`<button class="k" style="text-align:left" onclick="kOpen(${i})"><b>${k[0]}</b><strong>${k[LI[L]]}</strong><small>${t.on}: ${k[4]}</small><small>${t.kun}: ${k[5]}</small></button>`).join("")+'</div>';
+ else if(tab==="tips")v='<div class="panel"><ul class="tips">'+t.tl.map(x=>`<li>${x}</li>`).join("")+'</ul></div>';
+ else {v=`<div class="panel"><div style="margin-bottom:8px">`+["hira","kata","kanji"].map(k=>`<button class="${k===qset?'on':''}" style="${k===qset?'background:var(--ac);color:#fff':''}" onclick="qset='${k}';score=0;total=0;newQ()">${t[k]}</button>`).join(" ")+`</div><div class="big" id="qc"></div><div class="opts" id="qo"></div><div>${t.score}: <b id="sc"></b> <button id="nx" onclick="newQ()" style="margin-left:10px">${t.next}</button></div></div>`}
+ $("#view").innerHTML=v;
+ if(tab==="quiz")newQ();
+}
+function newQ(){
+ let pool;
+ if(qset==="kanji")pool=K.map(k=>[k[0],k[LI[L]]]);
+ else{const a=qset==="hira"?H:Kt;pool=a.map((c,i)=>[c,R[i]])}
+ const ans=pool[Math.floor(Math.random()*pool.length)];
+ const o=[ans];
+ while(o.length<4){const x=pool[Math.floor(Math.random()*pool.length)];if(!o.includes(x))o.push(x)}
+ o.sort(()=>Math.random()-.5);
+ q=ans;
+ $("#qc").textContent=ans[0];
+ $("#qo").innerHTML=o.map((x,i)=>`<button data-i="${i}">${x[1]}</button>`).join("");
+ $("#sc").textContent=score+"/"+total;
+ document.querySelectorAll("#qo button").forEach((b,i)=>b.onclick=()=>{
+  if(b.disabled)return;total++;
+  const right=o[i]===ans;if(right){score++;xp(5)}
+  document.querySelectorAll("#qo button").forEach((bb,j)=>{bb.disabled=true;if(o[j]===ans)bb.classList.add("ok");else if(bb===b)bb.classList.add("no")});
+  $("#sc").textContent=score+"/"+total;say(ans[0]);
+ });
+}
+const CL={pt:"Curso N5",en:"N5 Course",es:"Curso N5"};
+const LS=[
+{t:"O japonês escrito e os sons",b:"<p>O japonês usa <b>três sistemas</b> juntos: <b>hiragana</b> (palavras japonesas e gramática), <b>katakana</b> (palavras estrangeiras, como コーヒー) e <b>kanji</b> (caracteres chineses que carregam significado, como 日本).</p><p>Os sons são simples: só <b>5 vogais</b> (a, i, u, e, o) e elas sempre soam igual. Não há espaços entre palavras na escrita normal. Comece ouvindo e repetindo cada caractere na aba Hiragana.</p>",v:"あい|ai|amor;いえ|ie|casa;うえ|ue|em cima;あお|ao|azul;おおい|ooi|muito(s)"},
+{t:"Hiragana: linhas A, K, S, T, N",b:"<p>Estude em fileiras. Atenção às exceções de pronúncia: <b>し = shi</b>, <b>ち = chi</b>, <b>つ = tsu</b>.</p><p>Dica: escreva cada caractere 10 vezes seguindo a ordem dos traços (de cima para baixo, da esquerda para a direita) e invente uma imagem para cada um.</p>",v:"かき|kaki|caqui;さけ|sake|saquê;すし|sushi|sushi;たこ|tako|polvo;ねこ|neko|gato;いぬ|inu|cachorro;さくら|sakura|cerejeira"},
+{t:"Hiragana: linhas H, M, Y, R, W, N",b:"<p><b>ふ = fu</b> (meio entre f e h). O <b>r</b> japonês fica entre r e l, com um toque rápido da língua.</p><p><b>は</b> lê-se “ha”, mas como partícula gramatical lê-se <b>“wa”</b>. O mesmo vale para <b>を</b> (lê-se “o”) e <b>へ</b> (lê-se “e” quando indica direção).</p>",v:"はな|hana|flor;ふね|fune|barco;やま|yama|montanha;みみ|mimi|orelha;りんご|ringo|maçã;さかな|sakana|peixe"},
+{t:"Dakuten, combinações e っ",b:"<p><b>Dakuten ゛</b> engrossa o som: k→g, s→z, t→d, h→b (か→が). <b>Handakuten ゜</b> transforma h em p (は→ぱ).</p><p><b>Combinações:</b> き+ゃ = きゃ (kya), し+ゅ = しゅ (shu), ち+ょ = ちょ (cho). O segundo caractere fica pequeno.</p><p><b>っ pequeno</b> dobra a consoante seguinte (きって = kitte). Vogal longa: おおきい = ookii.</p>",v:"がっこう|gakkou|escola;ともだち|tomodachi|amigo;でんわ|denwa|telefone;ごはん|gohan|arroz, refeição;きって|kitte|selo;しゃしん|shashin|foto"},
+{t:"Katakana",b:"<p>Katakana tem os mesmos sons do hiragana, com formas mais angulares. É usado para <b>palavras estrangeiras</b>, nomes de estrangeiros e onomatopeias.</p><p>O traço <b>ー</b> alonga a vogal: コーヒー (koohii). Treine na aba Katakana e no Quiz.</p>",v:"コーヒー|koohii|café;テレビ|terebi|televisão;パン|pan|pão;ブラジル|burajiru|Brasil;アイス|aisu|sorvete;ホテル|hoteru|hotel"},
+{t:"Cumprimentos básicos",b:"<p>Aprenda estas expressões de uso diário. Em こんにちは e こんばんは, o último は lê-se <b>wa</b>.</p><p>いただきます é dito antes de comer e ごちそうさまでした depois.</p>",v:"おはようございます|ohayou gozaimasu|bom dia;こんにちは|konnichiwa|boa tarde, olá;こんばんは|konbanwa|boa noite;ありがとうございます|arigatou gozaimasu|muito obrigado;すみません|sumimasen|com licença, desculpe;さようなら|sayounara|adeus;いただきます|itadakimasu|(antes de comer);ごちそうさまでした|gochisousama deshita|(depois de comer)"},
+{t:"Apresentação: A は B です",b:"<p>Estrutura básica: <b>A は B です</b> = “A é B”. です deixa a frase educada.</p><p>Pergunta: acrescente <b>か</b> no fim: あなたは がくせいですか。<br>Negativa: <b>ではありません</b> (ou じゃありません).</p><p>Exemplo: わたしは ブラジルじんです。= Eu sou brasileiro(a).</p>",v:"わたし|watashi|eu;あなた|anata|você;がくせい|gakusei|estudante;せんせい|sensei|professor(a);ブラジルじん|burajirujin|brasileiro(a);はい|hai|sim;いいえ|iie|não;なまえ|namae|nome"},
+{t:"Números de 0 a 10",b:"<p>Os números têm kanji simples: 一二三四五六七八九十. Alguns têm duas leituras: 4 = <b>よん / し</b>, 7 = <b>なな / しち</b>, 9 = <b>きゅう / く</b>. Hoje, prefira よん, なな e きゅう.</p><p>Dinheiro: <b>えん</b> (円). Ex.: ひゃくえん = 100 ienes.</p>",v:"れい / ぜろ|rei / zero|0;いち|ichi|1;に|ni|2;さん|san|3;よん|yon|4;ご|go|5;ろく|roku|6;なな|nana|7;はち|hachi|8;きゅう|kyuu|9;じゅう|juu|10"},
+{t:"Partículas essenciais",b:"<p>Partículas marcam a função de cada palavra:</p><ul><li><b>は</b> (wa): tópico. わたしは せんせいです。</li><li><b>の</b>: posse. わたしの ほん = meu livro.</li><li><b>を</b> (o): objeto direto. みずを のみます。</li><li><b>に</b>: destino, hora, lugar de existência. がっこうに いきます。</li><li><b>で</b>: local da ação ou meio. いえで たべます。</li><li><b>と</b>: “e” / “com”. <b>も</b>: “também”.</li></ul>",v:"ほん|hon|livro;みず|mizu|água;いえ|ie|casa;がっこう|gakkou|escola;ともだち|tomodachi|amigo"},
+{t:"Verbos na forma ます",b:"<p>A frase japonesa termina com o verbo (ordem sujeito–objeto–verbo): わたしは ごはんを <b>たべます</b>。</p><p>Conjugação educada: <b>ます</b> (presente/futuro), <b>ません</b> (negativo), <b>ました</b> (passado), <b>ませんでした</b> (passado negativo).</p>",v:"たべます|tabemasu|comer;のみます|nomimasu|beber;いきます|ikimasu|ir;きます|kimasu|vir;みます|mimasu|ver;ききます|kikimasu|ouvir, perguntar;します|shimasu|fazer;よみます|yomimasu|ler"},
+{t:"Dias da semana e horas",b:"<p>Os dias vêm dos kanji dos elementos: 日 sol, 月 lua, 火 fogo, 水 água, 木 árvore, 金 ouro, 土 terra + <b>ようび</b> (曜日).</p><p>Horas: número + <b>じ</b>. いま なんじですか。= Que horas são? Ex.: さんじ = 3 horas.</p>",v:"にちようび|nichiyoubi|domingo;げつようび|getsuyoubi|segunda;かようび|kayoubi|terça;すいようび|suiyoubi|quarta;もくようび|mokuyoubi|quinta;きんようび|kinyoubi|sexta;どようび|doyoubi|sábado;いま|ima|agora;なんじ|nanji|que horas"},
+{t:"Demonstrativos: これ・それ・あれ",b:"<p><b>これ</b> (perto de mim), <b>それ</b> (perto de você), <b>あれ</b> (longe de ambos), <b>どれ</b> (qual?). Antes de substantivo: <b>この・その・あの</b> ほん. Lugar: <b>ここ・そこ・あそこ・どこ</b>.</p><p>これは なんですか。→ それは ほんです。<br>それは だれの かばんですか。= De quem é essa bolsa?</p>",v:"これ|kore|este;それ|sore|esse;あれ|are|aquele;どれ|dore|qual;ここ|koko|aqui;そこ|soko|aí;あそこ|asoko|ali;どこ|doko|onde;なん|nan|o quê;だれ|dare|quem"},
+{t:"Adjetivos い e な",b:"<p><b>Adjetivo い</b> termina em い: おおきい. Antes de substantivo fica igual (おおきい いえ). Negativo: い→<b>くない</b> (おおきくない). Exceção: いい→よくない.</p><p><b>Adjetivo な</b> usa な antes de substantivo: しずかな まち. Negativo: しずかでは ありません.</p>",v:"おおきい|ookii|grande;ちいさい|chiisai|pequeno;あたらしい|atarashii|novo;ふるい|furui|velho;たかい|takai|alto, caro;やすい|yasui|barato;おいしい|oishii|gostoso;たのしい|tanoshii|divertido;しずか|shizuka|quieto;きれい|kirei|bonito, limpo;げんき|genki|saudável;ゆうめい|yuumei|famoso"},
+{t:"あります・います e posições",b:"<p><b>あります</b> para coisas, <b>います</b> para pessoas e animais. Estrutura: <b>Lugar に Coisa が あります</b>.</p><p>つくえの うえに ほんが あります。<br>にわに ねこが います。<br>Negativo: ありません・いません.</p><p>Posição: <b>Nの うえ・した・なか・まえ・うしろ・となり</b>.</p>",v:"うえ|ue|em cima;した|shita|embaixo;なか|naka|dentro;まえ|mae|frente;うしろ|ushiro|atrás;となり|tonari|ao lado;つくえ|tsukue|mesa;いす|isu|cadeira;にわ|niwa|jardim"},
+{t:"Passado: です e adjetivos",b:"<p><b>です → でした</b>; <b>ではありません → ではありませんでした</b>.</p><p>Adjetivo い: い→<b>かった</b> (あつかったです); negativo: <b>くなかった</b>. Adjetivo な: しずかでした.</p><p>きのうは あつかったです。= Ontem estava quente.</p>",v:"きのう|kinou|ontem;きょう|kyou|hoje;あした|ashita|amanhã;あつい|atsui|quente;さむい|samui|frio;ひま|hima|livre;いそがしい|isogashii|ocupado;むずかしい|muzukashii|difícil;やさしい|yasashii|fácil, gentil"},
+{t:"Contadores e preços",b:"<p>Coisas: <b>ひとつ・ふたつ・みっつ…とお</b>. Pessoas: <b>ひとり・ふたり・さんにん</b>. Folhas: ～<b>まい</b>. Idade: ～<b>さい</b>. Preço: ～<b>えん</b>.</p><p>これは いくらですか。→ ひゃくえんです。</p>",v:"ひとつ|hitotsu|1 coisa;ふたつ|futatsu|2 coisas;みっつ|mittsu|3 coisas;ひとり|hitori|1 pessoa;ふたり|futari|2 pessoas;さんにん|sannin|3 pessoas;いちまい|ichimai|1 folha;いっさい|issai|1 ano de idade;はたち|hatachi|20 anos;いくら|ikura|quanto custa"},
+{t:"Calendário e datas",b:"<p>Meses: número + <b>がつ</b> (いちがつ…じゅうにがつ; 4 = しがつ, 7 = しちがつ, 9 = くがつ). Dias do mês têm leituras especiais até o dia 10.</p><p>たんじょうびは さんがつ じゅうごにちです。= Meu aniversário é 15 de março.</p>",v:"いちがつ|ichigatsu|janeiro;じゅうにがつ|juunigatsu|dezembro;ついたち|tsuitachi|dia 1;ふつか|futsuka|dia 2;みっか|mikka|dia 3;よっか|yokka|dia 4;いつか|itsuka|dia 5;とおか|tooka|dia 10;たんじょうび|tanjoubi|aniversário;らいしゅう|raishuu|semana que vem;きょねん|kyonen|ano passado"},
+{t:"Forma て",b:"<p>Muito usada no N5. Regras:</p><ul><li>Grupo 1: う・つ・る→<b>って</b> (かう→かって); む・ぶ・ぬ→<b>んで</b> (のむ→のんで); く→<b>いて</b> (かく→かいて; いく→いって); ぐ→<b>いで</b>; す→<b>して</b></li><li>Grupo 2: る→<b>て</b> (たべる→たべて)</li><li>する→して, くる→きて</li></ul><p>Usos: <b>～てください</b> (por favor faça), <b>～ています</b> (está fazendo), sequência de ações (あさ おきて、ごはんを たべます).</p>",v:"かって|katte|comprar (て);のんで|nonde|beber (て);かいて|kaite|escrever (て);いって|itte|ir (て);たべて|tabete|comer (て);みて|mite|ver (て);して|shite|fazer (て);きて|kite|vir (て)"},
+{t:"Forma ない e たい",b:"<p><b>Forma ない</b> (negativo informal): grupo 1: última sílaba vira o som あ + ない (かく→かかない; かう→かわない); grupo 2: る→ない (たべない); する→しない; くる→こない.</p><p><b>～ないでください</b> = por favor, não faça.</p><p><b>～たい</b> = querer fazer (たべたい); <b>～が ほしい</b> = querer um objeto.</p>",v:"かかない|kakanai|não escrever;たべない|tabenai|não comer;しない|shinai|não fazer;こない|konai|não vir;たべたい|tabetai|quero comer;いきたい|ikitai|quero ir;ほしい|hoshii|desejar (algo)"},
+{t:"Convites, から・まで e comparações",b:"<p>Convite: <b>～ませんか</b> (Que tal?) e <b>～ましょう</b> (Vamos!). いっしょに いきませんか。→ いいですね。</p><p><b>から</b> = de, desde; <b>まで</b> = até: くじから ごじまで。<br><b>A は B より ～</b> = A é mais ... que B. <b>いちばん</b> = o mais.</p><p>Gostos: <b>～が すき・きらい・じょうず・へた</b>.</p>",v:"いっしょに|issho ni|juntos;すき|suki|gostar;きらい|kirai|não gostar;じょうず|jouzu|habilidoso;へた|heta|ruim em;から|kara|de, desde;まで|made|até;より|yori|do que;いちばん|ichiban|o mais"},
+{t:"Vocabulário temático",b:"<p>Família (a sua: ちち, はは; a dos outros: おとうさん, おかあさん), cores, comida e lugares aparecem muito na prova. Revise lendo em voz alta.</p>",v:"ちち|chichi|meu pai;はは|haha|minha mãe;あに|ani|meu irmão mais velho;あね|ane|minha irmã mais velha;おとうと|otouto|irmão mais novo;いもうと|imouto|irmã mais nova;あか|aka|vermelho;あお|ao|azul;しろ|shiro|branco;くろ|kuro|preto;たまご|tamago|ovo;にく|niku|carne;やさい|yasai|verdura;おちゃ|ocha|chá;えき|eki|estação;びょういん|byouin|hospital;ぎんこう|ginkou|banco;としょかん|toshokan|biblioteca;でんしゃ|densha|trem;くるま|kuruma|carro"},
+{t:"Kanji N5 (1): números e tempo",b:"<p>Aprenda kanji dentro de palavras. Leituras: minúsculas = kun (japonesa), katakana = on (chinesa).</p>",v:"百|ヒャク|cem;千|セン|mil;万|マン|dez mil;円|エン|iene;年|とし・ネン|ano;時|ジ|hora;分|フン・ブン|minuto;半|ハン|metade;今|いま・コン|agora;毎|マイ|todo;週|シュウ|semana;前|まえ・ゼン|antes;後|あと・ゴ|depois;間|あいだ・カン|intervalo;何|なに・カ|o quê"},
+{t:"Kanji N5 (2): pessoas e natureza",b:"<p>Aproveite: 女子 (おんなのこ, menina), 男子, 友だち, 学校, 天気 (tempo), 花見, 白い.</p>",v:"男|おとこ・ダン|homem;女|おんな・ジョ|mulher;子|こ・シ|criança;父|ちち・フ|pai;母|はは・ボ|mãe;友|とも・ユウ|amigo;先|さき・セン|à frente;校|コウ|escola;田|た・デン|arrozal;雨|あめ・ウ|chuva;天|テン|céu;気|キ|espírito, ar;花|はな・カ|flor;犬|いぬ・ケン|cachorro;林|はやし・リン|bosque;本|ほん・ホン|livro;白|しろ・ハク|branco"},
+{t:"Kanji N5 (3): ações e descrições",b:"<p>Os verbos aparecem com okurigana: 食べる, 飲む, 見る, 聞く, 読む, 書く, 行く, 来る, 出る, 入る, 休む, 買う.</p>",v:"上|うえ・ジョウ|em cima;下|した・カ|embaixo;中|なか・チュウ|meio, dentro;高|たかい・コウ|alto, caro;安|やすい・アン|barato;長|ながい・チョウ|longo;新|あたらしい・シン|novo;古|ふるい・コ|velho;多|おおい・タ|muito;少|すくない・ショウ|pouco;名|な・メイ|nome;国|くに・コク|país;語|ゴ|idioma;車|くるま・シャ|carro;電|デン|eletricidade;話|はなす・ワ|conversa;食|たべる・ショク|comer;飲|のむ・イン|beber;見|みる・ケン|ver;聞|きく・ブン|ouvir;読|よむ・ドク|ler;書|かく・ショ|escrever;行|いく・コウ|ir;来|くる・ライ|vir;出|でる・シュツ|sair;入|いる・ニュウ|entrar;休|やすむ・キュウ|descansar;買|かう・バイ|comprar"},
+{t:"A prova JLPT N5 e plano de estudo",b:"<p><b>Estrutura:</b> vocabulário e kanji, gramática e leitura, compreensão auditiva. Nota total 180; é preciso atingir a nota mínima geral e também a mínima em cada parte, então não deixe a audição de lado. Confira os detalhes no site oficial do JLPT.</p><p><b>Plano sugerido (12 semanas):</b></p><ul><li>Semanas 1–2: hiragana e katakana</li><li>Semanas 3–6: lições 6 a 17, com revisão diária</li><li>Semanas 7–9: forma て, ない, たい e kanji</li><li>Semanas 10–11: simulados e erros mais comuns</li><li>Semana 12: revisão e audição</li></ul><p>Ouça japonês todo dia, mesmo 10 minutos, e refaça os quizzes dos kana e kanji.</p>",v:"もんだい|mondai|questão;こたえ|kotae|resposta;ぶんぽう|bunpou|gramática;ごい|goi|vocabulário;どっかい|dokkai|leitura;ちょうかい|choukai|audição"}
+];
+let cl=null,dn=[];
+try{dn=JSON.parse(localStorage.getItem("nh")||"[]")}catch(e){}
+function finish(i){if(!dn.includes(i))dn.push(i);try{localStorage.setItem("nh",JSON.stringify(dn))}catch(e){}cl=i+1<LS.length?i+1:null;render();scrollTo(0,0)}
+function courseView(){
+ const st='text-align:left';
+ if(cl===null)return `<div class="panel" style="${st}"><b>Curso N5 do zero</b><p class="sub">${dn.length}/${LS.length} ✓ ${L!=="pt"?"(Lessons are in Portuguese for now)":""}</p>`+LS.map((l,i)=>`<button style="display:block;width:100%;text-align:left;margin:6px 0" onclick="cl=${i};render()">${dn.includes(i)?'✅':(i+1)+'.'} ${l.t}</button>`).join("")+'</div>';
+ const l=LS[cl];
+ const rows=l.v.split(";").map(x=>x.split("|")).map(r=>`<tr><td><button onclick="say('${r[0]}')">${r[0]} 🔊</button></td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("");
+ return `<div class="panel" style="${st}"><button onclick="cl=null;render()">←</button><h2 style="margin:10px 0">${cl+1}. ${l.t}</h2>${l.b}<h3>Vocabulário</h3><div style="overflow-x:auto"><table style="border-collapse:collapse;width:100%">${rows}</table></div><p><button style="background:var(--ac);color:#fff" onclick="finish(${cl})">Concluir lição ✓</button></p></div>`;
+}
+const PQ=['わたし＿ ほんです。|の|の indica posse: わたしの ほん = meu livro','ごはん＿ たべます。|を|を marca o objeto direto','がっこう＿ いきます。|に|に indica o destino','いえ＿ ごはんを たべます。|で|で indica o local da ação','ともだち＿ えいがを みます。|と|と = com (ou e)','わたし＿ がくせいです。(eu também)|も|も = também','これ＿ なんですか。|は|は marca o tópico da frase','つくえの うえ＿ ほんが あります。|に|existência de um lugar usa に','バス＿ いきます。|で|で indica o meio de transporte','８じ＿ おきます。|に|hora exata usa に','みず＿ のみます。|を|を marca o objeto direto','ねこ＿ すきです。|が|すき usa が para o que se gosta','９じ＿ ５じまで はたらきます。|から|から = a partir de / de','あした ともだち＿ あいます。|に|あいます usa に para a pessoa'];
+const GQ=['O negativo educado de たべます é?|たべません|たべない,たべました,たべませんでした|ます vira ません','O passado educado de のみます é?|のみました|のみません,のんで,のみます|ます vira ました','きのう がっこうに ＿。|いきました|いきます,いきません,いって|ontem pede o passado ました','Forma て de かく:|かいて|かって,かんで,かきて|く vira いて','Forma て de のむ:|のんで|のって,のいて,のみて|む vira んで','Forma て de みる (grupo 2):|みて|みって,みいて,みるて|grupo 2: る vira て','Forma ない de たべる:|たべない|たべらない,たべるない,たべなる|grupo 2: る vira ない','Negativo de おおきい:|おおきくない|おおきいない,おおきいじゃない,おおきでない|い vira くない','しずか＿ まち (cidade tranquila)|しずかな|しずかい,しずかの,しずかで|adjetivo な usa な antes de substantivo','きのうは さむ＿ です。|かった|い,くない,だった|adjetivo い no passado: い vira かった','3 pessoas se diz:|さんにん|さんひと,みっつ,さんこ|pessoas: ひとり, ふたり, さんにん','Julho se diz:|しちがつ|ななつき,しがつ,ななかつ|7 no mês é しち','つくえの した significa:|embaixo da mesa|em cima da mesa,atrás da mesa,ao lado da mesa|した = embaixo','ふたり significa:|2 pessoas|2 coisas,2 folhas,2 anos|contador de pessoas','いっしょに いきませんか。significa:|Quer ir junto?|Eu não fui junto,Não vou sozinho,Você foi?|ませんか = convite','ねこが ＿。|います|あります,いきます,みます|animais usam います','きょうは なんようびですか。significa:|Que dia da semana é hoje?|Que horas são?,Que dia do mês?,Onde é hoje?|なんようび = que dia da semana'];
+const MODES='vlkpgm';
+let ex=null;
+const sh=a=>a.map(x=>[Math.random(),x]).sort((p,r)=>p[0]-r[0]).map(x=>x[1]);
+const uq=a=>[...new Set(a)];
+const Q=(q,a,w,e,s)=>({q,a,o:sh([a,...w]),e,s});
+const rowsOf=(a,b)=>LS.slice(a,b).flatMap(l=>l.v.split(';').map(x=>x.split('|'))).filter(r=>r.length>2&&r[0]);
+function mkV(a,b,lis,n){const pool=rowsOf(a,b);return sh(pool).slice(0,n).map(r=>{const ot=pool.filter(x=>x[2]!==r[2]&&x[0]!==r[0]);if(lis)return Q('🔊 Ouça e escolha',r[0],uq(sh(ot).map(x=>x[0])).slice(0,3),r[0]+' ('+r[1]+') = '+r[2],r[0]);return Q(r[0],r[2],uq(sh(ot).map(x=>x[2])).slice(0,3),r[0]+' ('+r[1]+')')})}
+function mkP(n){return sh(PQ).slice(0,n).map(s=>{const[q,a,e]=s.split('|');return Q(q,a,sh(['は','の','を','に','で','と','も','が','から'].filter(x=>x!==a)).slice(0,3),e)})}
+function mkG(n){return sh(GQ).slice(0,n).map(s=>{const[q,a,w,e]=s.split('|');return Q(q,a,w.split(','),e)})}
+function exStart(i){const m=MODES[i],n=10;let l;if(m==='v')l=mkV(0,21,0,n);else if(m==='l')l=mkV(0,21,1,n);else if(m==='k')l=mkV(21,24,0,n);else if(m==='p')l=mkP(n);else if(m==='g')l=mkG(n);else l=sh([...mkV(0,21,0,5),...mkV(0,21,1,4),...mkV(21,24,0,4),...mkP(4),...mkG(3)]);ex={mi:i,l,i:0,s:0,w:[],a:false,c:-1};render();if(l[0].s)say(l[0].s)}
+function exAns(j){if(ex.a)return;const q=ex.l[ex.i];ex.a=true;ex.c=j;if(q.o[j]===q.a)ex.s++;else ex.w.push(q);render()}
+function exNext(){ex.i++;ex.a=false;ex.c=-1;render();const q=ex.l[ex.i];if(q&&q.s)say(q.s)}
+function exQuit(){ex=null;render()}
+function exView(){
+ const st='text-align:left';
+ if(!ex)return `<div class='panel' style='${st}'><b>Exercícios N5</b><p class='sub'>Escolha um tipo de prática. Cada sessão tem 10 questões (o simulado misto tem 20). Os erros aparecem no fim com explicação.</p>`+['📖 Vocabulário: japonês → português','🔊 Ouvir e escolher','漢 Kanji: significado','は Partículas','📝 Gramática','🎯 Simulado misto (20)'].map((x,i)=>`<button style='display:block;width:100%;text-align:left;margin:6px 0' onclick='exStart(${i})'>${x}</button>`).join('')+'</div>';
+ if(ex.i>=ex.l.length)return `<div class='panel' style='${st}'><h2 style='margin:0 0 8px'>Resultado: ${ex.s}/${ex.l.length}</h2>${ex.w.length?'<b>Para revisar:</b>':'<p>Perfeito! 🎉</p>'}`+ex.w.map(q=>`<p>${q.q} → <b>${q.a}</b><br><small>${q.e}</small></p>`).join('')+`<button onclick='exStart(${ex.mi})'>Refazer</button> <button onclick='exQuit()'>Menu</button></div>`;
+ const q=ex.l[ex.i];
+ return `<div class='panel'><div class='sub'>${ex.i+1}/${ex.l.length} · ${ex.s} ✓ <button onclick='exQuit()' style='float:right;padding:2px 8px'>✕</button></div><div class='big' style='font-size:${q.q.length>6?'1.7rem':'4rem'}'>${q.q}</div>${q.s?"<button onclick='say(ex.l[ex.i].s,1)'>🔊 Normal</button> <button onclick='say(ex.l[ex.i].s,0.5)'>🐢 Lento</button>":''}<div class='opts'>`+q.o.map((o,j)=>`<button class='${ex.a?(o===q.a?'ok':(j===ex.c?'no':'')):''}' ${ex.a?'disabled':''} onclick='exAns(${j})'>${o}</button>`).join('')+`</div>${ex.a?`<p><small>${q.e}</small></p><button onclick='exNext()'>${ex.i+1<ex.l.length?'Próxima':'Ver resultado'}</button>`:''}</div>`;
+}
+let kmode='list',ki=0,kfl=false;
+const ST={'十':['M15 50 L85 50','M50 15 L50 85'],'田':['M25 15 L25 85','M25 15 L75 15 L75 85','M50 15 L50 85','M25 50 L75 50','M25 85 L75 85'],'一':['M15 50 L85 50'],'二':['M25 35 L75 35','M12 70 L88 70'],'三':['M25 25 L75 25','M32 50 L68 50','M12 76 L88 76'],'口':['M22 22 L22 78','M22 22 L78 22 L78 78','M22 78 L78 78'],'日':['M25 12 L25 88','M25 12 L75 12 L75 88','M25 50 L75 50','M25 88 L75 88'],'目':['M25 12 L25 88','M25 12 L75 12 L75 88','M25 37 L75 37','M25 62 L75 62','M25 88 L75 88'],'月':['M30 12 L30 70 Q30 85 15 92','M30 12 L78 12 L78 85 Q78 92 68 90','M30 38 L78 38','M30 62 L78 62'],'木':['M15 38 L85 38','M50 10 L50 90','M50 42 Q40 65 12 85','M50 42 Q60 65 88 85'],'土':['M25 35 L75 35','M50 35 L50 80','M15 80 L85 80'],'人':['M50 15 Q45 60 12 88','M45 48 Q60 70 88 88'],'大':['M12 40 L88 40','M55 12 Q45 60 12 88','M50 45 Q60 70 88 88'],'小':['M50 12 L50 85 Q50 90 42 88','M32 40 Q28 65 12 80','M68 40 Q72 65 88 80'],'山':['M50 15 L50 85','M22 45 L22 85','M22 85 L78 85 L78 45'],'川':['M25 15 Q25 55 12 85','M50 15 L50 85','M75 15 Q75 55 88 85'],'火':['M30 40 L22 58','M72 38 L80 55','M50 12 Q45 60 12 88','M45 45 Q60 70 88 88']};
+function strokeSVG(c){const p=ST[c];if(!p)return '<p class="sub" style="max-width:240px">Ordem dos traços: ainda não há modelo animado para este kanji ('+(SC[c]||'?')+' traços). Regra geral: de cima para baixo e da esquerda para a direita.</p><a href="https://jisho.org/search/'+encodeURIComponent(c)+'%20%23kanji" target="_blank" rel="noopener" style="color:var(--ac)" onclick="event.stopPropagation()">Ver ordem dos traços no Jisho ↗</a>';
+ let s="<svg viewBox='0 0 100 100' width='200' height='200' style='background:var(--bg);border:1px solid var(--bd);border-radius:12px'><path d='M50 0V100M0 50H100' stroke='var(--bd)' stroke-dasharray='3 3'/>";
+ const U={};p.forEach((d,i)=>{const m=d.match(/M([\d.]+) ([\d.]+)/);const key=m[1]+','+m[2];const dup=U[key];U[key]=1;s+=`<path d='${d}' fill='none' stroke='var(--tx)' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' pathLength='1' style='stroke-dasharray:1;stroke-dashoffset:1;animation:dr .6s ${i*.8}s forwards'/><text x='${dup?+m[1]+6:Math.max(2,m[1]-9)}' y='${dup?+m[2]+16:Math.max(10,+m[2]-3)}' font-size='11' fill='var(--ac)' style='opacity:0;animation:fi .2s ${i*.8}s forwards'>${i+1}</text>`});
+ return s+'</svg>'}
+function kanjiTop(){const b=(m,l)=>`<button onclick='kM(${m})' style='${(kmode==='cards')===!!m?'background:var(--ac);color:#fff':''}'>${l}</button>`;return `<div style='margin-bottom:12px'>${b(0,'📋 Lista')} ${b(1,'🎴 Flashcards')} ${kmode==='cards'?`<button onclick='kPr()' style='${kp?'background:var(--ac);color:#fff':''}'>✍ Praticar</button>`:''}</div>`}
+function kM(m){kmode=m?'cards':'list';kfl=false;render()}
+function cardView(){const k=K[ki],t=T[L];return `<div style='text-align:center'><div class='fc${kfl?' fl':''}' onclick='kFlip()'><div class='fcf'><div class='big' style='font-size:7rem'>${k[0]}</div><small style='color:var(--mu)'>↻</small></div><div class='fcb'><b style='font-size:1.3rem'>${k[LI[L]]}</b><small style='color:var(--mu)'>${t.on}: ${k[4]} · ${t.kun}: ${k[5]}</small><div id='ksv'></div></div></div><p><button onclick='kGo(-1)'>←</button> ${ki+1}/${K.length} <button onclick='kGo(1)'>→</button> <button onclick='kRand()'>🔀</button> <button onclick='say(K[ki][0])'>🔊</button> <button onclick='kPlay()'>▶ Traços</button></p></div>`}
+function kFlip(){kfl=!kfl;$('.fc').classList.toggle('fl',kfl);if(kfl)setTimeout(kPlay,350)}
+function kPlay(){if(!kfl){kFlip();return}const e=$('#ksv');if(e)e.innerHTML=strokeSVG(K[ki][0])}
+function kGo(d){ki=(ki+K.length+d)%K.length;kfl=false;render()}
+function kRand(){ki=Math.floor(Math.random()*K.length);kfl=false;render()}
+let kp=false,kdone=[],kdoneFor=-1,kmsg='',pcur=null;
+const ptsOf=d=>{const n=d.match(/[\d.]+/g).map(Number),r=[];for(let i=0;i<n.length;i+=2)r.push([n[i],n[i+1]]);return r};
+const pathOf=a=>a.map((q,i)=>(i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1)).join(' ');
+function kPr(){kp=!kp;render()}
+function prac(){const w=$('#pw');if(w)w.innerHTML=practiceView()}
+function practiceView(){
+ const c=K[ki][0],p=ST[c];
+ if(kdoneFor!==ki){kdone=[];kdoneFor=ki;kmsg=''}
+ let s=`<div style='text-align:center'><p class='sub'>${kmsg||'Desenhe o kanji com o mouse ou o dedo, seguindo a ordem dos traços.'}</p><svg id='psv' viewBox='0 0 100 100' width='260' height='260' style='touch-action:none;max-width:100%;background:var(--card);border:1px solid var(--bd);border-radius:12px;cursor:crosshair' onpointerdown='pD(event)' onpointermove='pM(event)' onpointerup='pU(event)' onpointerleave='pU(event)'><path d='M50 0V100M0 50H100' stroke='var(--bd)' stroke-dasharray='3 3'/><text x='50' y='78' font-size='80' text-anchor='middle' fill='var(--tx)' opacity='.1'>${c}</text>`;
+ kdone.forEach(d=>s+=`<path d='${d}' fill='none' stroke='var(--ok)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/>`);
+ if(p&&kdone.length<p.length){const m=ptsOf(p[kdone.length])[0];s+=`<circle cx='${m[0]}' cy='${m[1]}' r='4' fill='var(--ac)' opacity='.85'/>`}
+ return s+`<path id='pcur' d='' fill='none' stroke='var(--tx)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/></svg><p><button onclick='pUndo()'>↩</button> <button onclick='pClear()'>🗑</button></p></div>`}
+function pt(e){const r=$('#psv').getBoundingClientRect();return[(e.clientX-r.left)/r.width*100,(e.clientY-r.top)/r.height*100]}
+function pD(e){e.preventDefault();pcur=[pt(e)];try{$('#psv').setPointerCapture(e.pointerId)}catch(x){}$('#pcur').setAttribute('d',pathOf(pcur))}
+function pM(e){if(!pcur)return;pcur.push(pt(e));$('#pcur').setAttribute('d',pathOf(pcur))}
+function pU(e){
+ if(!pcur)return;const a=pcur;pcur=null;
+ if(a.length<3){prac();return}
+ const p=ST[K[ki][0]],d=pathOf(a);
+ if(p){const n=kdone.length;if(n>=p.length){prac();return}
+  const ref=ptsOf(p[n]),D=(u,v)=>Math.hypot(u[0]-v[0],u[1]-v[1]);
+  if(D(a[0],ref[0])>30||D(a[a.length-1],ref[ref.length-1])>30){kmsg='Esse não é o traço '+(n+1)+'. Comece no ponto vermelho.';prac();return}
+  kdone.push(d);kmsg=kdone.length===p.length?'Parabéns! 🎉 Kanji completo.':'Certo! Agora o traço '+(n+2)+'.';
+ }else{kdone.push(d);kmsg='Traço livre (sem verificação para este kanji).'}
+ prac()}
+function pUndo(){kdone.pop();kmsg='';prac()}
+function pClear(){kdone=[];kmsg='';prac()}
+function kanjiTop(){return "<p class='sub'>Toque em um kanji para abrir o card: gire, veja a ordem dos traços e pratique o desenho.</p>"}
+function kOpen(i){ki=i;kfl=false;kdoneFor=-1;kShow()}
+function kClose(){const o=$('#ov');if(o)o.remove()}
+function kShow(){let o=$('#ov');if(!o){o=document.createElement('div');o.id='ov';o.style.cssText='position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.6);overflow:auto;padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px))';o.onclick=e=>{if(e.target===o)kClose()};document.body.appendChild(o)}
+ o.innerHTML="<div style='background:var(--bg);color:var(--tx);border-radius:16px;padding:12px;max-width:380px;margin:0 auto'><button onclick='kClose()' style='float:right'>✕</button><div style='clear:both'></div>"+cardView()+"<div id='pw'>"+practiceView()+"</div></div>"}
+function kGo(d){ki=(ki+K.length+d)%K.length;kfl=false;kShow()}
+function kRand(){ki=Math.floor(Math.random()*K.length);kfl=false;kShow()}
+const NEW=`四|quatro|four|cuatro|シ|よん;五|cinco|five|cinco|ゴ|いつ;六|seis|six|seis|ロク|むっ;七|sete|seven|siete|シチ|なな;八|oito|eight|ocho|ハチ|やっ;九|nove|nine|nueve|キュウ|ここの;十|dez|ten|diez|ジュウ|とお;百|cem|hundred|cien|ヒャク|—;千|mil|thousand|mil|セン|ち;万|dez mil|ten thousand|diez mil|マン|—;円|iene|yen|yen|エン|まる;年|ano|year|año|ネン|とし;時|hora|time, hour|hora|ジ|とき;分|minuto, dividir|minute, divide|minuto, dividir|フン|わ(ける);半|metade|half|mitad|ハン|なか(ば);今|agora|now|ahora|コン|いま;毎|todo|every|cada|マイ|—;週|semana|week|semana|シュウ|—;前|antes, frente|before, front|antes, frente|ゼン|まえ;後|depois, atrás|after, behind|después, detrás|ゴ|あと;午|meio-dia|noon|mediodía|ゴ|—;間|intervalo|interval|intervalo|カン|あいだ;田|arrozal|rice field|arrozal|デン|た;雨|chuva|rain|lluvia|ウ|あめ;天|céu|sky|cielo|テン|あま;気|espírito, ar|spirit, air|espíritu, aire|キ|—;男|homem|man|hombre|ダン|おとこ;女|mulher|woman|mujer|ジョ|おんな;子|criança|child|niño|シ|こ;父|pai|father|padre|フ|ちち;母|mãe|mother|madre|ボ|はは;友|amigo|friend|amigo|ユウ|とも;先|antes, ponta|previous, tip|antes, punta|セン|さき;校|escola|school|escuela|コウ|—;語|idioma|language|idioma|ゴ|かた(る);本|livro, origem|book, origin|libro, origen|ホン|もと;名|nome|name|nombre|メイ|な;電|eletricidade|electricity|electricidad|デン|—;車|carro|car|coche|シャ|くるま;何|o quê|what|qué|カ|なに;白|branco|white|blanco|ハク|しろ;見|ver|see|ver|ケン|み(る);聞|ouvir|hear|oír|ブン|き(く);読|ler|read|leer|ドク|よ(む);書|escrever|write|escribir|ショ|か(く);食|comer|eat|comer|ショク|た(べる);飲|beber|drink|beber|イン|の(む);行|ir|go|ir|コウ|い(く);来|vir|come|venir|ライ|く(る);出|sair|exit|salir|シュツ|で(る);入|entrar|enter|entrar|ニュウ|い(る);休|descansar|rest|descansar|キュウ|やす(む);買|comprar|buy|comprar|バイ|か(う);話|conversa, falar|talk|hablar|ワ|はな(す);高|alto, caro|high, expensive|alto, caro|コウ|たか(い);安|barato, tranquilo|cheap, calm|barato, tranquilo|アン|やす(い);長|longo|long|largo|チョウ|なが(い);新|novo|new|nuevo|シン|あたら(しい);古|velho|old|viejo|コ|ふる(い);多|muito|many|mucho|タ|おお(い);少|pouco|few|poco|ショウ|すく(ない);上|em cima|above|arriba|ジョウ|うえ;下|embaixo|below|abajo|カ|した;中|meio, dentro|middle, inside|medio, dentro|チュウ|なか;外|fora|outside|fuera|ガイ|そと;左|esquerda|left|izquierda|サ|ひだり;右|direita|right|derecha|ウ|みぎ;東|leste|east|este|トウ|ひがし;西|oeste|west|oeste|セイ|にし;南|sul|south|sur|ナン|みなみ;北|norte|north|norte|ホク|きた;国|país|country|país|コク|くに`;
+K.push(...NEW.split(';').map(s=>s.split('|')));
+const CATS=[['Números','一二三四五六七八九十百千万円'],['Tempo','日年月時分半今毎週前後午間'],['Natureza','火水木金土山川田雨天気'],['Pessoas','人男女子父母友先生'],['Corpo','目口手'],['Escola e idioma','学校語本名'],['Ações','見聞読書食飲行来出入休買話'],['Descrição','大小高安長新古多少白'],['Direções e lugares','上下中外左右東西南北国'],['Outros','電車何']];
+K.forEach(k=>{const c=CATS.findIndex(x=>x[1].includes(k[0]));k.cat=c<0?CATS.length-1:c});
+let kcat=-1;
+function kC(i){kcat=i;render()}
+function kanjiList(){const t=T[L];
+ let h=`<div style='display:flex;gap:6px;margin-bottom:10px'><button onclick='kC(-1)' style='background:var(--ac);color:#fff'>N5 (${K.length})</button><button disabled>N4+ (em breve)</button></div><p class='sub'>Toque em um kanji para abrir o card: gire, veja a ordem dos traços e pratique o desenho.</p><div style='display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px'>`;
+ h+=['Todos',...CATS.map(c=>c[0])].map((n,i)=>`<button onclick='kC(${i-1})' style='${kcat===i-1?'background:var(--ac);color:#fff':''}'>${n}</button>`).join('')+`</div>`;
+ CATS.forEach((c,ci)=>{if(kcat>=0&&kcat!==ci)return;const it=K.map((k,i)=>[k,i]).filter(x=>x[0].cat===ci);if(!it.length)return;
+  h+=`<h3 style='margin:18px 0 8px'>${c[0]} (${it.length})</h3><div class='kgrid'>`+it.map(([k,i])=>`<button class='k' style='text-align:left' onclick='kOpen(${i})'><b>${k[0]}</b><strong>${k[LI[L]]}</strong><small>${t.on}: ${k[4]}</small><small>${t.kun}: ${k[5]}</small></button>`).join('')+'</div>'});
+ return h}
+let kt=false,kres=null,kpts=[],kscore={ok:0,n:0};
+const Dst=(u,v)=>Math.hypot(u[0]-v[0],u[1]-v[1]);
+function prac(){const w=$('#pw');if(w)w.innerHTML=kt?testView():practiceView()}
+function kOpen(i){ki=i;kfl=false;kdoneFor=-1;kt=false;kShow()}
+function kMode(m){kt=!!m;kres=null;kdone=[];kpts=[];kdoneFor=-1;if(kt)kNew();kShow()}
+function kNew(){ki=Math.floor(Math.random()*K.length);kdone=[];kpts=[];kres=null;kdoneFor=ki}
+function kShow(){let o=$('#ov');if(!o){o=document.createElement('div');o.id='ov';o.style.cssText='position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.6);overflow:auto;padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px))';o.onclick=e=>{if(e.target===o)kClose()};document.body.appendChild(o)}
+ const on="background:var(--ac);color:#fff";
+ const bar=`<div style='display:flex;gap:6px;margin-bottom:8px'><button onclick='kMode(0)' style='${kt?'':on}'>🎴 Estudar</button><button onclick='kMode(1)' style='${kt?on:''}'>📝 Teste de escrita</button><button onclick='kClose()' style='margin-left:auto'>✕</button></div>`;
+ o.innerHTML=`<div style='background:var(--bg);color:var(--tx);border-radius:16px;padding:12px;max-width:380px;margin:0 auto'>${bar}`+(kt?`<div id='pw'>${testView()}</div>`:cardView()+`<div id='pw'>${practiceView()}</div>`)+'</div>'}
+function testView(){
+ const k=K[ki],c=k[0],p=ST[c],t=T[L];
+ let s=`<div style='text-align:center'><p class='sub'>Pontos: ${kscore.ok}/${kscore.n}</p><p style='margin:6px 0'>Escreva o kanji, sem olhar:<br><b style='font-size:1.3rem'>${k[LI[L]]}</b><br><small style='color:var(--mu)'>${t.on}: ${k[4]} · ${t.kun}: ${k[5]}</small></p><svg id='psv' viewBox='0 0 100 100' width='260' height='260' style='touch-action:none;max-width:100%;background:var(--card);border:1px solid var(--bd);border-radius:12px;cursor:crosshair' onpointerdown='pD(event)' onpointermove='pM(event)' onpointerup='pU(event)' onpointerleave='pU(event)'><path d='M50 0V100M0 50H100' stroke='var(--bd)' stroke-dasharray='3 3'/>`;
+ if(kres){s+=`<text x='50' y='78' font-size='80' text-anchor='middle' fill='var(--tx)' opacity='.15'>${c}</text>`;if(p)p.forEach(d=>s+=`<path d='${d}' fill='none' stroke='var(--ac)' stroke-width='2' stroke-dasharray='4 3' stroke-linecap='round'/>`)}
+ kdone.forEach((d,i)=>s+=`<path d='${d}' fill='none' stroke='${kres&&p?(kres.good[i]?'var(--ok)':'var(--no)'):'var(--tx)'}' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/>`);
+ s+=`<path id='pcur' d='' fill='none' stroke='var(--tx)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/></svg>`;
+ if(!kres)s+=`<p><button onclick='tUndo()'>↩</button> <button onclick='tClear()'>🗑</button> <button onclick='tCheck()' style='background:var(--ac);color:#fff'>Conferir</button></p>`;
+ else s+=`<p class='sub'>${kres.msg}</p><p>`+(p?`<button onclick='tNext()'>Próximo →</button>`:`<button onclick='tSelf(1)'>✅ Acertei</button> <button onclick='tSelf(0)'>❌ Errei</button>`)+`</p>`;
+ return s+'</div>'}
+function tUndo(){kdone.pop();kpts.pop();prac()}
+function tClear(){kdone=[];kpts=[];prac()}
+function tNext(){kNew();kShow()}
+function tSelf(v){kscore.n++;if(v)kscore.ok++;kNew();kShow()}
+function tCheck(){
+ const p=ST[K[ki][0]];
+ if(!kdone.length){return}
+ if(!p){kres={good:[],msg:'Compare seu desenho com o kanji ao fundo e diga se acertou.'};prac();return}
+ const good=kpts.map((a,i)=>i<p.length&&(r=>Dst(a[0],r[0])<30&&Dst(a[a.length-1],r[r.length-1])<30)(ptsOf(p[i])));
+ const okc=good.filter(Boolean).length,perfect=kdone.length===p.length&&okc===p.length;
+ kscore.n++;if(perfect)kscore.ok++;
+ kres={good,msg:perfect?'Perfeito! 🎉 Todos os traços na ordem certa.':`Traços certos: ${okc}/${p.length} (você fez ${kdone.length}). Em tracejado, o modelo.`};prac()}
+function pU(e){
+ if(!pcur)return;const a=pcur;pcur=null;
+ if(a.length<3){prac();return}
+ const p=ST[K[ki][0]],d=pathOf(a);
+ if(kt){if(!kres){kdone.push(d);kpts.push(a)}prac();return}
+ if(p){const n=kdone.length;if(n>=p.length){prac();return}
+  const ref=ptsOf(p[n]);
+  if(Dst(a[0],ref[0])>30||Dst(a[a.length-1],ref[ref.length-1])>30){kmsg='Esse não é o traço '+(n+1)+'. Comece no ponto vermelho.';prac();return}
+  kdone.push(d);kmsg=kdone.length===p.length?'Parabéns! 🎉 Kanji completo.':'Certo! Agora o traço '+(n+2)+'.';
+ }else{kdone.push(d);kmsg='Traço livre (sem verificação para este kanji).'}
+ prac()}
+Object.assign(ST,{'上':['M45 15 L45 80','M45 45 L72 45','M15 85 L85 85'],'下':['M15 20 L85 20','M50 20 L50 90','M58 45 L78 62'],'中':['M22 30 L22 65','M22 30 L78 30 L78 65','M22 65 L78 65','M50 10 L50 90'],'本':['M15 35 L85 35','M50 10 L50 90','M45 40 Q35 62 12 82','M55 40 Q65 62 88 82','M32 72 L68 72'],'白':['M45 8 L40 25','M25 30 L25 90','M25 30 L75 30 L75 90','M25 60 L75 60','M25 90 L75 90'],'左':['M15 38 L85 38','M50 12 Q40 50 12 85','M25 62 L75 62','M50 62 L50 88','M22 88 L78 88'],'右':['M15 35 L85 35','M50 12 Q40 50 12 85','M30 58 L30 88','M30 58 L78 58 L78 88','M30 88 L78 88'],'八':['M42 25 Q38 60 15 82','M58 40 Q65 65 85 82']});
+const SC={};
+'一八二三四五六七九十'.length;
+('一1二2三3四5五4六4七2八2九2十2百6千3万3円4年6時10分4半5今4毎6週11前9後9午4間12田5雨8天4気6男7女3子3父4母5友4先6栱10語14本5名6電13車7何7白5見7聞14読14書10食9飲12行6来7出5入2休6買12話13高10安6長8新13古5多6少4上3下3中4外5左5右5東8西6南9北5国8口3日4目5月4木4坢3人2大3小3山3川3火4水4金8手4学8生5').replace(/(.)(\d+)/gu,(m,k,n)=>{SC[k]=+n;return m});
+const dirOK=a=>{const s=a[0],e=a[a.length-1],dx=e[0]-s[0],dy=e[1]-s[1];if(Math.hypot(dx,dy)<10)return true;if(dx<-12&&Math.abs(dy)<Math.abs(dx)*.6)return false;if(dy<-15&&Math.abs(dx)<Math.abs(dy)*.6)return false;return true};
+function testView(){
+ const k=K[ki],c=k[0],p=ST[c],t=T[L];
+ let s=`<div style='text-align:center'><p class='sub'>Pontos: ${kscore.ok}/${kscore.n}</p><p style='margin:6px 0'>Escreva o kanji, sem olhar:<br><b style='font-size:1.3rem'>${k[LI[L]]}</b><br><small style='color:var(--mu)'>${t.on}: ${k[4]} · ${t.kun}: ${k[5]}</small><br><small style='color:var(--mu)'>${SC[c]||'?'} traços</small></p><svg id='psv' viewBox='0 0 100 100' width='260' height='260' style='touch-action:none;max-width:100%;background:var(--card);border:1px solid var(--bd);border-radius:12px;cursor:crosshair' onpointerdown='pD(event)' onpointermove='pM(event)' onpointerup='pU(event)' onpointerleave='pU(event)'><path d='M50 0V100M0 50H100' stroke='var(--bd)' stroke-dasharray='3 3'/>`;
+ if(kres){s+=`<text x='50' y='78' font-size='80' text-anchor='middle' fill='var(--tx)' opacity='.15'>${c}</text>`;if(p)p.forEach(d=>s+=`<path d='${d}' fill='none' stroke='var(--ac)' stroke-width='2' stroke-dasharray='4 3' stroke-linecap='round'/>`)}
+ kdone.forEach((d,i)=>s+=`<path d='${d}' fill='none' stroke='${kres?(kres.good[i]?'var(--ok)':'var(--no)'):'var(--tx)'}' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/>`);
+ s+=`<path id='pcur' d='' fill='none' stroke='var(--tx)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/></svg>`;
+ if(!kres)s+=`<p><button onclick='tUndo()'>↩</button> <button onclick='tClear()'>🗑</button> <button onclick='tCheck()' style='background:var(--ac);color:#fff'>Conferir</button></p>`;
+ else s+=`<p class='sub'>${kres.msg}</p><p><button onclick='tNext()'>Próximo →</button></p>`;
+ return s+'</div>'}
+function tCheck(){
+ const c=K[ki][0],p=ST[c];
+ if(!kdone.length)return;
+ let good,perfect,msg;
+ if(p){good=kpts.map((a,i)=>i<p.length&&(r=>Dst(a[0],r[0])<30&&Dst(a[a.length-1],r[r.length-1])<30)(ptsOf(p[i])));
+  const okc=good.filter(Boolean).length;perfect=kdone.length===p.length&&okc===p.length;
+  msg=perfect?'Perfeito! 🎉 Todos os traços na ordem certa.':`Traços certos: ${okc}/${p.length} (você fez ${kdone.length}). Em tracejado, o modelo.`}
+ else{const n=SC[c]||0;good=kpts.map(dirOK);perfect=kdone.length===n&&good.every(Boolean);
+  msg=perfect?'Certo! ✅ Número de traços e direção corretos (a ordem exata não é verificada neste kanji).':`Esse kanji tem ${n} traços e você fez ${kdone.length}. Traços em vermelho estão na direção errada.`}
+ kscore.n++;if(perfect)kscore.ok++;
+ kres={good,msg};prac()}
+function pU(e){
+ if(!pcur)return;const a=pcur;pcur=null;
+ if(a.length<3){prac();return}
+ const c=K[ki][0],p=ST[c],d=pathOf(a);
+ if(kt){if(!kres){kdone.push(d);kpts.push(a)}prac();return}
+ if(p){const n=kdone.length;if(n>=p.length){prac();return}
+  const ref=ptsOf(p[n]);
+  if(Dst(a[0],ref[0])>30||Dst(a[a.length-1],ref[ref.length-1])>30){kmsg='Esse não é o traço '+(n+1)+'. Comece no ponto vermelho.';prac();return}
+  kdone.push(d);kmsg=kdone.length===p.length?'Parabéns! 🎉 Kanji completo.':'Certo! Agora o traço '+(n+2)+'.';
+ }else{const n=SC[c]||99;
+  if(kdone.length>=n){kmsg='Você já fez os '+n+' traços.';prac();return}
+  if(strokePrec(a,c)<0.6){kmsg='Esse traço não segue o kanji do fundo. Tente de novo.';prac();return}
+  if(!dirOK(a)){kmsg='Direção estranha: os traços vão da esquerda para a direita e de cima para baixo.';prac();return}
+  kdone.push(d);kmsg='Traço '+kdone.length+' de '+n+' (a ordem não é verificada neste kanji).'}
+ prac()}
+let cov=0;const inkC={};
+function ink(c){if(inkC[c])return inkC[c];const cv=document.createElement('canvas');cv.width=cv.height=200;const x=cv.getContext('2d');x.font='160px "Hiragino Sans","Noto Sans JP","Yu Gothic","Meiryo",sans-serif';x.textAlign='center';x.fillText(c,100,156);const d=x.getImageData(0,0,200,200).data,r=[];for(let j=0;j<200;j+=4)for(let i=0;i<200;i+=4)if(d[(j*200+i)*4+3]>128)r.push([i/2,j/2]);return inkC[c]=r}
+const rs=a=>{const o=[];for(let i=0;i<a.length;i++){if(i){const n=Math.ceil(Dst(a[i-1],a[i])/2);for(let k=1;k<n;k++)o.push([a[i-1][0]+(a[i][0]-a[i-1][0])*k/n,a[i-1][1]+(a[i][1]-a[i-1][1])*k/n])}o.push(a[i])}return o};
+const near=(p,Ls,r)=>Ls.some(q=>(p[0]-q[0])**2+(p[1]-q[1])**2<=r*r);
+function strokePrec(a,c){const I=ink(c),s=rs(a);return s.length?s.filter(p=>near(p,I,7)).length/s.length:0}
+function coverage(c){const I=ink(c),S=kpts.flatMap(rs);return I.length&&S.length?I.filter(p=>near(p,S,9)).length/I.length:0}
+function tCheck(){
+ const c=K[ki][0],p=ST[c];
+ if(!kdone.length)return;
+ let good,perfect,msg;
+ if(p){good=kpts.map((a,i)=>i<p.length&&(r=>Dst(a[0],r[0])<30&&Dst(a[a.length-1],r[r.length-1])<30)(ptsOf(p[i])));
+  const okc=good.filter(Boolean).length;perfect=kdone.length===p.length&&okc===p.length;
+  msg=perfect?'Perfeito! 🎉 Todos os traços na ordem certa.':`Traços certos: ${okc}/${p.length} (você fez ${kdone.length}). Em tracejado, o modelo.`}
+ else{const n=SC[c]||0;
+  good=kpts.map(a=>dirOK(a)&&strokePrec(a,c)>=0.7);cov=coverage(c);
+  const okc=good.filter(Boolean).length;perfect=kdone.length===n&&okc===n&&cov>=0.55;
+  msg=perfect?`Certo! ✅ Traços no lugar e na direção certos (cobertura ${Math.round(cov*100)}%). A ordem exata não é verificada neste kanji.`:`Traços certos: ${okc}/${kdone.length}. Esse kanji tem ${n} traços e você fez ${kdone.length}. Cobertura do kanji: ${Math.round(cov*100)}%. Em vermelho: traços fora do lugar ou na direção errada.`}
+ kscore.n++;if(perfect)kscore.ok++;
+ kres={good,msg};prac()}
+Object.assign(ST,{'五':['M25 15 L75 15','M42 15 L40 52','M28 50 L72 50 Q70 70 55 85','M12 85 L88 85'],'四':['M22 20 L22 80','M22 20 L78 20 L78 80','M38 22 L36 58','M58 22 L58 58 Q58 64 68 62','M22 80 L78 80'],'六':['M50 10 L50 22','M15 32 L85 32','M42 38 Q38 62 15 80','M60 40 Q68 65 85 80'],'七':['M15 40 L85 40','M42 15 L42 72 Q44 88 82 84'],'千':['M68 10 Q40 18 25 30','M12 48 L88 48','M52 18 L52 90'],'円':['M20 15 L20 90','M20 15 L80 15 L80 90','M22 50 L78 50','M50 15 L50 90'],'子':['M25 22 L72 22 Q55 42 30 52','M50 35 L50 85 Q50 92 38 88','M12 58 L88 58'],'少':['M50 10 L50 60 Q50 66 42 63','M32 35 Q28 50 15 60','M68 35 Q72 50 85 60','M62 20 Q52 70 25 90'],'古':['M15 28 L85 28','M50 10 L50 52','M25 48 L25 88','M25 48 L75 48 L75 88','M25 88 L75 88']});
+let S={xp:0,once:[]};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem('nhxp')||'{}'))}catch(e){}
+const TT=['初心者 Iniciante','見習い Aprendiz','学生 Estudante','勉強家 Dedicado','達人 Veterano','N5 Mestre'];
+function lv(x){let l=1,n=100;while(x>=n){x-=n;l++;n=100+50*(l-1)}return[l,x,n]}
+function xpBar(){let b=$('#xpb');if(!b){b=document.createElement('div');b.id='xpb';b.style.cssText='background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;margin-bottom:12px';$('#nav').before(b)}
+ const[l,r,n]=lv(S.xp);
+ b.innerHTML=`<div style='display:flex;justify-content:space-between;font-size:.9rem'><b>Nível ${l} · ${TT[Math.min(5,Math.floor((l-1)/2))]}</b><span style='color:var(--mu)'>${S.xp} XP</span></div><div style='height:8px;background:var(--bd);border-radius:6px;margin-top:6px;overflow:hidden'><div style='height:100%;width:${r/n*100}%;background:var(--ac);transition:width .4s'></div></div><div style='font-size:.75rem;color:var(--mu);margin-top:2px'>${r}/${n} para o próximo nível</div>`}
+function toast(t){const e=document.createElement('div');e.textContent=t;e.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));background:var(--ac);color:#fff;padding:8px 16px;border-radius:20px;z-index:99;font-weight:600;box-shadow:0 4px 14px rgba(0,0,0,.3)';document.body.appendChild(e);setTimeout(()=>e.remove(),1700)}
+function xp(n){const a=lv(S.xp)[0];S.xp+=n;try{localStorage.setItem('nhxp',JSON.stringify(S))}catch(e){}xpBar();const b=lv(S.xp)[0];toast(b>a?`🎉 Nível ${b}! +${n} XP`:`+${n} XP`)}
+function xpOnce(k,n){if(S.once.includes(k))return;S.once.push(k);xp(n)}
+xpBar();
+const _fi=finish;finish=function(i){_fi(i);xpOnce('l'+i,50)};
+const _ea=exAns;exAns=function(j){const s=ex.s,a=ex.a;_ea(j);if(!a&&ex.s>s)xp(5)};
+const _en=exNext;exNext=function(){_en();if(ex&&ex.i>=ex.l.length&&ex.s>=ex.l.length*.7)xp(20)};
+const _tc=tCheck;tCheck=function(){const o=kscore.ok;_tc();if(kscore.ok>o)xpOnce('kt'+K[ki][0],20)};
+const _pu=pU;pU=function(e){_pu(e);if(!kt&&kdone.length&&kdone.length===SC[K[ki][0]])xpOnce('kg'+K[ki][0],15)};
+S.tr=S.tr||{};
+const LQ=['わたしは がくせいです。|Eu sou estudante.|Eu sou professor.,Você é estudante.,Eu sou brasileiro.','きのう ともだちと えいがを みました。|Ontem vi um filme com um amigo.|Hoje vou ver um filme.,Ontem comi com um amigo.,Vi um amigo no cinema hoje.','まいあさ ７じに おきます。|Acordo todo dia às 7h.|Durmo às 7h.,Acordo às 9h.,Saio às 7h.','この りんごは ひとつ ひゃくえんです。|Esta maçã custa 100 ienes cada.|Esta maçã é grande.,Custa mil ienes.,Comprei duas maçãs.','にほんごは むずかしいですが、おもしろいです。|Japonês é difícil, mas interessante.|Japonês é fácil.,Japonês é chato.,Não gosto de japonês.','つくえの うえに ほんが にさつ あります。|Há 2 livros em cima da mesa.|Há 2 gatos na mesa.,O livro está embaixo.,Não há livros.','えきは どこですか。|Onde fica a estação?|Que horas é o trem?,Quanto custa?,O que é isso?','あした がっこうに いきません。|Amanhã não vou à escola.|Amanhã vou à escola.,Ontem não fui à escola.,Hoje não vou à escola.'];
+const P1='わたしの なまえは マリアです。ブラジルじんです。にほんごの がくせいです。まいにち にほんごを べんきょうします。',P2='きのうは にちようびでした。ともだちと デパートに いきました。ふくを かいました。そして、レストランで ひるごはんを たべました。',P3='わたしの いえは えきの ちかくに あります。いえの まえに こうえんが あります。こうえんに おおきい きが あります。',P4='にちようびは あめでした。だから、うちで ほんを よみました。',P5='まいあさ ７じに おきます。シャワーを あびて、パンを たべます。８じに うちを でます。';
+const RQ=[[P1,'マリアさんは どこの ひとですか。','ブラジルじん','にほんじん,ちゅうごくじん,アメリカじん'],[P1,'マリアさんは まいにち なにを しますか。','にほんごを べんきょうします','えいがを みます,しごとを します,りょうりを つくります'],[P2,'きのう だれと デパートに いきましたか。','ともだち','かぞく,せんせい,ひとり'],[P2,'デパートで なにを かいましたか。','ふく','ほん,くつ,ごはん'],[P3,'いえの まえに なにが ありますか。','こうえん','えき,がっこう,びょういん'],[P4,'どうして うちで ほんを よみましたか。','あめだったからです','ひまだったからです,さむかったからです,ともだちが きたからです'],[P5,'なんじに うちを でますか。','８じ','７じ,９じ,６じ']];
+const mkS=n=>sh(LQ).slice(0,n).map(s=>{const[j,a,w]=s.split('|');return Q('🔊 O que você ouviu?',a,w.split(','),j+' = '+a,j)});
+const mkR=n=>sh(RQ).slice(0,n).map(r=>Q(`<span style='display:block;font-size:1.05rem;text-align:left;line-height:1.7;margin-bottom:8px'>${r[0]}</span><b style='font-size:1rem'>${r[1]}</b>`,r[2],r[3].split(','),'Resposta: '+r[2]));
+const mkPs=r=>sh(PQ.slice(r[0],r[1])).map(s=>{const[q,a,e]=s.split('|');return Q(q,a,sh(['は','の','を','に','で','と','も','が','から'].filter(x=>x!==a)).slice(0,3),e)});
+const mkGs=r=>sh(GQ.slice(r[0],r[1])).map(s=>{const[q,a,w,e]=s.split('|');return Q(q,a,w.split(','),e)});
+const KG=[{t:'あ行 (a i u e o)',k:'あいうえお',w:'あい|ai|amor;いえ|ie|casa;うえ|ue|em cima;あお|ao|azul;いいえ|iie|não'},{t:'か行 (ka ki ku ke ko)',k:'かきくけこ',w:'あか|aka|vermelho;かお|kao|rosto;えき|eki|estação;いく|iku|ir;こえ|koe|voz'},{t:'さ行 (sa shi su se so)',k:'さしすせそ',w:'あさ|asa|manhã;すし|sushi|sushi;いす|isu|cadeira;せかい|sekai|mundo;すき|suki|gostar'},{t:'た行 (ta chi tsu te to)',k:'たちつてと',w:'たこ|tako|polvo;くち|kuchi|boca;つき|tsuki|lua;とけい|tokei|relógio;たかい|takai|alto'},{t:'な行 (na ni nu ne no)',k:'なにぬねの',w:'ねこ|neko|gato;いぬ|inu|cachorro;なに|nani|o quê;にく|niku|carne;あなた|anata|você'},{t:'は行 (ha hi fu he ho)',k:'はひふへほ',w:'はな|hana|flor;ひと|hito|pessoa;ふね|fune|barco;ほし|hoshi|estrela;ふく|fuku|roupa'},{t:'ま行 (ma mi mu me mo)',k:'まみむめも',w:'みみ|mimi|orelha;あめ|ame|chuva;くま|kuma|urso;まち|machi|cidade;むし|mushi|inseto'},{t:'や行 (ya yu yo)',k:'やゆよ',w:'やま|yama|montanha;ゆめ|yume|sonho;よむ|yomu|ler;ゆき|yuki|neve;やすみ|yasumi|folga'},{t:'ら行 (ra ri ru re ro)',k:'らりるれろ',w:'さくら|sakura|cerejeira;くるま|kuruma|carro;これ|kore|isto;いろ|iro|cor;うれしい|ureshii|feliz'},{t:'わ・を・ん (wa wo n)',k:'わをん',w:'ほん|hon|livro;にほん|nihon|Japão;みかん|mikan|tangerina;わたし|watashi|eu;みんな|minna|todos'}];
+const PH=[
+...KG.map((g,i)=>({t:'Hiragana: '+g.t,e:g.k[0],d:'Aprender e praticar',kg:i})),
+{t:'Katakana',e:'ア',d:'Palavras estrangeiras',v:[4,5],m:'vvvllssv'},
+{t:'Cumprimentos e apresentação',e:'👋',d:'Frases do dia a dia',v:[5,7],m:'vvlsssrv'},
+{t:'Números',e:'🔢',d:'Contar de 0 a 10',v:[7,8],m:'vvvlllss'},
+{t:'Partículas',e:'は',d:'は の を に で と も',v:[8,9],p:[0,14],m:'vlpppppr'},
+{t:'Verbos',e:'🍙',d:'Forma ます',v:[9,10],g:[0,3],m:'vvlsgggr'},
+{t:'Adjetivos e passado',e:'🌸',d:'い e な, passado',v:[12,15],g:[7,10],m:'vvlsggsr'},
+{t:'Existência e contadores',e:'📦',d:'あります, います, contar',v:[13,16],g:[10,17],m:'vvlsggsr'},
+{t:'Forma て, ない e convites',e:'🔁',d:'Gramática do N5',v:[17,20],g:[3,7],m:'vlsggggr'},
+{t:'Kanji',e:'漢',d:'Leitura e significado',v:[21,24],m:'vvvvlkkr'},
+{t:'Simulado final',e:'🏆',d:'Todas as áreas',v:[0,21],p:[0,14],g:[0,17],m:'vvvvllllssssppggggrr'}];
+function trQ(i){if(PH[i].kg!=null)return kanaQ(PH[i].kg);const P=PH[i],G={v:()=>mkV(P.v[0],P.v[1],0,9),l:()=>mkV(P.v[0],P.v[1],1,9),s:()=>mkS(9),r:()=>mkR(9),p:()=>mkPs(P.p),g:()=>mkGs(P.g),k:()=>mkV(21,24,0,9)},bag={};
+ return [...P.m].map(c=>{if(!bag[c]||!bag[c].length)bag[c]=G[c]();return bag[c].shift()}).filter(Boolean)}
+function trStart(i){ex={mi:-1,tr:i,l:trQ(i),i:0,s:0,w:[],a:false,c:-1};tab='trail';render();const f=ex.l[0];if(f&&f.s)say(f.s)}
+function trSave(){const i=ex.tr,pct=Math.round(100*ex.s/ex.l.length);ex.saved=true;S.tr[i]=Math.max(S.tr[i]||0,pct);try{localStorage.setItem('nhxp',JSON.stringify(S))}catch(e){}if(pct>=70)xpOnce('ph'+i,30);xpBar()}
+function trWrite(){const i=ex&&ex.tr!=null?ex.tr:-1;if(i>=0&&PH[i].kg!=null){kwOpen(PH[i].kg,'t');return}kOpen(Math.floor(Math.random()*K.length));kMode(1)}
+function trResult(){const i=ex.tr,pct=Math.round(100*ex.s/ex.l.length),ok=pct>=70,st='text-align:left';
+ return `<div class='panel' style='${st}'><h2 style='margin:0 0 6px'>${ok?'⭐ Fase concluída!':'Quase lá'}</h2><p>${ex.s}/${ex.l.length} (${pct}%) · ${ok?'próxima fase liberada':'você precisa de 70% para avançar'}</p>${ex.w.length?'<b>Para revisar:</b>':''}`+ex.w.map(q=>`<p>${q.q.replace(/<[^>]+>/g,' ')} → <b>${q.a}</b><br><small>${q.e}</small></p>`).join('')+`<p>${ok&&i+1<PH.length?`<button onclick='trStart(${i+1})' style='background:var(--ac);color:#fff'>Próxima fase →</button> `:''}<button onclick='trStart(${i})'>Refazer</button> <button onclick='trWrite()'>✍ Praticar escrita</button> <button onclick='ex=null;render()'>Trilha</button></p></div>`}
+function trailView(){
+ if(learnI!=null&&!ex)return learnView();
+ if(ex&&ex.tr!=null)return ex.i>=ex.l.length?trResult():exView();
+ return `<div class='panel' style='text-align:left'><b>Trilha N5</b><p class='sub'>Complete cada fase com 70% ou mais para liberar a próxima. Cada fase mistura vocabulário, audição, leitura e gramática. No fim, pratique a escrita.</p>`+PH.map((p,i)=>{const done=S.tr[i]>=70,open=i===0||S.tr[i-1]>=70;return `<button ${open?'':'disabled'} onclick='trStart(${i})' style='display:flex;align-items:center;gap:10px;width:100%;text-align:left;margin:6px 0;${open?'':'opacity:.5'}'><span style='font-size:1.6rem;min-width:36px;text-align:center'>${done?'⭐':open?p.e:'🔒'}</span><span><b>${i+1}. ${p.t}</b><br><small style='color:var(--mu)'>${p.d}${S.tr[i]!=null?' · melhor: '+S.tr[i]+'%':''}</small></span></button>`}).join('')+'</div>'}
+const _en2=exNext;exNext=function(){_en2();if(ex&&ex.tr!=null&&ex.i>=ex.l.length&&!ex.saved){trSave();render()}};
+{const sp=document.createElement('select');sp.setAttribute('aria-label','Velocidade do áudio');sp.innerHTML="<option value='1'>🔊 Normal</option><option value='0.7'>🐢 Lento</option><option value='0.5'>🐌 Muito lento</option>";try{SPD=+localStorage.getItem('nhspd')||1}catch(e){}sp.value=String(SPD);sp.onchange=()=>{SPD=+sp.value;try{localStorage.setItem('nhspd',sp.value)}catch(e){}say('こんにちは')};const lg=$('#lang'),w=document.createElement('div');w.style.cssText='display:flex;gap:6px';lg.before(w);w.append(sp,lg)}
+const KR={};H.forEach((c,i)=>KR[c]=R[i]);
+let learnI=null;
+function kanaQ(g){
+ const cum=KG.slice(0,g+1).flatMap(x=>[...x.k]),W=KG.slice(0,g+1).flatMap(x=>x.w.split(';').map(s=>s.split('|')));
+ const wr=(k,pool)=>sh(pool.filter(x=>x!==k)).slice(0,3);
+ const qa=k=>Q(k,KR[k],wr(KR[k],cum.map(c=>KR[c])),k+' = '+KR[k],k);
+ const qb=k=>Q(KR[k],k,wr(k,cum),KR[k]+' = '+k);
+ const qc=k=>Q('🔊 Qual caractere você ouviu?',k,wr(k,cum),KR[k]+' = '+k,k);
+ const qw=w=>Q(w[0],w[2],sh(W.filter(x=>x[2]!==w[2])).slice(0,3).map(x=>x[2]),w[0]+' ('+w[1]+')',w[0]);
+ return [...[...KG[g].k].map(qa),...sh(cum).slice(0,3).map(qb),...sh(cum).slice(0,3).map(qc),...sh(W).slice(0,2).map(qw)]}
+function learnAll(){[...KG[PH[learnI].kg].k].forEach((k,i)=>setTimeout(()=>say(k,0.5),i*1300))}
+function learnView(){
+ const G=KG[PH[learnI].kg],W=G.w.split(';').map(s=>s.split('|'));
+ return `<div class='panel' style='text-align:left'><button onclick='learnI=null;render()'>←</button><h2 style='margin:10px 0 4px'>Hiragana: ${G.t}</h2><p class='sub'>Você ainda não conhece estes caracteres. Toque para ouvir, repita em voz alta e treine escrevendo no papel. Depois vem o exercício.</p><div class='grid' style='grid-template-columns:repeat(${Math.min(5,G.k.length)},1fr)'>`+[...G.k].map(k=>`<button class='cell' onclick='say("${k}")'><b>${k}</b><span>${KR[k]}</span></button>`).join('')+`</div><p><button onclick='learnAll()'>🐢 Ouvir todos devagar</button> <button onclick='kwOpen(${PH[learnI].kg},"p")'>✍ Aprender a escrever</button> <button onclick='kwOpen(${PH[learnI].kg},"t")'>📝 Testar escrita</button></p><h3 style='margin:14px 0 4px'>Palavras com estes sons</h3>`+W.map(w=>`<p style='margin:4px 0'><button onclick='say("${w[0]}")'>${w[0]} 🔊</button> ${w[1]} — ${w[2]}</p>`).join('')+`<p><button onclick='trGo(${learnI})' style='background:var(--ac);color:#fff'>Começar exercícios →</button></p></div>`}
+function trGo(i){learnI=null;ex={mi:-1,tr:i,l:trQ(i),i:0,s:0,w:[],a:false,c:-1};tab='trail';render();const f=ex.l[0];if(f&&f.s)say(f.s)}
+function trStart(i){if(PH[i].kg!=null){learnI=i;ex=null;tab='trail';render();scrollTo(0,0);return}trGo(i)}
+'あ3い2う2え2お3か3き4く1け3こ2さ3し1す2さ3そ1た4ち2つ1て1と2な4に3ぬ2ね2の1は3ひ1ふ4へ1ほ4ま3み2む3め2も3や3ゆ2よ2ら2り2る1れ2ろ1わ2を3ん3'.replace(/(.)(\d)/gu,(m,k,n)=>{SC[k]=+n;return m});
+let kw=null;
+function kwOpen(g,m){let l=[...KG[g].k];if(m==='t')l=sh(l);kw={g,m,l,i:0,sc:0,done:[],pts:[],res:null,msg:'',ok:false,fin:false,cur:null};if(m==='t')say(l[0]);kwShow()}
+function kwCov(c){const I=ink(c),S=kw.pts.flatMap(rs);return I.length&&S.length?I.filter(p=>near(p,S,9)).length/I.length:0}
+function kwPt(e){const r=$('#kwsv').getBoundingClientRect();return[(e.clientX-r.left)/r.width*100,(e.clientY-r.top)/r.height*100]}
+function kwShow(){
+ let o=$('#ov');if(!o){o=document.createElement('div');o.id='ov';o.style.cssText='position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.6);overflow:auto;padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px))';o.onclick=e=>{if(e.target===o)kClose()};document.body.appendChild(o)}
+ const t=kw.m==='t',box="background:var(--bg);color:var(--tx);border-radius:16px;padding:12px;max-width:380px;margin:0 auto";
+ if(kw.fin){o.innerHTML=`<div style='${box}'><h2>Resultado: ${kw.sc}/${kw.l.length}</h2><p><button onclick='kwOpen(${kw.g},"${kw.m}")'>Refazer</button> <button onclick='kClose()'>Fechar</button></p></div>`;return}
+ const c=kw.l[kw.i],N=SC[c],last=kw.i+1>=kw.l.length;
+ let s=`<div style='${box}'><div style='display:flex;justify-content:space-between;align-items:center'><b>${t?'📝 Teste de escrita':'✍ Aprender a escrever'}</b><button onclick='kClose()'>✕</button></div><p class='sub' style='text-align:center'>${kw.i+1}/${kw.l.length}</p><div style='text-align:center'><p style='margin:4px 0'>${t?'Escreva o caractere:':'Escreva seguindo o modelo:'}<br><b style='font-size:${t?'2rem':'1.2rem'}'>${KR[c]}</b> · ${N} traço${N>1?'s':''} <button onclick='say("${c}")'>🔊</button></p><svg id='kwsv' viewBox='0 0 100 100' width='260' height='260' style='touch-action:none;max-width:100%;background:var(--card);border:1px solid var(--bd);border-radius:12px;cursor:crosshair' onpointerdown='kwD(event)' onpointermove='kwM(event)' onpointerup='kwU(event)' onpointerleave='kwU(event)'><path d='M50 0V100M0 50H100' stroke='var(--bd)' stroke-dasharray='3 3'/>`;
+ if(!t||kw.res)s+=`<text x='50' y='78' font-size='80' text-anchor='middle' fill='var(--tx)' opacity='.18'>${c}</text>`;
+ kw.done.forEach((d,i)=>s+=`<path d='${d}' fill='none' stroke='${kw.res?(kw.res.good[i]?'var(--ok)':'var(--no)'):(t?'var(--tx)':'var(--ok)')}' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/>`);
+ s+=`<path id='kwpc' d='' fill='none' stroke='var(--tx)' stroke-width='4' stroke-linecap='round'/></svg><p class='sub'>${kw.msg||(t?'Escreva de memória e toque em Conferir.':'Trace por cima do modelo, traço por traço.')}</p><p><button onclick='kwUndo()'>↩</button> <button onclick='kwClear()'>🗑</button>`;
+ if(t&&!kw.res)s+=` <button onclick='kwCheck()' style='background:var(--ac);color:#fff'>Conferir</button>`;
+ if((t&&kw.res)||(!t&&kw.ok))s+=` <button onclick='kwNext()' style='background:var(--ac);color:#fff'>${last?'Ver resultado':'Próximo →'}</button>`;
+ s+='</p>';
+ if(!t)s+=`<p><a href='https://www.google.com/search?q=${encodeURIComponent(c+' 書き順 hiragana')}' target='_blank' rel='noopener' style='color:var(--ac)'>Ver a ordem dos traços ↗</a></p>`;
+ o.innerHTML=s+'</div></div>'}
+function kwD(e){e.preventDefault();if(kw.res||(kw.m==='p'&&kw.ok))return;kw.cur=[kwPt(e)];try{$('#kwsv').setPointerCapture(e.pointerId)}catch(x){}$('#kwpc').setAttribute('d',pathOf(kw.cur))}
+function kwM(e){if(!kw.cur)return;kw.cur.push(kwPt(e));$('#kwpc').setAttribute('d',pathOf(kw.cur))}
+function kwU(e){
+ if(!kw.cur)return;const a=kw.cur;kw.cur=null;
+ if(a.length<3){kwShow();return}
+ const c=kw.l[kw.i],N=SC[c],d=pathOf(a);
+ if(kw.m==='t'){if(kw.done.length<N+3){kw.done.push(d);kw.pts.push(a)}kwShow();return}
+ if(strokePrec(a,c)<0.6){kw.msg='Esse traço não segue o modelo. Tente de novo.';kwShow();return}
+ if(!dirOK(a)){kw.msg='Direção estranha: da esquerda para a direita e de cima para baixo.';kwShow();return}
+ kw.done.push(d);kw.pts.push(a);
+ if(kw.done.length>=N){if(kwCov(c)>=0.5){kw.ok=true;kw.sc++;kw.msg='✅ Muito bem!';xpOnce('kwp'+c,3)}else kw.msg='Faltou cobrir parte do caractere. Toque em 🗑 e tente de novo.'}
+ else kw.msg='Traço '+kw.done.length+' de '+N+'.';
+ kwShow()}
+function kwCheck(){
+ const c=kw.l[kw.i],N=SC[c];if(!kw.done.length)return;
+ const good=kw.pts.map(a=>dirOK(a)&&strokePrec(a,c)>=0.7),cv=kwCov(c),okc=good.filter(Boolean).length,perfect=kw.done.length===N&&okc===N&&cv>=0.55;
+ if(perfect){kw.sc++;xpOnce('kwt'+c,5)}
+ kw.res={good};kw.msg=perfect?'Certo! ✅ (cobertura '+Math.round(cv*100)+'%)':`Traços certos: ${okc}/${kw.done.length}. O caractere tem ${N} traços. Cobertura: ${Math.round(cv*100)}%. Em vermelho: fora do lugar ou na direção errada.`;kwShow()}
+function kwNext(){kw.i++;if(kw.i>=kw.l.length)kw.fin=true;else{kw.done=[];kw.pts=[];kw.res=null;kw.msg='';kw.ok=false;if(kw.m==='t')say(kw.l[kw.i])}kwShow()}
+function kwUndo(){if(kw.res||kw.ok)return;kw.done.pop();kw.pts.pop();kw.msg='';kwShow()}
+function kwClear(){if(kw.res)return;kw.done=[];kw.pts=[];kw.ok=false;kw.msg='';kwShow()}
+$("#lang").onchange=e=>{L=e.target.value;document.documentElement.lang=L;render()};
+render();
+</script>
+</body>
+</html>
