@@ -49,6 +49,8 @@ export function kanaQ(g) {
 export function trQ(i) {
   const P = PH[i]
   if (P.kg != null) return kanaQ(P.kg)
+  const kv0 = P.v?.[0] ?? 21
+  const kv1 = P.v?.[1] ?? 24
   const G = {
     v: () => mkV(P.v[0], P.v[1], 0, 9),
     l: () => mkV(P.v[0], P.v[1], 1, 9),
@@ -56,7 +58,7 @@ export function trQ(i) {
     r: () => mkR(9),
     p: () => mkPs(P.p),
     g: () => mkGs(P.g),
-    k: () => mkV(21, 24, 0, 9),
+    k: () => mkV(kv0, kv1, 0, 9),
   }
   const bag = {}
   return [...P.m]
