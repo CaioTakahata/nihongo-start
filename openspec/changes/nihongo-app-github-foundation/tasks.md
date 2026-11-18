@@ -30,8 +30,8 @@
 
 ## 5. Entrega GitHub
 
-- [ ] 5.1 Inicializar repositório Git, fazer commit inicial do scaffold/app e verificar `git status` limpo após o commit
-- [ ] 5.2 Criar repositório no GitHub, configurar `remote origin` e push do branch `main`; verificar que o código aparece no GitHub
+- [x] 5.1 Inicializar repositório Git, fazer commit inicial do scaffold/app e verificar `git status` limpo após o commit
+- [x] 5.2 Criar repositório no GitHub, configurar `remote origin` e push do branch `main`; verificar que o código aparece no GitHub
 - [ ] 5.3 Adicionar workflow GitHub Actions de build + deploy para GitHub Pages a partir de `dist/`; verificar que o workflow conclui com sucesso e a URL pública carrega o app
 - [ ] 5.4 Documentar no README o fluxo “alterar → commit → push → testar na URL”; verificar que um push de mudança trivial (ex.: texto do subtítulo) reflete na Pages após o deploy
 

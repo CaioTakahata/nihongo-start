@@ -2,6 +2,9 @@
 
 App web para aprender japonês (JLPT N5 → N1). Stack: Vite + JavaScript vanilla.
 
+**Repositório:** https://github.com/CaioTakahata/nihongo-start  
+**Site (GitHub Pages):** https://caiotakahata.github.io/nihongo-start/ (após o workflow de deploy estar ativo)
+
 ## Rodar localmente
 
 ```bash
@@ -21,7 +24,8 @@ npm run preview
 1. Altere o código localmente e confira com `npm run dev`.
 2. `git add` + `git commit` + `git push` no branch `main`.
 3. O GitHub Actions faz build e publica no GitHub Pages.
-4. Abra a URL do Pages (veja a aba Actions / Settings → Pages) e faça hard refresh se necessário.
+4. Abra https://caiotakahata.github.io/nihongo-start/ (hard refresh se necessário).
+5. Em **Settings → Pages**, a source deve ser **GitHub Actions**.
 
 ## Estrutura
 
