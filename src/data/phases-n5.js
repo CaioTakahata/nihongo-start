@@ -1,278 +1,148 @@
+/** Trilha N5 alinhada à prova: kana → gramática → vocabulário temático → kanji → simulados.
+ * Índices de lição (LS): 0–35 vocabulário/gramática, 36–38 kanji, 39 plano.
+ */
 export const PH = [
+  // —— Kana ——
+  { t: 'Hiragana: あ行 (a i u e o)', e: 'あ', d: 'Aprender e praticar', kg: 0 },
+  { t: 'Hiragana: か行 (ka ki ku ke ko)', e: 'か', d: 'Aprender e praticar', kg: 1 },
+  { t: 'Hiragana: さ行 (sa shi su se so)', e: 'さ', d: 'Aprender e praticar', kg: 2 },
+  { t: 'Hiragana: た行 (ta chi tsu te to)', e: 'た', d: 'Aprender e praticar', kg: 3 },
+  { t: 'Hiragana: な行 (na ni nu ne no)', e: 'な', d: 'Aprender e praticar', kg: 4 },
+  { t: 'Hiragana: は行 (ha hi fu he ho)', e: 'は', d: 'Aprender e praticar', kg: 5 },
+  { t: 'Hiragana: ま行 (ma mi mu me mo)', e: 'ま', d: 'Aprender e praticar', kg: 6 },
+  { t: 'Hiragana: や行 (ya yu yo)', e: 'や', d: 'Aprender e praticar', kg: 7 },
+  { t: 'Hiragana: ら行 (ra ri ru re ro)', e: 'ら', d: 'Aprender e praticar', kg: 8 },
+  { t: 'Hiragana: わ・を・ん (wa wo n)', e: 'わ', d: 'Aprender e praticar', kg: 9 },
+  { t: 'Dakuten e combinações', e: 'が', d: '゛ ゜ っ e sons compostos', v: [3, 4], m: 'vvvlllss' },
+  { t: 'Katakana', e: 'ア', d: 'Palavras estrangeiras', v: [4, 5], m: 'vvvllssv' },
+  { t: 'Katakana reforço', e: 'カ', d: 'Leitura e memória', v: [4, 5], m: 'vvvvlllsss' },
+
+  // —— Base gramatical ——
+  { t: 'Cumprimentos e apresentação', e: '👋', d: 'Frases do dia a dia', v: [5, 7], m: 'vvlsssrv' },
+  { t: 'Números 0–10', e: '🔢', d: 'Contar no básico', v: [7, 8], m: 'vvvlllss' },
+  { t: 'Partículas', e: 'は', d: 'は の を に で と も', v: [8, 9], p: [0, 14], m: 'vlpppppr' },
+  { t: 'Partículas em frases', e: 'を', d: 'Uso em contexto', v: [8, 9], p: [0, 18], m: 'vlpppppppr' },
+  { t: 'Verbos na forma ます', e: '🍙', d: 'Presente / futuro educado', v: [9, 10], g: [0, 4], m: 'vvlsgggr' },
+  { t: 'Verbos: passado e negativo', e: 'ました', d: 'ます / ません / ました', v: [9, 10], g: [0, 4], m: 'vvlsggggrr' },
+  { t: 'Dias da semana e horas', e: '🕒', d: 'ようび e なんじ', v: [10, 11], m: 'vvvlsssr' },
+  { t: 'Demonstrativos', e: 'これ', d: 'これ・それ・あれ・ここ', v: [11, 12], m: 'vvvlssrr' },
+  { t: 'Adjetivos い e な', e: 'い', d: 'Conjugações básicas', v: [12, 13], g: [7, 11], m: 'vvvlsgggrr' },
+  { t: 'Adjetivos e passado', e: '🌸', d: 'かった / でした', v: [12, 15], g: [7, 11], m: 'vvlsggsr' },
+  { t: 'Posição e existência', e: 'ある', d: 'あります・います', v: [13, 14], g: [10, 16], m: 'vvlsggsrrr' },
+  { t: 'Existência e contadores', e: '📦', d: 'Contar coisas e pessoas', v: [13, 16], g: [10, 17], m: 'vvlsggsr' },
+  { t: 'Calendário e datas', e: '📅', d: 'Meses, dias e aniversário', v: [16, 17], m: 'vvvlllss' },
+  { t: 'Forma て', e: 'て', d: 'Pedidos e sequência', v: [17, 18], g: [3, 8], m: 'vlsggggr' },
+  { t: 'Forma て em contexto', e: '🔁', d: 'てください / ています', v: [17, 18], g: [3, 8], m: 'vlsggggrr' },
+  { t: 'Negativo, desejo e convites', e: 'たい', d: 'ない・たい・ませんか', v: [18, 20], g: [0, 12], m: 'vlsggggr' },
+  { t: 'Comparações e から・まで', e: 'より', d: 'Gramática do N5', v: [19, 20], g: [12, 22], m: 'vvlsgggrr' },
+
+  // —— Checkpoint ——
   {
-    "t": "Hiragana: あ行 (a i u e o)",
-    "e": "あ",
-    "d": "Aprender e praticar",
-    "kg": 0
+    t: 'Revisão intermediária',
+    e: '⭐',
+    d: 'Kana + gramática básica',
+    v: [0, 20],
+    p: [0, 18],
+    g: [0, 22],
+    m: 'vvvvllllssssppggggrr',
+  },
+
+  // —— Vocabulário temático da prova ——
+  { t: 'Família e cores', e: '👨‍👩‍👧', d: 'Vocabulário da prova', v: [20, 21], m: 'vvvvlllssr' },
+  { t: 'Números grandes', e: '💯', d: '11–100, 百, 千, 万', v: [21, 22], m: 'vvvvlllsss' },
+  { t: 'Corpo e saúde', e: '🩺', d: 'Sintomas e partes do corpo', v: [22, 23], m: 'vvvvlllssr' },
+  { t: 'Roupas e aparência', e: '👕', d: 'Vestir e descrever', v: [23, 24], m: 'vvvvlllssr' },
+  { t: 'Comida e restaurante', e: '🍜', d: 'Cardápio e pedidos', v: [24, 25], m: 'vvvvlllsssr' },
+  { t: 'Casa e cômodos', e: '🏠', d: 'Móveis e rotina em casa', v: [25, 26], m: 'vvvvlllssr' },
+  { t: 'Escola e estudos', e: '📚', d: 'Sala de aula e materiais', v: [26, 27], m: 'vvvvlllsssr' },
+  { t: 'Transporte e cidade', e: '🚃', d: 'Meios e lugares públicos', v: [27, 28], m: 'vvvvlllsssr' },
+  { t: 'Direções', e: '🧭', d: 'Esquerda, direita, perto', v: [28, 29], m: 'vvvvlllssr' },
+  { t: 'Trabalho e rotina', e: '💼', d: 'Profissões e hábitos', v: [29, 30], m: 'vvvvlllssr' },
+  { t: 'Tempo e clima', e: '⛅', d: 'Estações e previsão', v: [30, 31], m: 'vvvvlllsssr' },
+  { t: 'Compras e dinheiro', e: '💴', d: 'Preço e loja', v: [31, 32], m: 'vvvvlllssr' },
+  { t: 'Verbos essenciais', e: '✍️', d: 'Alta frequência N5', v: [32, 33], m: 'vvvvlllsssr' },
+  { t: 'Sentimentos', e: '😊', d: 'Humor e preferências', v: [33, 34], m: 'vvvvlllssr' },
+  { t: 'Natureza e animais', e: '🌸', d: 'Cenário e textos curtos', v: [34, 35], m: 'vvvvlllssr' },
+  { t: 'Expressões da prova', e: '📝', d: 'Instruções e conectores', v: [35, 36], m: 'vvvvlllsssr' },
+
+  // —— Misturas de vocabulário ——
+  {
+    t: 'Vocabulário misto A',
+    e: '🅰️',
+    d: 'Família → comida → casa',
+    v: [20, 26],
+    m: 'vvvvvvvvlllssssrr',
   },
   {
-    "t": "Hiragana: か行 (ka ki ku ke ko)",
-    "e": "か",
-    "d": "Aprender e praticar",
-    "kg": 1
+    t: 'Vocabulário misto B',
+    e: '🅱️',
+    d: 'Cidade → clima → compras',
+    v: [26, 32],
+    m: 'vvvvvvvvlllssssrr',
   },
   {
-    "t": "Hiragana: さ行 (sa shi su se so)",
-    "e": "さ",
-    "d": "Aprender e praticar",
-    "kg": 2
+    t: 'Vocabulário misto C',
+    e: '🅲',
+    d: 'Verbos → sentimentos → prova',
+    v: [32, 36],
+    m: 'vvvvvvvvlllssssrr',
   },
   {
-    "t": "Hiragana: た行 (ta chi tsu te to)",
-    "e": "た",
-    "d": "Aprender e praticar",
-    "kg": 3
+    t: 'Audição: vida diária',
+    e: '👂',
+    d: 'Ouvir frases N5',
+    v: [5, 36],
+    m: 'ssssssssssrr',
   },
   {
-    "t": "Hiragana: な行 (na ni nu ne no)",
-    "e": "な",
-    "d": "Aprender e praticar",
-    "kg": 4
+    t: 'Leitura: textos curtos',
+    e: '📖',
+    d: 'Compreensão N5',
+    v: [5, 36],
+    m: 'rrrrrrrrvvss',
+  },
+
+  // —— Kanji ——
+  { t: 'Kanji: números e tempo', e: '漢', d: '百千万円時分…', v: [36, 37], m: 'vvvvkkkkllss' },
+  { t: 'Kanji: pessoas e natureza', e: '花', d: '男女子父母友…', v: [37, 38], m: 'vvvvkkkkllss' },
+  { t: 'Kanji: ações e descrições', e: '行', d: '食飲見聞読…', v: [38, 39], m: 'vvvvkkkkllss' },
+  { t: 'Kanji misto N5', e: '学', d: 'Todos os kanji da trilha', v: [36, 39], m: 'vvvvkkkkkkllssrr' },
+
+  // —— Gramática reforço ——
+  {
+    t: 'Gramática reforço N5',
+    e: '📐',
+    d: 'Partículas + conjugações',
+    v: [8, 20],
+    p: [0, 18],
+    g: [0, 28],
+    m: 'vlppppgggggsrrr',
   },
   {
-    "t": "Hiragana: は行 (ha hi fu he ho)",
-    "e": "は",
-    "d": "Aprender e praticar",
-    "kg": 5
+    t: 'Revisão geral N5',
+    e: '🔁',
+    d: 'Vocabulário + gramática + audição',
+    v: [0, 36],
+    p: [0, 18],
+    g: [0, 28],
+    m: 'vvvvllllssssppggggrr',
   },
   {
-    "t": "Hiragana: ま行 (ma mi mu me mo)",
-    "e": "ま",
-    "d": "Aprender e praticar",
-    "kg": 6
+    t: 'Simulado parcial',
+    e: '📋',
+    d: 'Vocabulário, leitura e gramática',
+    v: [5, 36],
+    p: [0, 18],
+    g: [0, 28],
+    m: 'vvvvllllssrrppggggkk',
   },
   {
-    "t": "Hiragana: や行 (ya yu yo)",
-    "e": "や",
-    "d": "Aprender e praticar",
-    "kg": 7
+    t: 'Simulado final N5',
+    e: '🏆',
+    d: 'Prova completa — todas as áreas',
+    v: [0, 39],
+    p: [0, 18],
+    g: [0, 28],
+    m: 'vvvvllllssssrrppggggkk',
   },
-  {
-    "t": "Hiragana: ら行 (ra ri ru re ro)",
-    "e": "ら",
-    "d": "Aprender e praticar",
-    "kg": 8
-  },
-  {
-    "t": "Hiragana: わ・を・ん (wa wo n)",
-    "e": "わ",
-    "d": "Aprender e praticar",
-    "kg": 9
-  },
-  {
-    "t": "Katakana",
-    "e": "ア",
-    "d": "Palavras estrangeiras",
-    "v": [
-      4,
-      5
-    ],
-    "m": "vvvllssv"
-  },
-  {
-    "t": "Cumprimentos e apresentação",
-    "e": "👋",
-    "d": "Frases do dia a dia",
-    "v": [
-      5,
-      7
-    ],
-    "m": "vvlsssrv"
-  },
-  {
-    "t": "Números",
-    "e": "🔢",
-    "d": "Contar de 0 a 10",
-    "v": [
-      7,
-      8
-    ],
-    "m": "vvvlllss"
-  },
-  {
-    "t": "Partículas",
-    "e": "は",
-    "d": "は の を に で と も",
-    "v": [
-      8,
-      9
-    ],
-    "p": [
-      0,
-      14
-    ],
-    "m": "vlpppppr"
-  },
-  {
-    "t": "Verbos",
-    "e": "🍙",
-    "d": "Forma ます",
-    "v": [
-      9,
-      10
-    ],
-    "g": [
-      0,
-      3
-    ],
-    "m": "vvlsgggr"
-  },
-  {
-    "t": "Adjetivos e passado",
-    "e": "🌸",
-    "d": "い e な, passado",
-    "v": [
-      12,
-      15
-    ],
-    "g": [
-      7,
-      10
-    ],
-    "m": "vvlsggsr"
-  },
-  {
-    "t": "Existência e contadores",
-    "e": "📦",
-    "d": "あります, います, contar",
-    "v": [
-      13,
-      16
-    ],
-    "g": [
-      10,
-      17
-    ],
-    "m": "vvlsggsr"
-  },
-  {
-    "t": "Forma て, ない e convites",
-    "e": "🔁",
-    "d": "Gramática do N5",
-    "v": [
-      17,
-      20
-    ],
-    "g": [
-      3,
-      7
-    ],
-    "m": "vlsggggr"
-  },
-  {
-    "t": "Kanji",
-    "e": "漢",
-    "d": "Leitura e significado",
-    "v": [
-      21,
-      24
-    ],
-    "m": "vvvvlkkr"
-  },
-  {
-    "t": "Revisão intermediária",
-    "e": "⭐",
-    "d": "Checkpoint: kana, vocabulário e gramática básica",
-    "v": [
-      0,
-      21
-    ],
-    "p": [
-      0,
-      14
-    ],
-    "g": [
-      0,
-      17
-    ],
-    "m": "vvvvllllssssppggggrr"
-  },
-  {
-    "t": "Dakuten e combinações",
-    "e": "が",
-    "d": "゛ ゜ っ e sons compostos",
-    "v": [3, 4],
-    "m": "vvvlllss"
-  },
-  {
-    "t": "Dias da semana e horas",
-    "e": "🕒",
-    "d": "ようび e なんじ",
-    "v": [10, 11],
-    "m": "vvvlsssr"
-  },
-  {
-    "t": "Demonstrativos",
-    "e": "これ",
-    "d": "これ・それ・あれ・ここ",
-    "v": [11, 12],
-    "m": "vvvlssrr"
-  },
-  {
-    "t": "Calendário e datas",
-    "e": "📅",
-    "d": "Meses, dias e aniversário",
-    "v": [16, 17],
-    "m": "vvvlllss"
-  },
-  {
-    "t": "Vocabulário do dia a dia",
-    "e": "🏠",
-    "d": "Família, cores, comida e lugares",
-    "v": [20, 21],
-    "m": "vvvvlllssr"
-  },
-  {
-    "t": "Kanji: pessoas e natureza",
-    "e": "花",
-    "d": "Leitura e significado",
-    "v": [22, 23],
-    "m": "vvvvlkkr"
-  },
-  {
-    "t": "Kanji: ações e descrições",
-    "e": "行",
-    "d": "Verbos e adjetivos em kanji",
-    "v": [23, 24],
-    "m": "vvvvlkkr"
-  },
-  {
-    "t": "Forma て em contexto",
-    "e": "て",
-    "d": "Pedidos, sequência e ています",
-    "v": [17, 18],
-    "g": [3, 7],
-    "m": "vlsggggr"
-  },
-  {
-    "t": "Negativo, desejo e convites",
-    "e": "たい",
-    "d": "ない・たい・ませんか",
-    "v": [18, 20],
-    "g": [0, 7],
-    "m": "vlsggggr"
-  },
-  {
-    "t": "Audição intensiva",
-    "e": "👂",
-    "d": "Ouvir e entender frases N5",
-    "v": [5, 21],
-    "m": "ssssssssrr"
-  },
-  {
-    "t": "Leitura intensiva",
-    "e": "📖",
-    "d": "Textos curtos e compreensão",
-    "v": [5, 21],
-    "m": "rrrrrrvvss"
-  },
-  {
-    "t": "Simulado final N5",
-    "e": "🏆",
-    "d": "Todas as áreas — prova completa",
-    "v": [0, 24],
-    "p": [0, 14],
-    "g": [0, 17],
-    "m": "vvvvllllssssrrppggggkk"
-  }
-];
+]

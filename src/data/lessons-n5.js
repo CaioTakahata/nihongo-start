@@ -100,28 +100,103 @@ export const LS = [
     "v": "いっしょに|issho ni|juntos;すき|suki|gostar;きらい|kirai|não gostar;じょうず|jouzu|habilidoso;へた|heta|ruim em;から|kara|de, desde;まで|made|até;より|yori|do que;いちばん|ichiban|o mais"
   },
   {
-    "t": "Vocabulário temático",
-    "b": "<p>Família (a sua: ちち, はは; a dos outros: おとうさん, おかあさん), cores, comida e lugares aparecem muito na prova. Revise lendo em voz alta.</p>",
-    "v": "ちち|chichi|meu pai;はは|haha|minha mãe;あに|ani|meu irmão mais velho;あね|ane|minha irmã mais velha;おとうと|otouto|irmão mais novo;いもうと|imouto|irmã mais nova;あか|aka|vermelho;あお|ao|azul;しろ|shiro|branco;くろ|kuro|preto;たまご|tamago|ovo;にく|niku|carne;やさい|yasai|verdura;おちゃ|ocha|chá;えき|eki|estação;びょういん|byouin|hospital;ぎんこう|ginkou|banco;としょかん|toshokan|biblioteca;でんしゃ|densha|trem;くるま|kuruma|carro"
+    "t": "Vocabulário temático: família e cores",
+    "b": "<p>Família (a sua: ちち, はは; a dos outros: おとうさん, おかあさん) e cores caem muito no N5. Revise lendo em voz alta.</p>",
+    "v": "ちち|chichi|meu pai;はは|haha|minha mãe;あに|ani|meu irmão mais velho;あね|ane|minha irmã mais velha;おとうと|otouto|irmão mais novo;いもうと|imouto|irmã mais nova;おとうさん|otousan|pai (de outro);おかあさん|okaasan|mãe (de outro);おじいさん|ojiisan|avô;おばあさん|obaasan|avó;あか|aka|vermelho;あお|ao|azul;しろ|shiro|branco;くろ|kuro|preto;きいろ|kiiro|amarelo;みどり|midori|verde;ちゃいろ|chairo|marrom;ピンク|pinku|rosa;かぞく|kazoku|família"
+  },
+  {
+    "t": "Números grandes e quantidades",
+    "b": "<p>No N5 você precisa de 11–100, 百, 千, 万 e quantidades. 20 = にじゅう, 100 = ひゃく (exceções: さんびゃく, ろっぴゃく, はっぴゃく).</p>",
+    "v": "じゅういち|juuichi|11;にじゅう|nijuu|20;さんじゅう|sanjuu|30;よんじゅう|yonjuu|40;ごじゅう|gojuu|50;ひゃく|hyaku|100;にひゃく|nihyaku|200;せん|sen|1000;まん|man|10.000;なんにん|nannin|quantas pessoas;いくつ|ikutsu|quantos;どのくらい|dono kurai|quanto / aproximadamente;だいたい|daitai|mais ou menos;ぜんぶ|zenbu|tudo;みんな|minna|todos;すこし|sukoshi|um pouco;たくさん|takusan|muito;はんぶん|hanbun|metade"
+  },
+  {
+    "t": "Corpo e saúde",
+    "b": "<p>Vocabulário típico de diálogo médico e bem-estar no N5.</p>",
+    "v": "あたま|atama|cabeça;かお|kao|rosto;め|me|olho;みみ|mimi|orelha;はな|hana|nariz;くち|kuchi|boca;て|te|mão;あし|ashi|pé / perna;おなか|onaka|barriga;せき|seki|tosse;ねつ|netsu|febre;かぜ|kaze|resfriado;びょうき|byouki|doença;くすり|kusuri|remédio;いたい|itai|dolorido;だいじょうぶ|daijoubu|está bem;つかれました|tsukaremashita|estou cansado(a)"
+  },
+  {
+    "t": "Roupas e aparência",
+    "b": "<p>Compras e descrição de pessoas: roupas + きます / ぬぎます.</p>",
+    "v": "ふく|fuku|roupa;シャツ|shatsu|camisa;ズボン|zubon|calça;スカート|sukaato|saia;ドレス|doresu|vestido;くつ|kutsu|sapato;くつした|kutsushita|meia;ぼうし|boushi|chapéu;めがね|megane|óculos;かばん|kaban|bolsa;きます|kimasu|vestir;ぬぎます|nugimasu|tirar (roupa);サイズ|saizu|tamanho;きれい|kirei|bonito / limpo;だんせい|dansei|homem;じょせい|josei|mulher"
+  },
+  {
+    "t": "Comida e restaurante",
+    "b": "<p>Cardápio, pedidos e refeições — tema frequente em audição e leitura N5.</p>",
+    "v": "あさごはん|asagohan|café da manhã;ひるごはん|hirugohan|almoço;ばんごはん|bangohan|jantar;おちゃ|ocha|chá;ぎゅうにゅう|gyuunyuu|leite;たまご|tamago|ovo;にく|niku|carne;やさい|yasai|verdura;くだもの|kudamono|fruta;ラーメン|raamen|lámen;すし|sushi|sushi;メニュー|menyuu|cardápio;ちゅうもん|chuumon|pedido;おいしい|oishii|gostoso;まずい|mazui|ruim (sabor);おなかが すきました|onaka ga sukimashita|estou com fome;のどが かわきました|nodo ga kawakimashita|estou com sede;レストラン|resutoran|restaurante;みず|mizu|água;ごはん|gohan|arroz / refeição"
+  },
+  {
+    "t": "Casa e cômodos",
+    "b": "<p>Descrição de casa, móveis e objetos do cotidiano.</p>",
+    "v": "うち|uchi|casa;へや|heya|quarto;だいどころ|daidokoro|cozinha;トイレ|toire|banheiro;おふろ|ofuro|banho;まど|mado|janela;ドア|doa|porta;ベッド|beddo|cama;つくえ|tsukue|mesa;いす|isu|cadeira;ほんだな|hondana|estante;れいぞうこ|reizouko|geladeira;でんき|denki|luz / eletricidade;かぎ|kagi|chave;そうじ|souji|limpeza;せんたく|sentaku|lavagem de roupa;にわ|niwa|jardim;アパート|apaato|apartamento"
+  },
+  {
+    "t": "Escola e estudos",
+    "b": "<p>Vocabulário escolar e de estudo — base da prova e dos textos curtos.</p>",
+    "v": "がっこう|gakkou|escola;だいがく|daigaku|universidade;きょうしつ|kyoushitsu|sala de aula;じゅぎょう|jugyou|aula;しゅくだい|shukudai|lição de casa;テスト|tesuto|prova;じしょ|jisho|dicionário;えんぴつ|enpitsu|lápis;ペン|pen|caneta;ノート|nooto|caderno;かみ|kami|papel;けしゴム|keshigomu|borracha;べんきょうします|benkyou shimasu|estudar;おしえます|oshiemasu|ensinar;ならいます|naraimasu|aprender;わかります|wakarimasu|entender;しつもん|shitsumon|pergunta;せんせい|sensei|professor(a);がくせい|gakusei|estudante"
+  },
+  {
+    "t": "Transporte e cidade",
+    "b": "<p>Locomoção e lugares públicos: muito usado em diálogos de audição.</p>",
+    "v": "えき|eki|estação;でんしゃ|densha|trem;ちかてつ|chikatetsu|metrô;バス|basu|ônibus;タクシー|takushii|táxi;ひこうき|hikouki|avião;ふね|fune|barco;くるま|kuruma|carro;じてんしゃ|jitensha|bicicleta;みち|michi|rua;こうえん|kouen|parque;びょういん|byouin|hospital;ぎんこう|ginkou|banco;ゆうびんきょく|yuubinkyoku|correio;スーパー|suupaa|supermercado;コンビニ|konbini|loja de conveniência;デパート|depaato|shopping;としょかん|toshokan|biblioteca;くうこう|kuukou|aeroporto"
+  },
+  {
+    "t": "Direções e localização",
+    "b": "<p>Pedir e dar direções: direita, esquerda, perto, longe.</p>",
+    "v": "みぎ|migi|direita;ひだり|hidari|esquerda;まっすぐ|massugu|em frente;ちかく|chikaku|perto;とおい|tooi|longe;となり|tonari|ao lado;むかい|mukai|em frente / do outro lado;かど|kado|esquina;こうさてん|kousaten|cruzamento;しんごう|shingou|semáforo;ちず|chizu|mapa;こちら|kochira|por aqui;そちら|sochira|por aí;どちら|dochira|qual lado;つぎ|tsugi|próximo;まえ|mae|frente;うしろ|ushiro|atrás"
+  },
+  {
+    "t": "Trabalho e rotina",
+    "b": "<p>Profissões, empresa e hábitos diários.</p>",
+    "v": "しごと|shigoto|trabalho;かいしゃ|kaisha|empresa;かいしゃいん|kaishain|funcionário;いしゃ|isha|médico;かんごし|kangoshi|enfermeiro(a);エンジニア|enjinia|engenheiro;アルバイト|arubaito|emprego de meio período;やすみ|yasumi|folga;はたらきます|hatarakimasu|trabalhar;やすみます|yasumimasu|descansar;おきます|okimasu|acordar;ねます|nemasu|dormir;かえります|kaerimasu|voltar;でます|demasu|sair;はいります|hairimasu|entrar;まいにち|mainichi|todo dia;ときどき|tokidoki|às vezes;いつも|itsumo|sempre"
+  },
+  {
+    "t": "Tempo e clima",
+    "b": "<p>Expressões de tempo e previsão do tempo — clássico do N5.</p>",
+    "v": "てんき|tenki|tempo (clima);はれ|hare|ensolarado;くもり|kumori|nublado;あめ|ame|chuva;ゆき|yuki|neve;かぜ|kaze|vento;あつい|atsui|quente;さむい|samui|frio;すずしい|suzushii|fresco;あたたかい|atatakai|morno;きせつ|kisetsu|estação;はる|haru|primavera;なつ|natsu|verão;あき|aki|outono;ふゆ|fuyu|inverno;あさ|asa|manhã;ひる|hiru|meio-dia;ばん|ban|noite;よる|yoru|noite (tarde)"
+  },
+  {
+    "t": "Compras e dinheiro",
+    "b": "<p>Diálogos de loja: preço, troco, querer comprar.</p>",
+    "v": "かいもの|kaimono|compras;みせ|mise|loja;ねだん|nedan|preço;おかね|okane|dinheiro;うります|urimasu|vender;かいます|kaimasu|comprar;ください|kudasai|por favor (me dê);みせます|misemasu|mostrar;もっていきます|motte ikimasu|levar;もってきます|motte kimasu|trazer;レシート|reshiito|recibo;げんきん|genkin|dinheiro vivo;カード|kaado|cartão;たかい|takai|caro;やすい|yasui|barato;ちょうど|choudo|exato;いくら|ikura|quanto custa;えん|en|iene"
+  },
+  {
+    "t": "Verbos essenciais do N5",
+    "b": "<p>Verbos de alta frequência. Memorize com frases curtas.</p>",
+    "v": "かきます|kakimasu|escrever;よみます|yomimasu|ler;はなします|hanashimasu|falar;まちます|machimasu|esperar;あいます|aimasu|encontrar;つかいます|tsukaimasu|usar;つくります|tsukurimasu|fazer / preparar;あけます|akemasu|abrir;しめます|shimemasu|fechar;わすれます|wasuremasu|esquecer;おもいだします|omoidashimasu|lembrar;はじめます|hajimemasu|começar;おわります|owarimasu|terminar;できます|dekimasu|conseguir / poder;あるきます|arukimasu|andar;はしります|hashirimasu|correr;およぎます|oyogimasu|nadar;うたいます|utaimasu|cantar;おどります|odorimasu|dançar"
+  },
+  {
+    "t": "Sentimentos e estados",
+    "b": "<p>Adjetivos e expressões para humor, preferência e condição.</p>",
+    "v": "うれしい|ureshii|feliz;かなしい|kanashii|triste;おもしろい|omoshiroi|interessante;つまらない|tsumaranai|entediante;たいへん|taihen|difícil / puxado;かんたん|kantan|simples;すき|suki|gostar;だいすき|daisuki|adorar;きらい|kirai|não gostar;じょうず|jouzu|bom em;へた|heta|ruim em;げんき|genki|com saúde / animado;ねむい|nemui|com sono;おなかが いっぱい|onaka ga ippai|estou cheio(a);ひま|hima|livre;いそがしい|isogashii|ocupado;さびしい|sabishii|solitário"
+  },
+  {
+    "t": "Natureza e animais",
+    "b": "<p>Natureza, animais e palavras de cenário usadas em textos curtos.</p>",
+    "v": "やま|yama|montanha;かわ|kawa|rio;うみ|umi|mar;みずうみ|mizuumi|lago;もり|mori|floresta;はな|hana|flor;き|ki|árvore;そら|sora|céu;つき|tsuki|lua;ほし|hoshi|estrela;いぬ|inu|cachorro;ねこ|neko|gato;とり|tori|pássaro;うま|uma|cavalo;むし|mushi|inseto;どうぶつ|doubutsu|animal;しぜん|shizen|natureza;はなび|hanabi|fogos de artifício"
+  },
+  {
+    "t": "Expressões úteis da prova N5",
+    "b": "<p>Palavras e conectores que aparecem nas instruções e diálogos da prova.</p>",
+    "v": "もんだい|mondai|questão;こたえ|kotae|resposta;れい|rei|exemplo;つぎ|tsugi|próximo;だから|dakara|por isso;でも|demo|mas;そして|soshite|e então;それから|sorekara|depois disso;もう|mou|já;まだ|mada|ainda;たぶん|tabun|talvez;きっと|kitto|com certeza;ぜひ|zehi|com vontade;ちょっと|chotto|um pouco;お願いします|onegai shimasu|por favor;どうぞ|douzo|por favor / aqui está;どうも|doumo|obrigado (curto);どうして|doushite|por quê;なぜ|naze|por quê"
   },
   {
     "t": "Kanji N5 (1): números e tempo",
     "b": "<p>Aprenda kanji dentro de palavras. Leituras: minúsculas = kun (japonesa), katakana = on (chinesa).</p>",
-    "v": "百|ヒャク|cem;千|セン|mil;万|マン|dez mil;円|エン|iene;年|とし・ネン|ano;時|ジ|hora;分|フン・ブン|minuto;半|ハン|metade;今|いま・コン|agora;毎|マイ|todo;週|シュウ|semana;前|まえ・ゼン|antes;後|あと・ゴ|depois;間|あいだ・カン|intervalo;何|なに・カ|o quê"
+    "v": "百|ヒャク|cem;千|セン|mil;万|マン|dez mil;円|エン|iene;年|とし・ネン|ano;時|ジ|hora;分|フン・ブン|minuto;半|ハン|metade;今|いま・コン|agora;毎|マイ|todo;週|シュウ|semana;前|まえ・ゼン|antes;後|あと・ゴ|depois;間|あいだ・カン|intervalo;何|なに・カ|o quê;日|ひ・ニチ|dia;月|つき・ゲツ|mês / lua;火|ひ・カ|fogo;水|みず・スイ|água;木|き・モク|árvore;金|かね・キン|ouro / dinheiro;土|つち・ド|terra"
   },
   {
     "t": "Kanji N5 (2): pessoas e natureza",
-    "b": "<p>Aproveite: 女子 (おんなのこ, menina), 男子, 友だち, 学校, 天気 (tempo), 花見, 白い.</p>",
-    "v": "男|おとこ・ダン|homem;女|おんな・ジョ|mulher;子|こ・シ|criança;父|ちち・フ|pai;母|はは・ボ|mãe;友|とも・ユウ|amigo;先|さき・セン|à frente;校|コウ|escola;田|た・デン|arrozal;雨|あめ・ウ|chuva;天|テン|céu;気|キ|espírito, ar;花|はな・カ|flor;犬|いぬ・ケン|cachorro;林|はやし・リン|bosque;本|ほん・ホン|livro;白|しろ・ハク|branco"
+    "b": "<p>Aproveite: 女子, 男子, 友だち, 学校, 天気, 花見, 白い.</p>",
+    "v": "男|おとこ・ダン|homem;女|おんな・ジョ|mulher;子|こ・シ|criança;父|ちち・フ|pai;母|はは・ボ|mãe;友|とも・ユウ|amigo;先|さき・セン|à frente;校|コウ|escola;学|まなぶ・ガク|estudo;生|いきる・セイ|vida;田|た・デン|arrozal;雨|あめ・ウ|chuva;天|テン|céu;気|キ|espírito, ar;花|はな・カ|flor;犬|いぬ・ケン|cachorro;林|はやし・リン|bosque;本|ほん・ホン|livro;白|しろ・ハク|branco;山|やま・サン|montanha;川|かわ・セン|rio;人|ひと・ジン|pessoa"
   },
   {
     "t": "Kanji N5 (3): ações e descrições",
     "b": "<p>Os verbos aparecem com okurigana: 食べる, 飲む, 見る, 聞く, 読む, 書く, 行く, 来る, 出る, 入る, 休む, 買う.</p>",
-    "v": "上|うえ・ジョウ|em cima;下|した・カ|embaixo;中|なか・チュウ|meio, dentro;高|たかい・コウ|alto, caro;安|やすい・アン|barato;長|ながい・チョウ|longo;新|あたらしい・シン|novo;古|ふるい・コ|velho;多|おおい・タ|muito;少|すくない・ショウ|pouco;名|な・メイ|nome;国|くに・コク|país;語|ゴ|idioma;車|くるま・シャ|carro;電|デン|eletricidade;話|はなす・ワ|conversa;食|たべる・ショク|comer;飲|のむ・イン|beber;見|みる・ケン|ver;聞|きく・ブン|ouvir;読|よむ・ドク|ler;書|かく・ショ|escrever;行|いく・コウ|ir;来|くる・ライ|vir;出|でる・シュツ|sair;入|いる・ニュウ|entrar;休|やすむ・キュウ|descansar;買|かう・バイ|comprar"
+    "v": "上|うえ・ジョウ|em cima;下|した・カ|embaixo;中|なか・チュウ|meio, dentro;高|たかい・コウ|alto, caro;安|やすい・アン|barato;長|ながい・チョウ|longo;新|あたらしい・シン|novo;古|ふるい・コ|velho;多|おおい・タ|muito;少|すくない・ショウ|pouco;名|な・メイ|nome;国|くに・コク|país;語|ゴ|idioma;車|くるま・シャ|carro;電|デン|eletricidade;話|はなす・ワ|conversa;食|たべる・ショク|comer;飲|のむ・イン|beber;見|みる・ケン|ver;聞|きく・ブン|ouvir;読|よむ・ドク|ler;書|かく・ショ|escrever;行|いく・コウ|ir;来|くる・ライ|vir;出|でる・シュツ|sair;入|いる・ニュウ|entrar;休|やすむ・キュウ|descansar;買|かう・バイ|comprar;立|たつ・リツ|ficar de pé;座|すわる・ザ|sentar;歩|あるく・ホ|andar"
   },
   {
     "t": "A prova JLPT N5 e plano de estudo",
-    "b": "<p><b>Estrutura:</b> vocabulário e kanji, gramática e leitura, compreensão auditiva. Nota total 180; é preciso atingir a nota mínima geral e também a mínima em cada parte, então não deixe a audição de lado. Confira os detalhes no site oficial do JLPT.</p><p><b>Plano sugerido (12 semanas):</b></p><ul><li>Semanas 1–2: hiragana e katakana</li><li>Semanas 3–6: lições 6 a 17, com revisão diária</li><li>Semanas 7–9: forma て, ない, たい e kanji</li><li>Semanas 10–11: simulados e erros mais comuns</li><li>Semana 12: revisão e audição</li></ul><p>Ouça japonês todo dia, mesmo 10 minutos, e refaça os quizzes dos kana e kanji.</p>",
-    "v": "もんだい|mondai|questão;こたえ|kotae|resposta;ぶんぽう|bunpou|gramática;ごい|goi|vocabulário;どっかい|dokkai|leitura;ちょうかい|choukai|audição"
+    "b": "<p><b>Estrutura:</b> vocabulário (~800 palavras), kanji (~100), gramática e leitura, compreensão auditiva. Nota total 180; precisa de nota mínima geral e por bloco.</p><p><b>Nesta trilha:</b> kana → gramática → vocabulário temático da prova → kanji → simulados. Faça até o fim e revise os erros.</p><p><b>Plano:</b> 1–2 semanas kana; depois 1 fase por dia; no fim, 1 simulado por semana.</p>",
+    "v": "もんだい|mondai|questão;こたえ|kotae|resposta;ぶんぽう|bunpou|gramática;ごい|goi|vocabulário;どっかい|dokkai|leitura;ちょうかい|choukai|audição;じかん|jikan|tempo;てん|ten|pontos;ごうかく|goukaku|aprovação"
   }
 ];

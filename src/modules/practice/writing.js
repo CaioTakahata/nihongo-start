@@ -171,7 +171,11 @@ export function testView() {
   s += `<path id='pcur' d='' fill='none' stroke='var(--tx)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/></svg>`
   if (!kres)
     s += `<p><button onclick='tUndo()'>↩</button> <button onclick='tClear()'>🗑</button> <button onclick='tCheck()' style='background:var(--ac);color:#fff'>Conferir</button></p>`
-  else s += `<p class='sub'>${kres.msg}</p><p><button onclick='tNext()'>Próximo →</button></p>`
+  else {
+    s += `<p class='sub'>${kres.msg}</p>`
+    if (!kres.perfect) s += `<div id='stroke-model' style='margin:8px auto'></div>`
+    s += `<p><button onclick='tNext()'>Próximo →</button></p>`
+  }
   return s + '</div>'
 }
 
@@ -230,8 +234,9 @@ export function pU() {
     }
     const ref = ptsOf(p[n])
     if (Dst(a[0], ref[0]) > 30 || Dst(a[a.length - 1], ref[ref.length - 1]) > 30) {
-      state.kmsg = 'Esse não é o traço ' + (n + 1) + '. Comece no ponto vermelho.'
+      state.kmsg = 'Esse não é o traço ' + (n + 1) + '. Veja o modelo abaixo e comece no ponto vermelho.'
       prac()
+      mountPracticeErrorModel(c)
       return
     }
     state.kdone.push(d)
@@ -245,13 +250,15 @@ export function pU() {
       return
     }
     if (strokePrec(a, c) < 0.6) {
-      state.kmsg = 'Esse traço não segue o kanji do fundo. Tente de novo.'
+      state.kmsg = 'Esse traço não segue o kanji. Veja o modelo animado abaixo.'
       prac()
+      mountPracticeErrorModel(c)
       return
     }
     if (!dirOK(a)) {
-      state.kmsg = 'Direção estranha: os traços vão da esquerda para a direita e de cima para baixo.'
+      state.kmsg = 'Direção estranha: da esquerda para a direita e de cima para baixo. Veja o modelo.'
       prac()
+      mountPracticeErrorModel(c)
       return
     }
     state.kdone.push(d)
@@ -260,6 +267,21 @@ export function pU() {
   prac()
   const need = SC[c] || currentKanji()[state.ki]?.strokes || 0
   if (need && state.kdone.length && state.kdone.length === need) notifyXp(xpOnce('kg' + c, 15))
+}
+
+function mountPracticeErrorModel(c) {
+  setTimeout(() => {
+    let host = $('#stroke-model-practice')
+    if (!host) {
+      const wrap = $('#pw')
+      if (!wrap) return
+      host = document.createElement('div')
+      host.id = 'stroke-model-practice'
+      host.style.margin = '8px auto'
+      wrap.appendChild(host)
+    }
+    mountStrokeAnimation(host, c, { size: 200 })
+  }, 30)
 }
 
 export function pUndo() {
@@ -339,9 +361,16 @@ export function tCheck() {
   }
   state.kscore.n++
   if (perfect) state.kscore.ok++
-  state.kres = { good, msg }
+  state.kres = { good, msg, perfect }
   prac()
-  if (perfect) notifyXp(xpOnce('kt' + c, 20))
+  if (perfect) notifyXp(xpOnce('kt' + c, 25))
+  else {
+    // Show official stroke order when the learner misses (like study mode).
+    setTimeout(() => {
+      const host = $('#stroke-model')
+      if (host) mountStrokeAnimation(host, c, { size: 200 })
+    }, 30)
+  }
 }
 
 /* ---------- kana writing (kw*) ---------- */
@@ -349,7 +378,21 @@ export function tCheck() {
 export function kwOpen(g, m) {
   let l = [...KG[g].k]
   if (m === 't') l = sh(l)
-  state.kw = { g, m, l, i: 0, sc: 0, done: [], pts: [], res: null, msg: '', ok: false, fin: false, cur: null }
+  state.kw = {
+    g,
+    m,
+    l,
+    i: 0,
+    sc: 0,
+    done: [],
+    pts: [],
+    res: null,
+    msg: '',
+    ok: false,
+    fin: false,
+    cur: null,
+    showModel: false,
+  }
   if (m === 't') say(l[0])
   kwShow()
 }
@@ -409,11 +452,20 @@ export function kwShow() {
       last ? 'Ver resultado' : 'Próximo →'
     }</button>`
   s += '</p>'
-  if (!t)
-    s += `<p><a href='https://www.google.com/search?q=${encodeURIComponent(
-      c + ' 書き順 hiragana',
-    )}' target='_blank' rel='noopener' style='color:var(--ac)'>Ver a ordem dos traços ↗</a></p>`
+  if (kw.showModel || (kw.res && !kw.res.perfect)) {
+    s += `<div id='stroke-model' style='margin:8px auto'></div>`
+  } else if (!t) {
+    s += `<p><button type='button' onclick='showKanaStroke(decodeURIComponent("${encodeURIComponent(
+      c,
+    )}"))' style='color:var(--ac)'>▶ Ver ordem dos traços</button></p>`
+  }
   o.innerHTML = s + '</div></div>'
+  if (kw.showModel || (kw.res && !kw.res.perfect)) {
+    setTimeout(() => {
+      const host = $('#stroke-model')
+      if (host) mountStrokeAnimation(host, c, { size: 200 })
+    }, 30)
+  }
 }
 
 export function kwD(e) {
@@ -457,24 +509,30 @@ export function kwU() {
     return
   }
   if (strokePrec(a, c) < 0.6) {
-    kw.msg = 'Esse traço não segue o modelo. Tente de novo.'
+    kw.msg = 'Esse traço não segue o modelo. Veja a ordem abaixo e tente de novo.'
+    kw.showModel = true
     kwShow()
     return
   }
   if (!dirOK(a)) {
     kw.msg = 'Direção estranha: da esquerda para a direita e de cima para baixo.'
+    kw.showModel = true
     kwShow()
     return
   }
   kw.done.push(d)
   kw.pts.push(a)
+  kw.showModel = false
   if (kw.done.length >= N) {
     if (kwCov(c) >= 0.5) {
       kw.ok = true
       kw.sc++
       kw.msg = '✅ Muito bem!'
-      notifyXp(xpOnce('kwp' + c, 3))
-    } else kw.msg = 'Faltou cobrir parte do caractere. Toque em 🗑 e tente de novo.'
+      notifyXp(xpOnce('kwp' + c, 10))
+    } else {
+      kw.msg = 'Faltou cobrir parte do caractere. Veja o modelo e toque em 🗑.'
+      kw.showModel = true
+    }
   } else kw.msg = 'Traço ' + kw.done.length + ' de ' + N + '.'
   kwShow()
 }
@@ -490,12 +548,13 @@ export function kwCheck() {
   const perfect = kw.done.length === N && okc === N && cv >= 0.55
   if (perfect) {
     kw.sc++
-    notifyXp(xpOnce('kwt' + c, 5))
+    notifyXp(xpOnce('kwt' + c, 12))
   }
-  kw.res = { good }
+  kw.res = { good, perfect }
+  kw.showModel = !perfect
   kw.msg = perfect
     ? 'Certo! ✅ (cobertura ' + Math.round(cv * 100) + '%)'
-    : `Traços certos: ${okc}/${kw.done.length}. O caractere tem ${N} traços. Cobertura: ${Math.round(cv * 100)}%. Em vermelho: fora do lugar ou na direção errada.`
+    : `Traços certos: ${okc}/${kw.done.length}. O caractere tem ${N} traços. Cobertura: ${Math.round(cv * 100)}%. Em vermelho: errados — veja o modelo abaixo.`
   kwShow()
 }
 
@@ -509,6 +568,7 @@ export function kwNext() {
     kw.res = null
     kw.msg = ''
     kw.ok = false
+    kw.showModel = false
     if (kw.m === 't') say(kw.l[kw.i])
   }
   kwShow()
@@ -530,5 +590,6 @@ export function kwClear() {
   kw.pts = []
   kw.ok = false
   kw.msg = ''
+  kw.showModel = false
   kwShow()
 }

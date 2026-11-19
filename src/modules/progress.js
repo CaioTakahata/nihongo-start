@@ -20,8 +20,8 @@ function writeJson(key, value) {
   }
 }
 
-/** @type {{ xp: number, once: string[], tr: Record<string, number> }} */
-let state = { xp: 0, once: [], tr: {} }
+/** @type {{ xp: number, once: string[], tr: Record<string, number>, resume: object|null }} */
+let state = { xp: 0, once: [], tr: {}, resume: null }
 
 export function loadProgress() {
   const saved = readJson(KEYS.xp, {})
@@ -29,6 +29,7 @@ export function loadProgress() {
     xp: Number(saved.xp) || 0,
     once: Array.isArray(saved.once) ? saved.once : [],
     tr: saved.tr && typeof saved.tr === 'object' ? { ...saved.tr } : {},
+    resume: saved.resume && typeof saved.resume === 'object' ? { ...saved.resume } : null,
   }
   return state
 }
@@ -113,6 +114,34 @@ export function isPhaseOpen(i) {
 
 export function isPhaseDone(i) {
   return (state.tr[i] || 0) >= 70
+}
+
+/** Where the learner left off (trail phase, question index, course lesson, tab). */
+export function getResume() {
+  return state.resume
+}
+
+export function saveResume( partial ) {
+  state.resume = {
+    ...(state.resume || {}),
+    ...partial,
+    updated: Date.now(),
+  }
+  persistXp()
+  return state.resume
+}
+
+export function clearResume() {
+  state.resume = null
+  persistXp()
+}
+
+/** First incomplete open phase, or null if all done. */
+export function nextTrailPhase(total) {
+  for (let i = 0; i < total; i++) {
+    if (isPhaseOpen(i) && !isPhaseDone(i)) return i
+  }
+  return null
 }
 
 /** Ensure XP bar exists above nav and reflects current state. */

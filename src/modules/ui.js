@@ -3,12 +3,12 @@ import { say, mountSpeedControl } from './audio.js'
 import { lessonListView, lessonDetailView, finishLesson, isLevelOpen } from './curriculum.js'
 import { loadProgress, renderXpBar } from './progress.js'
 import { state, hooks, $ } from './state.js'
-import { exView, exStart, exAns, exNext, exQuit, exSay } from './practice/exercises.js'
+import { exView, exStart, exContinue, exAns, exNext, exQuit, exSay } from './practice/exercises.js'
 import { kanaGrid } from './practice/kana-grid.js'
 import { kanjiList, kC, kOpen, kClose, kMode, kFlip, kGo, kRand, kPlay, kSay, setKLevel } from './practice/kanji.js'
 import { toggleKanaStrokeMode, showKanaStroke } from './practice/kana-grid.js'
 import { quizView, newQ, setQset } from './practice/quiz.js'
-import { trailView, trStart, trGo, trWrite, learnAll, learnClose } from './practice/trail.js'
+import { trailView, trStart, trGo, trContinue, trWrite, learnAll, learnClose } from './practice/trail.js'
 import {
   pD,
   pM,
@@ -81,6 +81,7 @@ function exposeWindowHandlers() {
     newQ,
     // exercises
     exStart,
+    exContinue,
     exAns,
     exNext,
     exQuit,
@@ -88,6 +89,7 @@ function exposeWindowHandlers() {
     // trail
     trStart,
     trGo,
+    trContinue,
     trWrite,
     learnAll,
     learnClose,

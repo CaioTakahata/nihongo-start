@@ -3,7 +3,16 @@ import { getKanjiList } from '../../data/kanji/index.js'
 import { setKanjiLevel } from '../kanji-store.js'
 import { say } from '../audio.js'
 import { trailListView } from '../curriculum.js'
-import { notifyXp, renderXpBar, setTrailBest, xpOnce } from '../progress.js'
+import {
+  addXp,
+  clearResume,
+  getResume,
+  notifyXp,
+  renderXpBar,
+  saveResume,
+  setTrailBest,
+  xpOnce,
+} from '../progress.js'
 import { state, hooks, render, sh } from '../state.js'
 import { Q, exView, mkG, mkGs, mkPs, mkR, mkS, mkV } from './exercises.js'
 import { kMode, kOpen } from './kanji.js'
@@ -51,16 +60,17 @@ export function kanaQ(g) {
 export function trQ(i) {
   const P = PH[i]
   if (P.kg != null) return kanaQ(P.kg)
-  const kv0 = P.v?.[0] ?? 21
-  const kv1 = P.v?.[1] ?? 24
+  // Kanji lessons live at the end of the N5 pack (see lessons-n5.js).
+  const KANJI0 = 36
+  const KANJI1 = 39
   const G = {
-    v: () => mkV(P.v[0], P.v[1], 0, 9),
-    l: () => mkV(P.v[0], P.v[1], 1, 9),
-    s: () => mkS(9),
-    r: () => mkR(9),
+    v: () => mkV(P.v[0], P.v[1], 0, 12),
+    l: () => mkV(P.v[0], P.v[1], 1, 12),
+    s: () => mkS(12),
+    r: () => mkR(12),
     p: () => mkPs(P.p),
     g: () => mkGs(P.g),
-    k: () => mkV(kv0, kv1, 0, 9),
+    k: () => mkV(P.k?.[0] ?? KANJI0, P.k?.[1] ?? KANJI1, 0, 12),
   }
   const bag = {}
   return [...P.m]
@@ -72,12 +82,15 @@ export function trQ(i) {
 }
 
 /** Start exercises for phase i (skips the learn screen). */
-export function trGo(i) {
+export function trGo(i, fromQ = 0) {
   state.learnI = null
-  state.ex = { mi: -1, tr: i, l: trQ(i), i: 0, s: 0, w: [], a: false, c: -1 }
+  const l = trQ(i)
+  const start = Math.max(0, Math.min(fromQ, l.length - 1))
+  state.ex = { mi: -1, tr: i, l, i: start, s: 0, w: [], a: false, c: -1 }
   state.tab = 'trail'
+  saveResume({ tab: 'trail', phase: i, qIndex: start, kind: 'trail' })
   render()
-  const f = state.ex.l[0]
+  const f = state.ex.l[state.ex.i]
   if (f && f.s) say(f.s)
 }
 
@@ -87,11 +100,23 @@ export function trStart(i) {
     state.learnI = i
     state.ex = null
     state.tab = 'trail'
+    saveResume({ tab: 'trail', phase: i, learnI: i, kind: 'learn' })
     render()
     scrollTo(0, 0)
     return
   }
   trGo(i)
+}
+
+/** Resume saved trail position. */
+export function trContinue() {
+  const r = getResume()
+  if (!r || r.kind === 'exercises') return
+  if (r.kind === 'learn' && r.phase != null) {
+    trStart(r.phase)
+    return
+  }
+  if (r.phase != null) trGo(r.phase, r.qIndex || 0)
 }
 
 export function trSave() {
@@ -100,7 +125,11 @@ export function trSave() {
   const pct = Math.round((100 * ex.s) / ex.l.length)
   ex.saved = true
   setTrailBest(i, pct)
-  if (pct >= 70) notifyXp(xpOnce('ph' + i, 30))
+  // Always grant score-based XP; first pass of a phase gets a big bonus.
+  notifyXp(addXp(Math.max(5, Math.round(pct / 5))))
+  if (pct >= 70) notifyXp(xpOnce('ph' + i, 60))
+  if (pct === 100) notifyXp(xpOnce('phPerfect' + i, 40))
+  clearResume()
   renderXpBar()
 }
 hooks.trSave = trSave

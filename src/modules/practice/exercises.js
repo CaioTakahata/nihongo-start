@@ -1,5 +1,6 @@
 import { LS, PQ, GQ, LQ, RQ } from '../../data/index.js'
 import { say } from '../audio.js'
+import { saveResume, clearResume, getResume } from '../progress.js'
 import { state, hooks, render, sh, uq, xp } from '../state.js'
 
 const MODES = 'vlkpgm'
@@ -64,19 +65,51 @@ export const mkR = (n) =>
       ),
     )
 
-export function exStart(i) {
+/** Lições 0–35 = vocabulário/gramática; 36–38 = kanji N5. */
+const VOCAB_END = 36
+const KANJI_START = 36
+const KANJI_END = 39
+
+function buildExList(i) {
   const m = MODES[i]
-  const n = 10
-  let l
-  if (m === 'v') l = mkV(0, 21, 0, n)
-  else if (m === 'l') l = mkV(0, 21, 1, n)
-  else if (m === 'k') l = mkV(21, 24, 0, n)
-  else if (m === 'p') l = mkP(n)
-  else if (m === 'g') l = mkG(n)
-  else l = sh([...mkV(0, 21, 0, 5), ...mkV(0, 21, 1, 4), ...mkV(21, 24, 0, 4), ...mkP(4), ...mkG(3)])
-  state.ex = { mi: i, l, i: 0, s: 0, w: [], a: false, c: -1 }
+  const n = 15
+  if (m === 'v') return mkV(0, VOCAB_END, 0, n)
+  if (m === 'l') return mkV(0, VOCAB_END, 1, n)
+  if (m === 'k') return mkV(KANJI_START, KANJI_END, 0, n)
+  if (m === 'p') return mkP(n)
+  if (m === 'g') return mkG(n)
+  return sh([
+    ...mkV(0, VOCAB_END, 0, 8),
+    ...mkV(0, VOCAB_END, 1, 6),
+    ...mkV(KANJI_START, KANJI_END, 0, 6),
+    ...mkP(6),
+    ...mkG(4),
+  ])
+}
+
+const EX_LABELS = [
+  'Vocabulário',
+  'Ouvir',
+  'Kanji',
+  'Partículas',
+  'Gramática',
+  'Simulado misto',
+]
+
+export function exStart(i, fromQ = 0) {
+  const l = buildExList(i)
+  const start = Math.max(0, Math.min(fromQ, l.length - 1))
+  state.ex = { mi: i, l, i: start, s: 0, w: [], a: false, c: -1 }
+  saveResume({ tab: 'ex', exMi: i, qIndex: start, kind: 'exercises' })
   render()
-  if (l[0].s) say(l[0].s)
+  if (l[start]?.s) say(l[start].s)
+}
+
+/** Resume N5 exercise session saved in this browser. */
+export function exContinue() {
+  const r = getResume()
+  if (!r || r.kind !== 'exercises' || r.exMi == null) return
+  exStart(r.exMi, r.qIndex || 0)
 }
 
 export function exAns(j) {
@@ -87,8 +120,10 @@ export function exAns(j) {
   ex.c = j
   if (q.o[j] === q.a) {
     ex.s++
-    xp(5)
+    xp(ex.tr != null ? 8 : 6)
   } else ex.w.push(q)
+  if (ex.tr != null) saveResume({ tab: 'trail', phase: ex.tr, qIndex: ex.i, kind: 'trail' })
+  else saveResume({ tab: 'ex', exMi: ex.mi, qIndex: ex.i, kind: 'exercises' })
   render()
 }
 
@@ -99,17 +134,26 @@ export function exNext() {
   ex.a = false
   ex.c = -1
   const finished = ex.i >= ex.l.length
-  if (finished && ex.s >= ex.l.length * 0.7) xp(20)
+  if (finished && ex.s >= ex.l.length * 0.7) xp(ex.tr != null ? 35 : 30)
+  if (finished && ex.s === ex.l.length) xp(25)
   render()
   if (finished && ex.tr != null && !ex.saved) {
     hooks.trSave()
+    clearResume()
     render()
-  }
+  } else if (!finished) {
+    if (ex.tr != null) saveResume({ tab: 'trail', phase: ex.tr, qIndex: ex.i, kind: 'trail' })
+    else saveResume({ tab: 'ex', exMi: ex.mi, qIndex: ex.i, kind: 'exercises' })
+  } else if (finished) clearResume()
   const q = ex.l[ex.i]
   if (q && q.s) say(q.s)
 }
 
 export function exQuit() {
+  const ex = state.ex
+  if (ex && ex.tr != null && ex.i > 0 && ex.i < ex.l.length) {
+    saveResume({ tab: 'trail', phase: ex.tr, qIndex: ex.i, kind: 'trail', score: ex.s })
+  }
   state.ex = null
   render()
 }
@@ -123,16 +167,22 @@ export function exSay(rate) {
 export function exView() {
   const ex = state.ex
   const st = 'text-align:left'
-  if (!ex)
+  if (!ex) {
+    const resume = getResume()
+    let cont = ''
+    if (resume && resume.kind === 'exercises' && resume.exMi != null) {
+      const label = EX_LABELS[resume.exMi] || 'exercício'
+      cont = `<div style="margin:0 0 12px;padding:10px;border:1px solid var(--bd);border-radius:12px;background:var(--bg)"><b>Continuar de onde parou</b><p class="sub" style="margin:4px 0 8px">${label} · questão ${(resume.qIndex || 0) + 1}</p><button type="button" onclick="exContinue()" style="background:var(--ac);color:#fff">▶ Continuar</button></div>`
+    }
     return (
-      `<div class='panel' style='${st}'><b>Exercícios N5</b><p class='sub'>Escolha um tipo de prática. Cada sessão tem 10 questões (o simulado misto tem 20). Os erros aparecem no fim com explicação.</p>` +
+      `<div class='panel' style='${st}'><b>Exercícios N5</b><p class='sub'>Escolha um tipo de prática. Cada sessão tem 15 questões (o simulado misto tem 30). Progresso e XP ficam salvos neste navegador. +XP a cada acerto.</p>${cont}` +
       [
-        '📖 Vocabulário: japonês → português',
-        '🔊 Ouvir e escolher',
-        '漢 Kanji: significado',
-        'は Partículas',
-        '📝 Gramática',
-        '🎯 Simulado misto (20)',
+        '📖 Vocabulário: japonês → português (15)',
+        '🔊 Ouvir e escolher (15)',
+        '漢 Kanji: significado (15)',
+        'は Partículas (15)',
+        '📝 Gramática (15)',
+        '🎯 Simulado misto (30)',
       ]
         .map(
           (x, i) =>
@@ -141,6 +191,7 @@ export function exView() {
         .join('') +
       '</div>'
     )
+  }
   if (ex.i >= ex.l.length)
     return (
       `<div class='panel' style='${st}'><h2 style='margin:0 0 8px'>Resultado: ${ex.s}/${ex.l.length}</h2>${

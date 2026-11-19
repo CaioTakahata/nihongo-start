@@ -3,12 +3,16 @@ import { LS } from '../data/lessons-n5.js'
 import { PH } from '../data/phases-n5.js'
 import {
   getDoneLessons,
+  getResume,
   getTrailBest,
   isPhaseDone,
   isPhaseOpen,
   markLessonDone,
+  nextTrailPhase,
   xpOnce,
   notifyXp,
+  saveResume,
+  addXp,
 } from './progress.js'
 
 const lessonsByLevel = {
@@ -71,10 +75,13 @@ export function lessonDetailView(levelId, cl, say) {
 
 export function finishLesson(i) {
   markLessonDone(i)
-  const r = xpOnce('l' + i, 50)
+  notifyXp(addXp(20))
+  const r = xpOnce('l' + i, 80)
   notifyXp(r)
   const lessons = getLessons()
-  return i + 1 < lessons.length ? i + 1 : null
+  const next = i + 1 < lessons.length ? i + 1 : null
+  saveResume({ tab: 'course', cl: next, kind: 'course' })
+  return next
 }
 
 export function trailListView(levelId) {
@@ -82,7 +89,21 @@ export function trailListView(levelId) {
   if (!isLevelOpen(levelId)) {
     return `<div class="panel" style="text-align:left"><b>Trilha ${levelId.toUpperCase()}</b><p class="sub">Em breve.</p></div>`
   }
-  return `<div class="panel" style="text-align:left"><b>Trilha ${levelId.toUpperCase()}</b><p class="sub">${phases.length} fases · complete com 70% ou mais para liberar a próxima. Role até o fim da lista para ver todas.</p>${phases
+  const resume = getResume()
+  const nxt = nextTrailPhase(phases.length)
+  let cont = ''
+  if (resume && (resume.kind === 'trail' || resume.kind === 'learn') && resume.phase != null) {
+    const p = phases[resume.phase]
+    const qLabel =
+      resume.kind === 'learn'
+        ? 'tela de aprendizado'
+        : `questão ${(resume.qIndex || 0) + 1}`
+    cont = `<div style="margin:0 0 12px;padding:10px;border:1px solid var(--bd);border-radius:12px;background:var(--bg)"><b>Continuar de onde parou</b><p class="sub" style="margin:4px 0 8px">Fase ${(resume.phase || 0) + 1}${p ? `: ${p.t}` : ''} · ${qLabel}</p><button type="button" onclick="trContinue()" style="background:var(--ac);color:#fff">▶ Continuar</button></div>`
+  } else if (nxt != null) {
+    cont = `<p style="margin:0 0 10px"><button type="button" data-phase="${nxt}" style="background:var(--ac);color:#fff">▶ Continuar fase ${nxt + 1}</button></p>`
+  }
+  const doneN = phases.filter((_, i) => isPhaseDone(i)).length
+  return `<div class="panel" style="text-align:left"><b>Trilha ${levelId.toUpperCase()}</b><p class="sub">${doneN}/${phases.length} fases ★ · cobre o N5 da prova (kana, gramática, ~500+ palavras, kanji e simulados). 70% libera a próxima. Progresso salvo neste navegador.</p>${cont}${phases
     .map((p, i) => {
       const done = isPhaseDone(i)
       const open = isPhaseOpen(i)
