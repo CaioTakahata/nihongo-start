@@ -519,6 +519,24 @@ svg text {
   font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", "Meiryo", sans-serif;
 }
 
+/* Partículas em destaque (cor diferente do texto) */
+.particle,
+.sent-chip.is-particle {
+  color: #ffb84d;
+  font-weight: 700;
+}
+.part-jp b.particle {
+  color: #ffb84d;
+}
+.sent-chip.is-particle {
+  background: color-mix(in srgb, #ffb84d 18%, var(--card));
+  border-color: color-mix(in srgb, #ffb84d 45%, var(--bd));
+}
+:root[data-theme="light"] .particle,
+:root[data-theme="light"] .sent-chip.is-particle {
+  color: #c97800;
+}
+
 /* Partículas + montar frases */
 .part-grid {
   display: grid;

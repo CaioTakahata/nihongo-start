@@ -329,23 +329,59 @@ export function isJoshiPhase(P) {
   return /助詞|Partícula|Frases:|Montar frases/i.test(P.t)
 }
 
+const PARTICLE_CHARS = new Set(['は', 'が', 'を', 'に', 'で', 'と', 'も', 'か', 'の', 'へ', 'や', 'ね', 'よ'])
+
+/**
+ * Destaca só partículas gramaticais (no fim do bloco), não sílabas dentro da palavra.
+ * Ex.: がっこうに → só に; わたしは → só は (não o が de がっこう).
+ */
+export function highlightParticles(text) {
+  if (!text) return ''
+  return String(text)
+    .split(/(\s+|。|、|！|？|\.|!|\?)/)
+    .map((token) => {
+      if (!token || /^(\s+|。|、|！|？|\.|!|\?)$/.test(token)) return token
+      if (PARTICLE_CHARS.has(token)) return `<span class="particle">${token}</span>`
+
+      const chars = [...token]
+      let cut = chars.length
+      // Só tira partículas no FINAL do bloco (ex.: がっこうに, ですか, ねこが)
+      while (cut > 1 && PARTICLE_CHARS.has(chars[cut - 1])) cut--
+      if (cut === chars.length) return token
+
+      const stem = chars.slice(0, cut).join('')
+      const parts = chars
+        .slice(cut)
+        .map((ch) => `<span class="particle">${ch}</span>`)
+        .join('')
+      return stem + parts
+    })
+    .join('')
+}
+
+function isParticleToken(tok) {
+  return PARTICLE_CHARS.has(tok) || (tok.length <= 2 && /^[はがをにでともかのへやねよ]+$/.test(tok))
+}
+
 /** Tela de estudo: partículas + montar frases (depois do kana). */
 export function learnParticlesView(learnI) {
   const P = PH[learnI]
   const cards = N5_PARTICLES.map(
     (p) => `<div class="part-card">
-      <div class="part-jp"><b>${p.jp}</b><small>${p.reading}</small></div>
+      <div class="part-jp"><b class="particle">${p.jp}</b><small>${p.reading}</small></div>
       <div class="part-meta"><strong>${p.pt}</strong><span>${p.tip}</span></div>
-      <button type="button" class="part-ex" data-say="${encodeURIComponent(p.ex)}">${p.ex} 🔊</button>
+      <button type="button" class="part-ex" data-say="${encodeURIComponent(p.ex)}">${highlightParticles(p.ex)} 🔊</button>
       <small class="part-ex-pt">${p.exPt}</small>
     </div>`,
   ).join('')
 
   const builds = N5_SENTENCE_BUILDS.map(
     (s) => `<div class="sent-build">
-      <div class="sent-goal">${s.goal} · foco <b>${s.focus}</b></div>
-      <div class="sent-parts">${s.parts.map((x) => `<span class="sent-chip">${x}</span>`).join('<span class="sent-plus">+</span>')}</div>
-      <button type="button" class="sent-full" data-say="${encodeURIComponent(s.full)}">${s.full} 🔊</button>
+      <div class="sent-goal">${s.goal} · foco <b class="particle">${s.focus}</b></div>
+      <div class="sent-parts">${s.parts
+        .map((x) => `<span class="sent-chip${isParticleToken(x) ? ' is-particle' : ''}">${x}</span>`)
+        .join('<span class="sent-plus">+</span>')}</div>
+      <button type="button" class="sent-full" data-say="${encodeURIComponent(s.full)}">${highlightParticles(s.full)} 🔊</button>
       <small>${s.pt}</small>
     </div>`,
   ).join('')
