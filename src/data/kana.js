@@ -197,3 +197,62 @@ export const KG = [
     "w": "ほん|hon|livro;にほん|nihon|Japão;みかん|mikan|tangerina;わたし|watashi|eu;みんな|minna|todos"
   }
 ];
+
+/** Katakana rows for the trail (loanwords / foreign words). */
+export const KKG = [
+  {
+    t: 'ア行 (a i u e o)',
+    k: 'アイウエオ',
+    w: 'アイス|aisu|sorvete;カフェ|kafe|café;エア|ea|ar;オレンジ|orenji|laranja;エイ|ei|raia',
+  },
+  {
+    t: 'カ行 (ka ki ku ke ko)',
+    k: 'カキクケコ',
+    w: 'カメラ|kamera|câmera;ケーキ|keeki|bolo;コーヒー|koohii|café;キロ|kiro|quilo;タクシー|takushii|táxi',
+  },
+  {
+    t: 'サ行 (sa shi su se so)',
+    k: 'サシスセソ',
+    w: 'スーパー|suupaa|supermercado;サッカー|sakkaa|futebol;シャツ|shatsu|camisa;セーター|seetaa|suéter;ソース|soosu|molho',
+  },
+  {
+    t: 'タ行 (ta chi tsu te to)',
+    k: 'タチツテト',
+    w: 'テレビ|terebi|televisão;トイレ|toire|banheiro;テニス|tenisu|tênis;タオル|taoru|toalha;チケット|chiketto|ingresso',
+  },
+  {
+    t: 'ナ行 (na ni nu ne no)',
+    k: 'ナニヌネノ',
+    w: 'ノート|nooto|caderno;ナイフ|naifu|faca;ニュース|nyuusu|notícia;ネクタイ|nekutai|gravata;バナナ|banana|banana',
+  },
+  {
+    t: 'ハ行 (ha hi fu he ho)',
+    k: 'ハヒフヘホ',
+    w: 'ホテル|hoteru|hotel;パン|pan|pão;フォーク|fooku|garfo;ヘッドホン|heddohon|fone;ハンバーガー|hanbaagaa|hambúrguer',
+  },
+  {
+    t: 'マ行 (ma mi mu me mo)',
+    k: 'マミムメモ',
+    w: 'メニュー|menyuu|cardápio;ミルク|miruku|leite;メモ|memo|anotação;マンション|manshon|apartamento;マイク|maiku|microfone',
+  },
+  {
+    t: 'ヤ行 (ya yu yo)',
+    k: 'ヤユヨ',
+    w: 'ヨガ|yoga|ioga;ユーモア|yuumoa|humor;ヨーロッパ|yooroppa|Europa;ヤクザ|yakuza|yakuza;ユートピア|yuutopia|utopia',
+  },
+  {
+    t: 'ラ行 (ra ri ru re ro)',
+    k: 'ラリルレロ',
+    w: 'レストラン|resutoran|restaurante;ラジオ|rajio|rádio;レモン|remon|limão;ロボット|robotto|robô;ルール|ruuru|regra',
+  },
+  {
+    t: 'ワ・ヲ・ン (wa wo n)',
+    k: 'ワヲン',
+    w: 'ワイン|wain|vinho;ワンピース|wanpiisu|vestido;オンライン|onrain|online;フィンランド|finrando|Finlândia;ロンドン|rondon|Londres',
+  },
+  {
+    t: '濁点・長音 (ga… / ー)',
+    k: 'ガギグゲゴザジズゼゾダデドバビブベボパピプペポ',
+    w: 'ゲーム|geemu|jogo;ギター|gitaa|guitarra;ピザ|piza|pizza;デパート|depaato|shopping;ビール|biiru|cerveja;プール|puuru|piscina',
+  },
+];

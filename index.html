@@ -6,17 +6,32 @@
   <title>Nihongo Start – Hiragana, Katakana, Kanji</title>
 </head>
 <body>
+  <div id="drawer-backdrop" class="drawer-backdrop" hidden></div>
+  <aside id="drawer" class="drawer" aria-label="Menu" hidden>
+    <div class="drawer-head">
+      <div class="drawer-brand">日本語</div>
+      <div class="drawer-sub">Nihongo Start</div>
+    </div>
+    <nav id="drawer-nav" class="drawer-nav"></nav>
+    <div class="drawer-foot">
+      <label class="drawer-lang">Idioma
+        <select id="lang" aria-label="Language">
+          <option value="pt">Português</option>
+          <option value="en">English</option>
+          <option value="es">Español</option>
+        </select>
+      </label>
+    </div>
+  </aside>
   <main>
-    <header>
-      <h1>日本語 Nihongo Start</h1>
-      <select id="lang" aria-label="Language">
-        <option value="pt">Português</option>
-        <option value="en">English</option>
-        <option value="es">Español</option>
-      </select>
+    <header class="appbar">
+      <button type="button" id="menu-btn" class="icon-btn" aria-label="Abrir menu">☰</button>
+      <div class="appbar-titles">
+        <h1 id="app-title">日本語 Nihongo Start</h1>
+        <p class="sub" id="sub"></p>
+      </div>
     </header>
-    <p class="sub" id="sub"></p>
-    <nav id="nav"></nav>
+    <nav id="nav" class="top-tabs" hidden aria-hidden="true"></nav>
     <section id="view"></section>
     <p class="note" id="note"></p>
   </main>

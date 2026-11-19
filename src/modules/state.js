@@ -5,6 +5,10 @@ export const state = {
   L: 'pt',
   tab: 'trail',
   levelId: 'n5',
+  /** Side drawer open (Kanji Study–style). */
+  drawerOpen: false,
+  /** Which trail accordion sections are expanded (ids). */
+  trailOpenSecs: { hira: true, kata: false, gram: false, vocab: false, kanji: false, sim: false },
 
   // quiz
   qset: 'hira',

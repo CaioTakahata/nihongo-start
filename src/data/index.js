@@ -1,5 +1,5 @@
 export { T, CL } from './i18n.js';
-export { H, R, Kt, KG } from './kana.js';
+export { H, R, Kt, KG, KKG } from './kana.js';
 export { K, CATS, LI } from './kanji-n5.js';
 export { ST, SC } from './strokes.js';
 export { LS } from './lessons-n5.js';

@@ -1,4 +1,4 @@
-import { T, LI, KG, ST, SC, H, R } from '../../data/index.js'
+import { T, LI, KG, KKG, ST, SC, H, R } from '../../data/index.js'
 import { currentKanji } from '../kanji-store.js'
 import { say } from '../audio.js'
 import { xpOnce, notifyXp } from '../progress.js'
@@ -375,12 +375,16 @@ export function tCheck() {
 
 /* ---------- kana writing (kw*) ---------- */
 
-export function kwOpen(g, m) {
-  let l = [...KG[g].k]
+export function kwOpen(g, m, packKey = 'kg') {
+  const pack = packKey === 'kk' ? KKG : KG
+  const group = pack[g]
+  if (!group) return
+  let l = [...group.k]
   if (m === 't') l = sh(l)
   state.kw = {
     g,
     m,
+    packKey,
     l,
     i: 0,
     sc: 0,
@@ -419,7 +423,7 @@ export function kwShow() {
   const t = kw.m === 't'
   const box = 'background:var(--bg);color:var(--tx);border-radius:16px;padding:12px;max-width:380px;margin:0 auto'
   if (kw.fin) {
-    o.innerHTML = `<div style='${box}'><h2>Resultado: ${kw.sc}/${kw.l.length}</h2><p><button onclick='kwOpen(${kw.g},"${kw.m}")'>Refazer</button> <button onclick='kClose()'>Fechar</button></p></div>`
+    o.innerHTML = `<div style='${box}'><h2>Resultado: ${kw.sc}/${kw.l.length}</h2><p><button onclick='kwOpen(${kw.g},"${kw.m}","${kw.packKey || 'kg'}")'>Refazer</button> <button onclick='kClose()'>Fechar</button></p></div>`
     return
   }
   const c = kw.l[kw.i]

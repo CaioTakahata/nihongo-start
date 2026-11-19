@@ -13,9 +13,21 @@ export const PH = [
   { t: 'Hiragana: や行 (ya yu yo)', e: 'や', d: 'Aprender e praticar', kg: 7 },
   { t: 'Hiragana: ら行 (ra ri ru re ro)', e: 'ら', d: 'Aprender e praticar', kg: 8 },
   { t: 'Hiragana: わ・を・ん (wa wo n)', e: 'わ', d: 'Aprender e praticar', kg: 9 },
-  { t: 'Dakuten e combinações', e: 'が', d: '゛ ゜ っ e sons compostos', v: [3, 4], m: 'vvvlllss' },
-  { t: 'Katakana', e: 'ア', d: 'Palavras estrangeiras', v: [4, 5], m: 'vvvllssv' },
-  { t: 'Katakana reforço', e: 'カ', d: 'Leitura e memória', v: [4, 5], m: 'vvvvlllsss' },
+  { t: 'Hiragana: dakuten e combinações', e: 'が', d: '゛ ゜ っ e sons compostos', v: [3, 4], m: 'vvvlllss' },
+
+  // —— Katakana (mesmo formato do hiragana) ——
+  { t: 'Katakana: ア行 (a i u e o)', e: 'ア', d: 'Aprender e praticar', kk: 0 },
+  { t: 'Katakana: カ行 (ka ki ku ke ko)', e: 'カ', d: 'Aprender e praticar', kk: 1 },
+  { t: 'Katakana: サ行 (sa shi su se so)', e: 'サ', d: 'Aprender e praticar', kk: 2 },
+  { t: 'Katakana: タ行 (ta chi tsu te to)', e: 'タ', d: 'Aprender e praticar', kk: 3 },
+  { t: 'Katakana: ナ行 (na ni nu ne no)', e: 'ナ', d: 'Aprender e praticar', kk: 4 },
+  { t: 'Katakana: ハ行 (ha hi fu he ho)', e: 'ハ', d: 'Aprender e praticar', kk: 5 },
+  { t: 'Katakana: マ行 (ma mi mu me mo)', e: 'マ', d: 'Aprender e praticar', kk: 6 },
+  { t: 'Katakana: ヤ行 (ya yu yo)', e: 'ヤ', d: 'Aprender e praticar', kk: 7 },
+  { t: 'Katakana: ラ行 (ra ri ru re ro)', e: 'ラ', d: 'Aprender e praticar', kk: 8 },
+  { t: 'Katakana: ワ・ヲ・ン (wa wo n)', e: 'ワ', d: 'Aprender e praticar', kk: 9 },
+  { t: 'Katakana: dakuten e ー', e: 'ガ', d: '濁点・半濁点 e vogal longa', kk: 10 },
+  { t: 'Katakana: palavras estrangeiras', e: 'カ', d: 'Leitura em contexto', v: [4, 5], m: 'vvvvlllsss' },
 
   // —— Base gramatical ——
   { t: 'Cumprimentos e apresentação', e: '👋', d: 'Frases do dia a dia', v: [5, 7], m: 'vvlsssrv' },

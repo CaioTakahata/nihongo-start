@@ -14,6 +14,7 @@ import {
   saveResume,
   addXp,
 } from './progress.js'
+import { state } from './state.js'
 
 const lessonsByLevel = {
   n5: LS,
@@ -84,6 +85,26 @@ export function finishLesson(i) {
   return next
 }
 
+/** Group trail phases into accordion sections (Kanji Study–style sets). */
+function phaseSection(p) {
+  if (p.kg != null || /^Hiragana/i.test(p.t)) return 'hira'
+  if (p.kk != null || /^Katakana/i.test(p.t)) return 'kata'
+  if (/^Kanji/i.test(p.t)) return 'kanji'
+  if (/Simulado|Revisão|Audição|Leitura|Gramática reforço/i.test(p.t)) return 'sim'
+  if (/Família|Números grandes|Corpo|Roupas|Comida|Casa|Escola|Transporte|Direções|Trabalho|Tempo e clima|Compras|Verbos essenciais|Sentimentos|Natureza|Expressões|Vocabulário misto/i.test(p.t))
+    return 'vocab'
+  return 'gram'
+}
+
+const TRAIL_SECS = [
+  { id: 'hira', e: 'あ', t: 'Hiragana', d: 'Linhas + dakuten' },
+  { id: 'kata', e: 'ア', t: 'Katakana', d: 'Linhas + palavras estrangeiras' },
+  { id: 'gram', e: 'は', t: 'Gramática N5', d: 'Partículas, verbos, て…' },
+  { id: 'vocab', e: '📖', t: 'Vocabulário', d: 'Temas da prova' },
+  { id: 'kanji', e: '漢', t: 'Kanji N5', d: 'Leitura e significado' },
+  { id: 'sim', e: '🏆', t: 'Revisão e simulados', d: 'Audição, leitura, prova' },
+]
+
 export function trailListView(levelId) {
   const phases = getPhases(levelId)
   if (!isLevelOpen(levelId)) {
@@ -103,15 +124,37 @@ export function trailListView(levelId) {
     cont = `<p style="margin:0 0 10px"><button type="button" data-phase="${nxt}" style="background:var(--ac);color:#fff">▶ Continuar fase ${nxt + 1}</button></p>`
   }
   const doneN = phases.filter((_, i) => isPhaseDone(i)).length
-  return `<div class="panel" style="text-align:left"><b>Trilha ${levelId.toUpperCase()}</b><p class="sub">${doneN}/${phases.length} fases ★ · cobre o N5 da prova (kana, gramática, ~500+ palavras, kanji e simulados). Todas as fases estão liberadas por enquanto (em edição). Progresso e melhor nota ainda são salvos neste navegador.</p>${cont}${phases
-    .map((p, i) => {
-      const done = isPhaseDone(i)
-      const open = isPhaseOpen(i)
-      const best = getTrailBest(i)
-      const bestTxt = best != null ? ` · melhor: ${best}%` : ''
-      return `<button ${open ? '' : 'disabled'} data-phase="${i}" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;margin:6px 0;${open ? '' : 'opacity:.5'}"><span style="font-size:1.6rem;min-width:36px;text-align:center">${done ? '⭐' : open ? p.e : '🔒'}</span><span><b>${i + 1}. ${p.t}</b><br><small style="color:var(--mu)">${p.d}${bestTxt}</small></span></button>`
-    })
-    .join('')}</div>`
+  const openSecs = state.trailOpenSecs || {}
+  const buckets = Object.fromEntries(TRAIL_SECS.map((s) => [s.id, []]))
+  phases.forEach((p, i) => {
+    const id = phaseSection(p)
+    ;(buckets[id] || buckets.gram).push({ p, i })
+  })
+
+  const home = `<div class="home-grid">${TRAIL_SECS.map((s) => {
+    const items = buckets[s.id] || []
+    const done = items.filter(({ i }) => isPhaseDone(i)).length
+    return `<button type="button" class="home-tile" data-trail-jump="${s.id}"><span class="big-ico">${s.e}</span><b>${s.t}</b><span>${done}/${items.length} ★ · ${s.d}</span></button>`
+  }).join('')}</div>`
+
+  const secs = TRAIL_SECS.map((s) => {
+    const items = buckets[s.id] || []
+    if (!items.length) return ''
+    const done = items.filter(({ i }) => isPhaseDone(i)).length
+    const isOpen = !!openSecs[s.id]
+    const body = items
+      .map(({ p, i }) => {
+        const donePh = isPhaseDone(i)
+        const open = isPhaseOpen(i)
+        const best = getTrailBest(i)
+        const bestTxt = best != null ? ` · melhor: ${best}%` : ''
+        return `<button ${open ? '' : 'disabled'} class="trail-item" data-phase="${i}" style="${open ? '' : 'opacity:.5'}"><span class="num">${i + 1}</span><span style="font-size:1.35rem;min-width:32px;text-align:center">${donePh ? '⭐' : open ? p.e : '🔒'}</span><span><b>${p.t.replace(/^Hiragana:\s*|^Katakana:\s*/, '')}</b><br><small style="color:var(--mu)">${p.d}${bestTxt}</small></span></button>`
+      })
+      .join('')
+    return `<div class="trail-sec${isOpen ? ' open' : ''}" data-sec="${s.id}"><button type="button" class="trail-sec-hd" data-trail-sec="${s.id}"><span style="font-size:1.4rem">${s.e}</span><span><b>${s.t}</b><br><small style="color:var(--mu)">${done}/${items.length} concluídas · ${s.d}</small></span><span class="chev">▸</span></button><div class="trail-sec-bd">${body}</div></div>`
+  }).join('')
+
+  return `<div class="panel" style="text-align:left"><b>Trilha ${levelId.toUpperCase()}</b><p class="sub">${doneN}/${phases.length} fases ★ · escolha um conjunto (estilo Kanji Study). Fases liberadas por enquanto.</p>${cont}${home}${secs}</div>`
 }
 
 export function levelTabsHtml(selected = 'n5') {

@@ -156,8 +156,8 @@ export function renderXpBar() {
     b.id = 'xpb'
     b.style.cssText =
       'background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;margin-bottom:12px'
-    const nav = document.querySelector('#nav')
-    if (nav) nav.before(b)
+    const view = document.querySelector('#view')
+    if (view) view.before(b)
     else document.querySelector('main')?.prepend(b)
   }
   const [l, r, n] = levelFromXp(state.xp)

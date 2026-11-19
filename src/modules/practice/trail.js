@@ -1,4 +1,4 @@
-import { H, R, KG, PH } from '../../data/index.js'
+import { H, R, Kt, KG, KKG, PH } from '../../data/index.js'
 import { getKanjiList } from '../../data/kanji/index.js'
 import { setKanjiLevel } from '../kanji-store.js'
 import { say } from '../audio.js'
@@ -20,11 +20,46 @@ import { kwOpen } from './writing.js'
 
 const KR = {}
 H.forEach((c, i) => (KR[c] = R[i]))
+Kt.forEach((c, i) => (KR[c] = R[i]))
+Object.assign(KR, {
+  ガ: 'ga',
+  ギ: 'gi',
+  グ: 'gu',
+  ゲ: 'ge',
+  ゴ: 'go',
+  ザ: 'za',
+  ジ: 'ji',
+  ズ: 'zu',
+  ゼ: 'ze',
+  ゾ: 'zo',
+  ダ: 'da',
+  デ: 'de',
+  ド: 'do',
+  バ: 'ba',
+  ビ: 'bi',
+  ブ: 'bu',
+  ベ: 'be',
+  ボ: 'bo',
+  パ: 'pa',
+  ピ: 'pi',
+  プ: 'pu',
+  ペ: 'pe',
+  ポ: 'po',
+})
 
-/** Questions for a hiragana-row phase (cumulative review of rows learned so far). */
-export function kanaQ(g) {
-  const cum = KG.slice(0, g + 1).flatMap((x) => [...x.k])
-  const W = KG.slice(0, g + 1).flatMap((x) => x.w.split(';').map((s) => s.split('|')))
+/** Resolve kana pack for a trail phase (`kg` = hiragana, `kk` = katakana). */
+export function kanaPackOf(P) {
+  if (!P) return null
+  if (P.kg != null) return { pack: KG, i: P.kg, label: 'Hiragana', key: 'kg' }
+  if (P.kk != null) return { pack: KKG, i: P.kk, label: 'Katakana', key: 'kk' }
+  return null
+}
+
+/** Questions for a kana-row phase (cumulative review of rows learned so far). */
+export function kanaQ(g, pack = KG) {
+  const from = g >= 10 ? g : 0
+  const cum = pack.slice(from, g + 1).flatMap((x) => [...x.k])
+  const W = pack.slice(from, g + 1).flatMap((x) => x.w.split(';').map((s) => s.split('|')))
   const wr = (k, pool) => sh(pool.filter((x) => x !== k)).slice(0, 3)
   const qa = (k) =>
     Q(
@@ -49,17 +84,19 @@ export function kanaQ(g) {
       w[0] + ' (' + w[1] + ')',
       w[0],
     )
+  const chars = [...pack[g].k]
   return [
-    ...[...KG[g].k].map(qa),
-    ...sh(cum).slice(0, 3).map(qb),
-    ...sh(cum).slice(0, 3).map(qc),
+    ...chars.map(qa),
+    ...sh(cum).slice(0, Math.min(3, cum.length)).map(qb),
+    ...sh(cum).slice(0, Math.min(3, cum.length)).map(qc),
     ...sh(W).slice(0, 2).map(qw),
   ]
 }
 
 export function trQ(i) {
   const P = PH[i]
-  if (P.kg != null) return kanaQ(P.kg)
+  const kana = kanaPackOf(P)
+  if (kana) return kanaQ(kana.i, kana.pack)
   // Kanji lessons live at the end of the N5 pack (see lessons-n5.js).
   const KANJI0 = 36
   const KANJI1 = 39
@@ -96,7 +133,7 @@ export function trGo(i, fromQ = 0) {
 
 /** Open phase i: kana phases show the learn screen first. */
 export function trStart(i) {
-  if (PH[i].kg != null) {
+  if (kanaPackOf(PH[i])) {
     state.learnI = i
     state.ex = null
     state.tab = 'trail'
@@ -137,8 +174,9 @@ hooks.trSave = trSave
 export function trWrite() {
   const { ex } = state
   const i = ex && ex.tr != null ? ex.tr : -1
-  if (i >= 0 && PH[i].kg != null) {
-    kwOpen(PH[i].kg, 't')
+  const kana = i >= 0 ? kanaPackOf(PH[i]) : null
+  if (kana) {
+    kwOpen(kana.i, 't', kana.key)
     return
   }
   setKanjiLevel('n5')
@@ -153,35 +191,34 @@ export function learnClose() {
 }
 
 export function learnAll() {
-  ;[...KG[PH[state.learnI].kg].k].forEach((k, i) => setTimeout(() => say(k, 0.5), i * 1300))
+  const kana = kanaPackOf(PH[state.learnI])
+  if (!kana) return
+  ;[...kana.pack[kana.i].k].forEach((k, i) => setTimeout(() => say(k, 0.5), i * 1300))
 }
 
 export function learnView() {
   const { learnI } = state
-  const G = KG[PH[learnI].kg]
+  const kana = kanaPackOf(PH[learnI])
+  if (!kana) return '<p class="sub">Fase de kana inválida.</p>'
+  const G = kana.pack[kana.i]
   const W = G.w.split(';').map((s) => s.split('|'))
+  const cols = Math.min(5, G.k.length)
   return (
-    `<div class='panel' style='text-align:left'><button onclick='learnClose()'>←</button><h2 style='margin:10px 0 4px'>Hiragana: ${G.t}</h2><p class='sub'>Você ainda não conhece estes caracteres. Toque para ouvir, repita em voz alta e treine escrevendo no papel. Depois vem o exercício.</p><div class='grid' style='grid-template-columns:repeat(${Math.min(
-      5,
-      G.k.length,
-    )},1fr)'>` +
+    `<div class='panel' style='text-align:left'><button onclick='learnClose()'>←</button><h2 style='margin:10px 0 4px'>${kana.label}: ${G.t}</h2><p class='sub'>Você ainda não conhece estes caracteres. Toque para ouvir, repita em voz alta e treine escrevendo. Depois vem o exercício.</p><div class='grid' style='grid-template-columns:repeat(${cols},1fr)'>` +
     [...G.k]
       .map(
         (k) =>
-          `<button class='cell' data-say='${encodeURIComponent(k)}'><b>${k}</b><span>${KR[k]}</span></button>`,
+          `<button class='cell' data-say='${encodeURIComponent(k)}'><b>${k}</b><span>${KR[k] || ''}</span></button>`,
       )
       .join('') +
-    `</div><p class='sub'>Toque para ouvir. Use “Ordem dos traços” para animação KanjiVG.</p><div class='grid' style='grid-template-columns:repeat(${Math.min(
-      5,
-      G.k.length,
-    )},1fr);margin-bottom:8px'>` +
+    `</div><p class='sub'>Toque para ouvir. Use “Ordem dos traços” para animação KanjiVG.</p><div class='grid' style='grid-template-columns:repeat(${cols},1fr);margin-bottom:8px'>` +
     [...G.k]
       .map(
         (k) =>
           `<button class='cell' data-kana-stroke='${encodeURIComponent(k)}'><b>✍</b><span>${k}</span></button>`,
       )
       .join('') +
-    `</div><p><button onclick='learnAll()'>🐢 Ouvir todos devagar</button> <button onclick='kwOpen(${PH[learnI].kg},"p")'>✍ Aprender a escrever</button> <button onclick='kwOpen(${PH[learnI].kg},"t")'>📝 Testar escrita</button></p><h3 style='margin:14px 0 4px'>Palavras com estes sons</h3>` +
+    `</div><p><button onclick='learnAll()'>🐢 Ouvir todos devagar</button> <button onclick='kwOpen(${kana.i},"p","${kana.key}")'>✍ Aprender a escrever</button> <button onclick='kwOpen(${kana.i},"t","${kana.key}")'>📝 Testar escrita</button></p><h3 style='margin:14px 0 4px'>Palavras com estes sons</h3>` +
     W.map(
       (w) =>
         `<p style='margin:4px 0'><button data-say='${encodeURIComponent(w[0])}'>${w[0]} 🔊</button> ${w[1]} — ${w[2]}</p>`,
