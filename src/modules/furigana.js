@@ -8,6 +8,7 @@ export function ruby(kanji, reading) {
 export const FURI = {
   goi: `${ruby('語彙', 'ごい')} Vocabulário`,
   bunpou: `${ruby('文法', 'ぶんぽう')} Gramática`,
+  joshi: `${ruby('助詞', 'じょし')} Partículas`,
   choukai: `${ruby('聴解', 'ちょうかい')} Audição`,
   dokkai: `${ruby('読解', 'どっかい')} Leitura`,
   kanji: `${ruby('漢字', 'かんじ')} Kanji`,

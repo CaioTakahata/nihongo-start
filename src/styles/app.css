@@ -156,11 +156,11 @@ nav button.on { background: var(--ac); color: #fff; border-color: var(--ac); }
 }
 .drawer-lang select { width: 100%; }
 
-/* —— Trail accordion sections —— */
+/* —— Trail accordion (orientação) —— */
 .trail-sec {
   margin: 10px 0;
-  border: 1px solid var(--bd);
-  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--sec, var(--bd)) 35%, var(--bd));
+  border-radius: 18px;
   overflow: hidden;
   background: var(--bg);
 }
@@ -174,6 +174,7 @@ nav button.on { background: var(--ac); color: #fff; border-color: var(--ac); }
   border-radius: 0;
   background: var(--card);
   padding: 12px 14px;
+  border-left: 3px solid var(--sec, var(--ac));
   border-bottom: 1px solid transparent;
 }
 .trail-sec.open .trail-sec-hd { border-bottom-color: var(--bd); }
@@ -193,6 +194,7 @@ nav button.on { background: var(--ac); color: #fff; border-color: var(--ac); }
   text-align: left;
   margin: 4px 0;
   background: var(--card);
+  border-radius: 14px;
 }
 .trail-item .num {
   min-width: 28px;
@@ -203,33 +205,167 @@ nav button.on { background: var(--ac); color: #fff; border-color: var(--ac); }
 .home-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 12px;
   margin: 12px 0 4px;
 }
+button.home-tile,
 .home-tile {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
-  padding: 14px;
+  gap: 8px;
+  padding: 18px 18px 16px;
   text-align: left;
-  min-height: 88px;
-  border-color: color-mix(in srgb, var(--sec, var(--ac)) 45%, var(--bd));
+  min-height: 110px;
+  border-radius: 28px !important;
+  border: 1.5px solid color-mix(in srgb, var(--sec, var(--ac)) 38%, transparent);
   background:
-    linear-gradient(145deg, color-mix(in srgb, var(--sec, var(--ac)) 16%, var(--card)), var(--card));
+    radial-gradient(120% 90% at 8% 0%, color-mix(in srgb, var(--sec, var(--ac)) 26%, transparent), transparent 58%),
+    linear-gradient(165deg, color-mix(in srgb, var(--sec, var(--ac)) 14%, var(--card)), var(--card) 70%);
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--sec, var(--ac)) 14%, transparent);
+  transition: transform .15s ease, box-shadow .15s ease;
 }
+button.home-tile:hover,
+.home-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px color-mix(in srgb, var(--sec, var(--ac)) 20%, transparent);
+}
+button.home-tile:active,
+.home-tile:active { transform: translateY(0); }
 .home-tile b { font-size: 1.05rem; }
-.home-tile span { color: var(--mu); font-size: .8rem; }
+.home-tile span { color: var(--mu); font-size: .8rem; line-height: 1.35; }
 .home-tile .big-ico {
-  font-size: 1.6rem;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
   margin-bottom: 2px;
-  color: var(--sec, var(--ac));
+  font-size: 1.4rem;
+  line-height: 1;
+  color: #fff;
+  background: color-mix(in srgb, var(--sec, var(--ac)) 90%, #fff);
+  font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--sec, var(--ac)) 50%, #000);
 }
-.trail-sec {
-  border-color: color-mix(in srgb, var(--sec, var(--bd)) 35%, var(--bd));
+
+/* Lesson shell (estudar + exercício) */
+.duo-lesson {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-.trail-sec-hd {
-  border-left: 3px solid var(--sec, var(--ac));
+.duo-lesson-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.duo-lesson-top .duo-x {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  padding: 0;
+  font-size: 1.1rem;
+}
+.duo-bar {
+  flex: 1;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--bd);
+  overflow: hidden;
+}
+.duo-bar > i {
+  display: block;
+  height: 100%;
+  background: var(--ok);
+  border-radius: inherit;
+  transition: width .35s ease;
+}
+.duo-prompt {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px 8px 8px;
+  gap: 10px;
+}
+.duo-prompt .big { margin: 0; }
+.duo-opts-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 8px 0 12px;
+}
+.duo-opts-stack button {
+  width: 100%;
+  min-height: 56px;
+  padding: 14px 22px;
+  border-radius: 999px;
+  border: 2px solid var(--bd);
+  background: var(--card);
+  font-size: 1.15rem;
+  text-align: center;
+  box-shadow: 0 4px 0 var(--bd);
+}
+.duo-opts-stack button:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--bd);
+}
+.duo-opts-stack button.ok {
+  border-color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 18%, var(--card));
+  color: var(--ok);
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--ok) 45%, #000);
+}
+.duo-opts-stack button.no {
+  border-color: var(--no);
+  background: color-mix(in srgb, var(--no) 16%, var(--card));
+  color: var(--no);
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--no) 40%, #000);
+}
+.duo-footer {
+  position: sticky;
+  bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  margin: 8px 4px 0;
+  padding: 16px 14px;
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 28px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .28);
+}
+.duo-footer button.duo-cta {
+  width: 100%;
+  padding: 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ac);
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: .04em;
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--ac) 60%, #000);
+}
+.duo-footer button.duo-cta:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--ac) 60%, #000);
+}
+.duo-footer.ok-bg {
+  background: color-mix(in srgb, var(--ok) 18%, var(--card));
+  border-color: color-mix(in srgb, var(--ok) 40%, var(--bd));
+}
+.duo-footer.no-bg {
+  background: color-mix(in srgb, var(--no) 16%, var(--card));
+  border-color: color-mix(in srgb, var(--no) 40%, var(--bd));
+}
+.duo-feedback {
+  margin: 0 0 10px;
+  padding: 0 4px;
+  font-size: .92rem;
+  text-align: left;
 }
 
 .theme-picker {
@@ -296,9 +432,6 @@ rt {
   font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
 }
 #xpb rt { font-size: .4em; }
-.home-tile {
-  padding-top: 18px; /* espaço para a furigana */
-}
 .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .cell {
   background: var(--card);
@@ -347,8 +480,8 @@ rt {
   line-height: 1.1;
   font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
 }
-.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 14px 0; }
-.opts button { padding: 12px; }
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+.opts button { padding: 12px 16px; border-radius: 999px; min-height: 48px; }
 .ok { border-color: var(--ok) !important; color: var(--ok); }
 .no { border-color: var(--no) !important; color: var(--no); }
 ul.tips { text-align: left; padding-left: 20px; }
@@ -384,4 +517,208 @@ ul.tips { text-align: left; padding-left: 20px; }
 @keyframes fi { to { opacity: 1; } }
 svg text {
   font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", "Meiryo", sans-serif;
+}
+
+/* Partículas + montar frases */
+.part-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+.part-card {
+  background: var(--bg);
+  border: 1px solid var(--bd);
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.part-jp {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.part-jp b {
+  font-size: 2rem;
+  color: var(--ac);
+  font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+  font-weight: 500;
+}
+.part-jp small { color: var(--mu); font-size: .85rem; }
+.part-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.part-meta strong { font-size: .95rem; }
+.part-meta span { color: var(--mu); font-size: .82rem; line-height: 1.35; }
+.part-ex {
+  text-align: left;
+  font-size: 1rem;
+  font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+  padding: 8px 10px;
+  border-radius: 12px;
+}
+.part-ex-pt { color: var(--mu); }
+.sent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sent-build {
+  background: var(--bg);
+  border: 1px solid var(--bd);
+  border-radius: 16px;
+  padding: 14px;
+  text-align: left;
+}
+.sent-goal {
+  font-size: .85rem;
+  color: var(--mu);
+  margin-bottom: 8px;
+}
+.sent-parts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.sent-chip {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ac) 16%, var(--card));
+  border: 1px solid color-mix(in srgb, var(--ac) 35%, var(--bd));
+  font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+  font-size: .95rem;
+}
+.sent-plus { color: var(--mu); padding: 0 2px; }
+.sent-full {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-size: 1.05rem;
+  font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+  padding: 10px 12px;
+  border-radius: 12px;
+  margin-bottom: 4px;
+}
+
+/* Learn-first: vocabulário / gramática (trilha) */
+.learn-note {
+  margin: 10px 0;
+  padding: 12px 14px;
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  background: var(--bg);
+}
+.learn-note-body {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--mu);
+}
+.learn-note-body p { margin: 0.4em 0; }
+.vlearn-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+.vlearn-card {
+  background: var(--bg);
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+.vlearn-say {
+  font-size: 1.25rem;
+  line-height: 1.3;
+  font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+}
+.vlearn-say b { font-weight: 500; color: var(--ac); }
+.vlearn-pt { font-size: 0.92rem; }
+.vlearn-romaji { color: var(--mu); font-size: 0.8rem; }
+.glearn-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.glearn-card {
+  background: var(--bg);
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  padding: 12px 14px;
+  text-align: left;
+}
+.glearn-card b { color: var(--ac); display: block; margin-top: 4px; }
+.glearn-card small { color: var(--mu); display: block; margin-top: 4px; }
+.glearn-q { font-size: 1.05rem; line-height: 1.5; }
+.glearn-blank {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 0 4px;
+  border-bottom: 2px solid var(--ac);
+  color: var(--ac);
+  text-align: center;
+}
+
+/* Kanji learn-first screen (trilha) */
+.klearn-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.klearn-card {
+  background: var(--bg);
+  border: 1px solid var(--bd);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.klearn-char {
+  font-size: 3.2rem;
+  line-height: 1.15;
+  text-align: center;
+  font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+  color: var(--ac);
+}
+.klearn-char rt {
+  font-size: 0.85rem;
+  color: var(--mu);
+}
+.klearn-meta {
+  text-align: center;
+}
+.klearn-meta b {
+  display: block;
+  font-size: 1rem;
+}
+.klearn-meta small {
+  color: var(--mu);
+  font-size: 0.85rem;
+}
+.klearn-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+.klearn-actions button {
+  font-size: 0.85rem;
+  padding: 6px 10px;
+}
+.klearn-stroke {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

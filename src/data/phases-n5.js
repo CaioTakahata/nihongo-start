@@ -29,11 +29,20 @@ export const PH = [
   { t: 'Katakana: dakuten e ー', e: 'ガ', d: '濁点・半濁点 e vogal longa', kk: 10 },
   { t: 'Katakana: palavras estrangeiras', e: 'カ', d: 'Leitura em contexto', v: [4, 5], m: 'vvvvlllsss' },
 
+  // —— Partículas + montar frases (logo após o kana) ——
+  { t: 'Frases: は e です', e: 'は', d: 'Tópico · “eu sou…”', v: [8, 9], p: [6, 8], m: 'vlppppp' },
+  { t: 'Frases: か (perguntas)', e: 'か', d: '…ですか？', v: [8, 9], p: [24, 28], m: 'vlppppp' },
+  { t: '助詞: が e は', e: 'が', d: 'Tópico vs sujeito', v: [8, 9], p: [11, 14], m: 'vlpppppp' },
+  { t: '助詞: を・に・で', e: 'を', d: 'Objeto, destino, local', v: [8, 9], p: [1, 5], m: 'vlpppppp' },
+  { t: '助詞: の・と・も', e: 'の', d: 'Posse, com, também', v: [8, 9], p: [0, 7], m: 'vlpppppp' },
+  { t: 'Montar frases 1', e: '🧩', d: 'Peças → frase completa', v: [8, 9], p: [24, 32], m: 'vlppppppp' },
+  { t: 'Montar frases 2', e: '✏️', d: 'Mais combinações do dia a dia', v: [8, 10], p: [24, 36], m: 'vlpppppppr' },
+
   // —— Base gramatical ——
   { t: 'Cumprimentos e apresentação', e: '👋', d: 'Frases do dia a dia', v: [5, 7], m: 'vvlsssrv' },
   { t: 'Números 0–10', e: '🔢', d: 'Contar no básico', v: [7, 8], m: 'vvvlllss' },
-  { t: 'Partículas', e: 'は', d: 'は の を に で と も', v: [8, 9], p: [0, 14], m: 'vlpppppr' },
-  { t: 'Partículas em frases', e: 'を', d: 'Uso em contexto', v: [8, 9], p: [0, 18], m: 'vlpppppppr' },
+  { t: 'Partículas (revisão)', e: 'は', d: 'は の を に で と も', v: [8, 9], p: [0, 14], m: 'vlpppppr' },
+  { t: 'Partículas em frases (revisão)', e: 'を', d: 'Uso em contexto', v: [8, 9], p: [0, 18], m: 'vlpppppppr' },
   { t: 'Verbos na forma ます', e: '🍙', d: 'Presente / futuro educado', v: [9, 10], g: [0, 4], m: 'vvlsgggr' },
   { t: 'Verbos: passado e negativo', e: 'ました', d: 'ます / ません / ました', v: [9, 10], g: [0, 4], m: 'vvlsggggrr' },
   { t: 'Dias da semana e horas', e: '🕒', d: 'ようび e なんじ', v: [10, 11], m: 'vvvlsssr' },
@@ -114,11 +123,11 @@ export const PH = [
     m: 'rrrrrrrrvvss',
   },
 
-  // —— Kanji ——
-  { t: 'Kanji: números e tempo', e: '漢', d: '百千万円時分…', v: [36, 37], m: 'vvvvkkkkllss' },
-  { t: 'Kanji: pessoas e natureza', e: '花', d: '男女子父母友…', v: [37, 38], m: 'vvvvkkkkllss' },
-  { t: 'Kanji: ações e descrições', e: '行', d: '食飲見聞読…', v: [38, 39], m: 'vvvvkkkkllss' },
-  { t: 'Kanji misto N5', e: '学', d: 'Todos os kanji da trilha', v: [36, 39], m: 'vvvvkkkkkkllssrr' },
+  // —— Kanji (abre com tela de aprendizado: traços/leituras antes do teste) ——
+  { t: 'Kanji: números e tempo', e: '漢', d: 'Aprenda 百千万円時分…', v: [36, 37], m: 'vvvvkkkkllss' },
+  { t: 'Kanji: pessoas e natureza', e: '花', d: 'Aprenda 男女子父母友…', v: [37, 38], m: 'vvvvkkkkllss' },
+  { t: 'Kanji: ações e descrições', e: '行', d: 'Aprenda 食飲見聞読…', v: [38, 39], m: 'vvvvkkkkllss' },
+  { t: 'Kanji misto N5', e: '学', d: 'Revise todos os kanji (traços + quiz)', v: [36, 39], m: 'vvvvkkkkkkllssrr' },
 
   // —— Gramática reforço ——
   {

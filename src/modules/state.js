@@ -11,6 +11,7 @@ export const state = {
   trailOpenSecs: {
     hira: true,
     kata: false,
+    joshi: false,
     goi: false,
     bunpou: false,
     choukai: false,

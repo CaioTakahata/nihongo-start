@@ -93,9 +93,10 @@ function phaseSection(p) {
   if (/^Kanji|漢字/i.test(p.t)) return 'kanji'
   if (/聴解|Choukai|Audição/i.test(p.t)) return 'choukai'
   if (/読解|Dokkai|Leitura:/i.test(p.t)) return 'dokkai'
+  if (/助詞|Partícula|Frases:|Montar frases/i.test(p.t)) return 'joshi'
   if (/語彙|Verbos N5|Adjetivos N5|Substantivos|Vocabulário|Família|Números grandes|Corpo|Roupas|Comida|Casa|Escola|Transporte|Direções|Trabalho|Tempo e clima|Compras|Sentimentos|Natureza|Expressões/i.test(p.t))
     return 'goi'
-  if (/文法|Bunpou|Partículas|Forma|Negativo|Comparações|Adjetivos e|Existência|Calendário|Cumprimentos|Demonstrativos|Verbos na|Verbos:/i.test(p.t))
+  if (/文法|Bunpou|Forma|Negativo|Comparações|Adjetivos e|Existência|Calendário|Cumprimentos|Demonstrativos|Verbos na|Verbos:/i.test(p.t))
     return 'bunpou'
   if (/Simulado|Revisão|JLPT/i.test(p.t)) return 'sim'
   return 'bunpou'
@@ -103,13 +104,14 @@ function phaseSection(p) {
 
 const TRAIL_SECS = [
   { id: 'hira', e: 'あ', t: 'Hiragana', d: 'Linhas + dakuten', color: '#5b9fd4' },
-  { id: 'kata', e: 'ア', t: 'Katakana', d: 'Linhas + palavras estrangeiras', color: '#6bbf8a' },
-  { id: 'goi', e: '語', t: FURI.goi, d: 'Verbos, adj., substantivos N5', color: '#e0a04a' },
-  { id: 'bunpou', e: '文', t: FURI.bunpou, d: 'Partículas e estruturas', color: '#c97bdb' },
-  { id: 'choukai', e: '聴', t: FURI.choukai, d: 'Choukai — ouvir e entender', color: '#4db8c4' },
-  { id: 'dokkai', e: '読', t: FURI.dokkai, d: 'Dokkai — textos curtos', color: '#e07a6a' },
-  { id: 'kanji', e: '漢', t: FURI.kanji, d: 'Leituras e significados', color: '#d45b6a' },
-  { id: 'sim', e: '🏆', t: 'Simulados', d: 'Prova completa N5', color: '#d4a84b' },
+  { id: 'kata', e: 'ア', t: 'Katakana', d: 'Linhas + palavras estrangeiras', color: '#5ecf98' },
+  { id: 'joshi', e: 'は', t: FURI.joshi, d: 'は・が・か · montar frases', color: '#f0a060' },
+  { id: 'goi', e: '語', t: FURI.goi, d: 'Estudar palavras → exercício', color: '#e0a04a' },
+  { id: 'bunpou', e: '文', t: FURI.bunpou, d: 'Estudar regras → exercício', color: '#c97bdb' },
+  { id: 'choukai', e: '聴', t: FURI.choukai, d: 'Revisar → ouvir', color: '#4db8c4' },
+  { id: 'dokkai', e: '読', t: FURI.dokkai, d: 'Revisar → ler', color: '#e07a6a' },
+  { id: 'kanji', e: '漢', t: FURI.kanji, d: 'Traços → leituras → exercícios', color: '#d45b6a' },
+  { id: 'sim', e: '🏆', t: 'Simulados', d: 'Revisão → prova', color: '#d4a84b' },
 ]
 
 export function trailListView(levelId) {
@@ -135,7 +137,7 @@ export function trailListView(levelId) {
   const buckets = Object.fromEntries(TRAIL_SECS.map((s) => [s.id, []]))
   phases.forEach((p, i) => {
     const id = phaseSection(p)
-    ;(buckets[id] || buckets.gram).push({ p, i })
+    ;(buckets[id] || buckets.bunpou).push({ p, i })
   })
 
   const home = `<div class="home-grid">${TRAIL_SECS.map((s) => {
@@ -161,7 +163,7 @@ export function trailListView(levelId) {
     return `<div class="trail-sec${isOpen ? ' open' : ''}" data-sec="${s.id}" style="--sec:${s.color}"><button type="button" class="trail-sec-hd" data-trail-sec="${s.id}"><span style="font-size:1.4rem;color:var(--sec)">${s.e}</span><span><b>${s.t}</b><br><small style="color:var(--mu)">${done}/${items.length} concluídas · ${s.d}</small></span><span class="chev">▸</span></button><div class="trail-sec-bd">${body}</div></div>`
   }).join('')
 
-  return `<div class="panel" style="text-align:left"><b>Trilha ${levelId.toUpperCase()}</b><p class="sub">${doneN}/${phases.length} fases ★ · caminho principal do N5 (${FURI.areas}). Use o menu ☰ para mudar o tema de cores.</p>${cont}${home}${secs}</div>`
+  return `<div class="panel" style="text-align:left"><b>Trilha ${levelId.toUpperCase()}</b><p class="sub">${doneN}/${phases.length} fases ★ · caminho principal do N5 (${FURI.areas}). Em cada fase: estudar o conteúdo e depois fazer o exercício.</p>${cont}${home}${secs}</div>`
 }
 
 export function levelTabsHtml(selected = 'n5') {

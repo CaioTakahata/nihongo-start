@@ -8,7 +8,17 @@ import { kanaGrid } from './practice/kana-grid.js'
 import { kanjiList, kC, kOpen, kClose, kMode, kFlip, kGo, kRand, kPlay, kSay, setKLevel } from './practice/kanji.js'
 import { toggleKanaStrokeMode, showKanaStroke } from './practice/kana-grid.js'
 import { quizView, newQ, setQset } from './practice/quiz.js'
-import { trailView, trStart, trGo, trContinue, trWrite, learnAll, learnClose } from './practice/trail.js'
+import {
+  trailView,
+  trStart,
+  trGo,
+  trContinue,
+  trWrite,
+  learnAll,
+  learnClose,
+  learnKanjiWrite,
+  learnKanjiStroke,
+} from './practice/trail.js'
 import {
   pD,
   pM,
@@ -45,6 +55,7 @@ const TABS = [
 
 /** Quick jumps into trail study areas (語彙・文法・聴解・読解…). */
 const DRAWER_CATS = [
+  { sec: 'joshi', ico: 'は', label: FURI.joshi },
   { sec: 'goi', ico: '語', label: FURI.goi },
   { sec: 'bunpou', ico: '文', label: FURI.bunpou },
   { sec: 'choukai', ico: '聴', label: FURI.choukai },
@@ -190,6 +201,8 @@ function exposeWindowHandlers() {
     trWrite,
     learnAll,
     learnClose,
+    learnKanjiWrite,
+    learnKanjiStroke,
     // kanji
     kC,
     kOpen,
@@ -284,6 +297,14 @@ function wireDelegation() {
     }
     if ((b = el.closest('[data-kana-stroke]'))) {
       showKanaStroke(decodeURIComponent(b.dataset.kanaStroke))
+      return
+    }
+    if ((b = el.closest('[data-klearn-write]'))) {
+      learnKanjiWrite(decodeURIComponent(b.dataset.klearnWrite))
+      return
+    }
+    if ((b = el.closest('[data-klearn-stroke]'))) {
+      learnKanjiStroke(decodeURIComponent(b.dataset.klearnStroke), b.dataset.klearnHost)
     }
   })
   document.addEventListener('keydown', (e) => {

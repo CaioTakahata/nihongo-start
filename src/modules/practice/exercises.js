@@ -32,7 +32,23 @@ export function mkV(a, b, lis, n) {
 }
 
 const particleQ = (s) => {
-  const [q, a, e] = s.split('|')
+  const parts = s.split('|')
+  // q|a|wrong1,wrong2,wrong3|explain  OR  legacy q|a|explain
+  if (parts.length >= 4) {
+    const [q, a, w, e] = parts
+    const wrong = w
+      .split(',')
+      .map((x) => x.trim())
+      .filter((x) => x && x !== a)
+      .slice(0, 3)
+    while (wrong.length < 3) {
+      const pad = sh(PARTICLES.filter((x) => x !== a && !wrong.includes(x)))[0]
+      if (!pad) break
+      wrong.push(pad)
+    }
+    return Q(q, a, wrong, e)
+  }
+  const [q, a, e] = parts
   return Q(q, a, sh(PARTICLES.filter((x) => x !== a)).slice(0, 3), e)
 }
 const grammarQ = (s) => {
@@ -206,24 +222,38 @@ export function exView() {
       `<button onclick='exStart(${ex.mi})'>Refazer</button> <button onclick='exQuit()'>Menu</button></div>`
     )
   const q = ex.l[ex.i]
+  const pct = Math.round((100 * ex.i) / Math.max(1, ex.l.length))
+  const answeredOk = ex.a && q.o[ex.c] === q.a
+  const footClass = ex.a ? (answeredOk ? 'ok-bg' : 'no-bg') : ''
   return (
-    `<div class='panel'><div class='sub'>${ex.i + 1}/${ex.l.length} · ${ex.s} ✓ <button onclick='exQuit()' style='float:right;padding:2px 8px'>✕</button></div><div class='big' style='font-size:${
-      q.q.length > 6 ? '1.7rem' : '4rem'
-    }'>${q.q}</div>${
-      q.s ? "<button onclick='exSay(1)'>🔊 Normal</button> <button onclick='exSay(0.5)'>🐢 Lento</button>" : ''
-    }<div class='opts'>` +
+    `<div class="duo-lesson">
+      <div class="duo-lesson-top">
+        <button type="button" class="duo-x" onclick="exQuit()" aria-label="Sair">✕</button>
+        <div class="duo-bar" aria-hidden="true"><i style="width:${pct}%"></i></div>
+        <span class="sub" style="margin:0;white-space:nowrap">${ex.s} ✓</span>
+      </div>
+      <div class="duo-prompt">
+        <div class="big" style="font-size:${q.q.length > 6 ? '1.55rem' : '3.6rem'}">${q.q}</div>
+        ${q.s ? `<p><button type="button" onclick="exSay(1)">🔊</button> <button type="button" onclick="exSay(0.5)">🐢</button></p>` : ''}
+      </div>
+      <div class="duo-opts-stack">` +
     q.o
       .map(
         (o, j) =>
-          `<button class='${ex.a ? (o === q.a ? 'ok' : j === ex.c ? 'no' : '') : ''}' ${
+          `<button type="button" class="${ex.a ? (o === q.a ? 'ok' : j === ex.c ? 'no' : '') : ''}" ${
             ex.a ? 'disabled' : ''
-          } onclick='exAns(${j})'>${o}</button>`,
+          } onclick="exAns(${j})">${o}</button>`,
       )
       .join('') +
-    `</div>${
-      ex.a
-        ? `<p><small>${q.e}</small></p><button onclick='exNext()'>${ex.i + 1 < ex.l.length ? 'Próxima' : 'Ver resultado'}</button>`
-        : ''
-    }</div>`
+    `</div>
+      <div class="duo-footer ${footClass}">
+        ${
+          ex.a
+            ? `<p class="duo-feedback"><b>${answeredOk ? 'Correto!' : 'Quase…'}</b> ${q.e}</p>
+               <button type="button" class="duo-cta" onclick="exNext()">${ex.i + 1 < ex.l.length ? 'CONTINUAR' : 'VER RESULTADO'}</button>`
+            : `<p class="sub" style="text-align:center;margin:0">Escolha a resposta</p>`
+        }
+      </div>
+    </div>`
   )
 }

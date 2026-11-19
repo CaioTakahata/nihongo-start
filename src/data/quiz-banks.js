@@ -1,6 +1,7 @@
 import { N5_CHOUKAI } from './n5/choukai.js'
 import { N5_DOKKAI } from './n5/dokkai.js'
 import { N5_GRAMMAR_QUIZ } from './n5/grammar.js'
+import { N5_SENTENCE_QUIZ } from './n5/particles.js'
 
 export const PQ = [
   "わたし＿ ほんです。|の|の indica posse: わたしの ほん = meu livro",
@@ -26,7 +27,8 @@ export const PQ = [
   "デパート＿ ふくを かいました。|で|local da compra com で",
   "うち＿ でます。|を|sair de um lugar usa を",
   "としょかん＿ ほんが あります。|に|existência no lugar com に",
-  "ともだち＿ でんわを します。|に|ligar para alguém usa に"
+  "ともだち＿ でんわを します。|に|ligar para alguém usa に",
+  ...N5_SENTENCE_QUIZ,
 ];
 
 export const GQ = [
