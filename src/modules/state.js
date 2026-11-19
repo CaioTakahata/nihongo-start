@@ -8,7 +8,16 @@ export const state = {
   /** Side drawer open (Kanji Study–style). */
   drawerOpen: false,
   /** Which trail accordion sections are expanded (ids). */
-  trailOpenSecs: { hira: true, kata: false, gram: false, vocab: false, kanji: false, sim: false },
+  trailOpenSecs: {
+    hira: true,
+    kata: false,
+    goi: false,
+    bunpou: false,
+    choukai: false,
+    dokkai: false,
+    kanji: false,
+    sim: false,
+  },
 
   // quiz
   qset: 'hira',

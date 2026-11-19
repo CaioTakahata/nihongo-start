@@ -65,34 +65,39 @@ export const mkR = (n) =>
       ),
     )
 
-/** Lições 0–35 = vocabulário/gramática; 36–38 = kanji N5. */
+/** Lições: 0–35 base, 36–38 kanji, 39 plano, 40+ pacotes N5 (verbos/adj/substantivos). */
 const VOCAB_END = 36
 const KANJI_START = 36
 const KANJI_END = 39
+const PACK_START = 40
+const PACK_END = 59
 
 function buildExList(i) {
   const m = MODES[i]
   const n = 15
-  if (m === 'v') return mkV(0, VOCAB_END, 0, n)
-  if (m === 'l') return mkV(0, VOCAB_END, 1, n)
+  if (m === 'v')
+    return sh([...mkV(0, VOCAB_END, 0, 10), ...mkV(PACK_START, PACK_END, 0, 10)]).slice(0, n)
+  if (m === 'l')
+    return sh([...mkV(0, VOCAB_END, 1, 8), ...mkV(PACK_START, PACK_END, 1, 8)]).slice(0, n)
   if (m === 'k') return mkV(KANJI_START, KANJI_END, 0, n)
   if (m === 'p') return mkP(n)
   if (m === 'g') return mkG(n)
   return sh([
-    ...mkV(0, VOCAB_END, 0, 8),
-    ...mkV(0, VOCAB_END, 1, 6),
-    ...mkV(KANJI_START, KANJI_END, 0, 6),
+    ...mkV(0, VOCAB_END, 0, 6),
+    ...mkV(PACK_START, PACK_END, 0, 4),
+    ...mkV(0, VOCAB_END, 1, 4),
+    ...mkV(KANJI_START, KANJI_END, 0, 4),
     ...mkP(6),
-    ...mkG(4),
+    ...mkG(6),
   ])
 }
 
 const EX_LABELS = [
-  'Vocabulário',
-  'Ouvir',
-  'Kanji',
-  'Partículas',
-  'Gramática',
+  '語彙 Vocabulário',
+  '聴解 Ouvir',
+  '漢字 Kanji',
+  'は Partículas',
+  '文法 Gramática',
   'Simulado misto',
 ]
 
@@ -177,11 +182,11 @@ export function exView() {
     return (
       `<div class='panel' style='${st}'><b>Exercícios N5</b><p class='sub'>Escolha um tipo de prática. Cada sessão tem 15 questões (o simulado misto tem 30). Progresso e XP ficam salvos neste navegador. +XP a cada acerto.</p>${cont}` +
       [
-        '📖 Vocabulário: japonês → português (15)',
-        '🔊 Ouvir e escolher (15)',
-        '漢 Kanji: significado (15)',
+        '語彙 Vocabulário N5 (15)',
+        '聴解 Ouvir e escolher (15)',
+        '漢字 Kanji: significado (15)',
         'は Partículas (15)',
-        '📝 Gramática (15)',
+        '文法 Gramática N5 (15)',
         '🎯 Simulado misto (30)',
       ]
         .map(

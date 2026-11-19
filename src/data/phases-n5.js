@@ -156,5 +156,20 @@ export const PH = [
     p: [0, 18],
     g: [0, 28],
     m: 'vvvvllllssssrrppggggkk',
-  },
+  },,
+
+  // —— Pacotes N5 (goi / bunpou / choukai / dokkai) ——
+  { t: '語彙 · Verbos N5 A', e: '動', d: 'Pacote de verbos (1)', v: [40, 41], m: 'vvvvvvlllsss' },
+  { t: '語彙 · Verbos N5 B', e: '詞', d: 'Pacote de verbos (2)', v: [41, 42], m: 'vvvvvvlllsss' },
+  { t: '語彙 · Adjetivos N5', e: '形', d: 'い e な', v: [42, 43], m: 'vvvvvvlllsss' },
+  { t: '語彙 · Substantivos 1–4', e: '名', d: 'Blocos de palavras N5', v: [43, 47], m: 'vvvvvvvvlllssss' },
+  { t: '語彙 · Substantivos 5–8', e: '名', d: 'Blocos de palavras N5', v: [47, 51], m: 'vvvvvvvvlllssss' },
+  { t: '語彙 · Substantivos 9–12', e: '名', d: 'Blocos de palavras N5', v: [51, 55], m: 'vvvvvvvvlllssss' },
+  { t: '語彙 · Substantivos 13–16', e: '名', d: 'Blocos de palavras N5', v: [55, 59], m: 'vvvvvvvvlllssss' },
+  { t: '文法 Bunpou reforço total', e: '文', d: 'Pontos gramaticais N5', v: [8, 20], p: [0, 24], g: [0, 108], m: 'ggggggppppvvssrr' },
+  { t: '聴解 Choukai 1', e: '聴', d: 'Audição — frases do dia a dia', v: [5, 36], m: 'ssssssssss' },
+  { t: '聴解 Choukai 2', e: '解', d: 'Audição — mais frases', v: [20, 59], m: 'ssssssssssll' },
+  { t: '読解 Dokkai 1', e: '読', d: 'Leitura — textos curtos', v: [5, 36], m: 'rrrrrrrr' },
+  { t: '読解 Dokkai 2', e: '解', d: 'Leitura + vocabulário', v: [20, 59], m: 'rrrrrrvvss' },
+  { t: 'Simulado JLPT N5 (áreas)', e: 'JLPT', d: '語彙・文法・聴解・読解・漢字', v: [0, 59], p: [0, 24], g: [0, 108], m: 'vvvvllllssssrrppggggkk' },
 ]

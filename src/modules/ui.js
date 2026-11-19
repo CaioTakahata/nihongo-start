@@ -1,6 +1,6 @@
-import { T, CL, H, Kt } from '../data/index.js'
+import { T, H, Kt } from '../data/index.js'
 import { say, mountSpeedControl } from './audio.js'
-import { lessonListView, lessonDetailView, finishLesson, isLevelOpen } from './curriculum.js'
+import { finishLesson } from './curriculum.js'
 import { loadProgress, renderXpBar } from './progress.js'
 import { state, hooks, $ } from './state.js'
 import { exView, exStart, exContinue, exAns, exNext, exQuit, exSay } from './practice/exercises.js'
@@ -29,10 +29,12 @@ import {
   kwUndo,
   kwClear,
 } from './practice/writing.js'
+import { FURI } from './furigana.js'
+import { applyTheme, getThemeId, themePickerHtml } from './theme.js'
 
+/** Curso removido do menu: a Trilha é o caminho principal do N5. */
 const TABS = [
   { id: 'trail', ico: '🗺', label: (t) => t.trail || 'Trilha' },
-  { id: 'course', ico: '📘', label: (t) => t.course || CL[state.L] || 'Curso' },
   { id: 'hira', ico: 'あ', label: (t) => t.hira || 'Hiragana' },
   { id: 'kata', ico: 'ア', label: (t) => t.kata || 'Katakana' },
   { id: 'kanji', ico: '漢', label: (t) => t.kanji || 'Kanji' },
@@ -41,9 +43,18 @@ const TABS = [
   { id: 'tips', ico: '💡', label: (t) => t.tips || 'Dicas' },
 ]
 
+/** Quick jumps into trail study areas (語彙・文法・聴解・読解…). */
+const DRAWER_CATS = [
+  { sec: 'goi', ico: '語', label: FURI.goi },
+  { sec: 'bunpou', ico: '文', label: FURI.bunpou },
+  { sec: 'choukai', ico: '聴', label: FURI.choukai },
+  { sec: 'dokkai', ico: '読', label: FURI.dokkai },
+  { sec: 'kanji', ico: '漢', label: FURI.kanji },
+  { sec: 'sim', ico: '🏆', label: 'Simulados N5' },
+]
+
 const TAB_TITLES = {
   trail: 'Trilha N5',
-  course: 'Curso',
   hira: 'Hiragana',
   kata: 'Katakana',
   kanji: 'Kanji',
@@ -88,16 +99,27 @@ function syncDrawer() {
 function renderDrawer(t) {
   const nav = $('#drawer-nav')
   if (!nav) return
-  nav.innerHTML = TABS.map(
+  const main = TABS.map(
     (tab) =>
       `<button type="button" class="${tab.id === state.tab ? 'on' : ''}" data-tab="${tab.id}"><span class="ico">${tab.ico}</span><span>${tab.label(t)}</span></button>`,
   ).join('')
-}
-
-export function courseView() {
-  if (!isLevelOpen(state.levelId)) return lessonListView(state.levelId, state.L)
-  if (state.cl === null) return lessonListView(state.levelId, state.L)
-  return lessonDetailView(state.levelId, state.cl, say)
+  const cats =
+    `<div style="margin:10px 8px 4px;font-size:.75rem;color:var(--mu);letter-spacing:.04em">ÁREAS N5</div>` +
+    DRAWER_CATS.map(
+      (c) =>
+        `<button type="button" data-trail-jump="${c.sec}"><span class="ico">${c.ico}</span><span>${c.label}</span></button>`,
+    ).join('')
+  nav.innerHTML = main + cats
+  const foot = document.querySelector('.drawer-foot')
+  if (foot) {
+    let host = foot.querySelector('#theme-host')
+    if (!host) {
+      host = document.createElement('div')
+      host.id = 'theme-host'
+      foot.prepend(host)
+    }
+    host.innerHTML = themePickerHtml()
+  }
 }
 
 export function toggleTrailSec(id, forceOpen = false) {
@@ -112,7 +134,11 @@ export function toggleTrailSec(id, forceOpen = false) {
 
 export function render() {
   const t = T[state.L]
-  const { tab } = state
+  let { tab } = state
+  if (tab === 'course') {
+    state.tab = 'trail'
+    tab = 'trail'
+  }
   const title = $('#app-title')
   if (title) title.textContent = TAB_TITLES[tab] || 'Nihongo Start'
   $('#sub').textContent = t.sub
@@ -123,7 +149,6 @@ export function render() {
   if (nav) nav.innerHTML = ''
   let v = ''
   if (tab === 'trail') v = trailView()
-  else if (tab === 'course') v = courseView()
   else if (tab === 'ex') v = exView()
   else if (tab === 'hira') v = kanaGrid(H)
   else if (tab === 'kata') v = kanaGrid(Kt)
@@ -209,7 +234,17 @@ function wireDelegation() {
     if (el.closest('#menu-btn')) return toggleDrawer()
     if (el.closest('#drawer-backdrop')) return closeDrawer()
     if ((b = el.closest('[data-tab]'))) return setTab(b.dataset.tab)
-    if ((b = el.closest('[data-trail-jump]'))) return toggleTrailSec(b.dataset.trailJump, true)
+    if ((b = el.closest('[data-theme-pick]'))) {
+      applyTheme(b.dataset.themePick)
+      renderDrawer(T[state.L])
+      return
+    }
+    if ((b = el.closest('[data-trail-jump]'))) {
+      state.tab = 'trail'
+      closeDrawer()
+      toggleTrailSec(b.dataset.trailJump, true)
+      return
+    }
     if ((b = el.closest('[data-trail-sec]'))) return toggleTrailSec(b.dataset.trailSec)
     if ((b = el.closest('[data-say]'))) return say(decodeURIComponent(b.dataset.say))
     if ((b = el.closest('[data-lesson]'))) {
@@ -258,6 +293,7 @@ function wireDelegation() {
 
 export function boot() {
   hooks.render = render
+  applyTheme(getThemeId())
   loadProgress()
   mountSpeedControl()
   renderXpBar()
@@ -273,6 +309,5 @@ export function boot() {
       render()
     }
   }
-  // Prefer dark feel closer to Kanji Study when system is dark; leave auto otherwise.
   render()
 }

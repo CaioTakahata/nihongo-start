@@ -15,6 +15,7 @@ import {
   addXp,
 } from './progress.js'
 import { state } from './state.js'
+import { FURI } from './furigana.js'
 
 const lessonsByLevel = {
   n5: LS,
@@ -89,20 +90,26 @@ export function finishLesson(i) {
 function phaseSection(p) {
   if (p.kg != null || /^Hiragana/i.test(p.t)) return 'hira'
   if (p.kk != null || /^Katakana/i.test(p.t)) return 'kata'
-  if (/^Kanji/i.test(p.t)) return 'kanji'
-  if (/Simulado|Revisão|Audição|Leitura|Gramática reforço/i.test(p.t)) return 'sim'
-  if (/Família|Números grandes|Corpo|Roupas|Comida|Casa|Escola|Transporte|Direções|Trabalho|Tempo e clima|Compras|Verbos essenciais|Sentimentos|Natureza|Expressões|Vocabulário misto/i.test(p.t))
-    return 'vocab'
-  return 'gram'
+  if (/^Kanji|漢字/i.test(p.t)) return 'kanji'
+  if (/聴解|Choukai|Audição/i.test(p.t)) return 'choukai'
+  if (/読解|Dokkai|Leitura:/i.test(p.t)) return 'dokkai'
+  if (/語彙|Verbos N5|Adjetivos N5|Substantivos|Vocabulário|Família|Números grandes|Corpo|Roupas|Comida|Casa|Escola|Transporte|Direções|Trabalho|Tempo e clima|Compras|Sentimentos|Natureza|Expressões/i.test(p.t))
+    return 'goi'
+  if (/文法|Bunpou|Partículas|Forma|Negativo|Comparações|Adjetivos e|Existência|Calendário|Cumprimentos|Demonstrativos|Verbos na|Verbos:/i.test(p.t))
+    return 'bunpou'
+  if (/Simulado|Revisão|JLPT/i.test(p.t)) return 'sim'
+  return 'bunpou'
 }
 
 const TRAIL_SECS = [
-  { id: 'hira', e: 'あ', t: 'Hiragana', d: 'Linhas + dakuten' },
-  { id: 'kata', e: 'ア', t: 'Katakana', d: 'Linhas + palavras estrangeiras' },
-  { id: 'gram', e: 'は', t: 'Gramática N5', d: 'Partículas, verbos, て…' },
-  { id: 'vocab', e: '📖', t: 'Vocabulário', d: 'Temas da prova' },
-  { id: 'kanji', e: '漢', t: 'Kanji N5', d: 'Leitura e significado' },
-  { id: 'sim', e: '🏆', t: 'Revisão e simulados', d: 'Audição, leitura, prova' },
+  { id: 'hira', e: 'あ', t: 'Hiragana', d: 'Linhas + dakuten', color: '#5b9fd4' },
+  { id: 'kata', e: 'ア', t: 'Katakana', d: 'Linhas + palavras estrangeiras', color: '#6bbf8a' },
+  { id: 'goi', e: '語', t: FURI.goi, d: 'Verbos, adj., substantivos N5', color: '#e0a04a' },
+  { id: 'bunpou', e: '文', t: FURI.bunpou, d: 'Partículas e estruturas', color: '#c97bdb' },
+  { id: 'choukai', e: '聴', t: FURI.choukai, d: 'Choukai — ouvir e entender', color: '#4db8c4' },
+  { id: 'dokkai', e: '読', t: FURI.dokkai, d: 'Dokkai — textos curtos', color: '#e07a6a' },
+  { id: 'kanji', e: '漢', t: FURI.kanji, d: 'Leituras e significados', color: '#d45b6a' },
+  { id: 'sim', e: '🏆', t: 'Simulados', d: 'Prova completa N5', color: '#d4a84b' },
 ]
 
 export function trailListView(levelId) {
@@ -134,7 +141,7 @@ export function trailListView(levelId) {
   const home = `<div class="home-grid">${TRAIL_SECS.map((s) => {
     const items = buckets[s.id] || []
     const done = items.filter(({ i }) => isPhaseDone(i)).length
-    return `<button type="button" class="home-tile" data-trail-jump="${s.id}"><span class="big-ico">${s.e}</span><b>${s.t}</b><span>${done}/${items.length} ★ · ${s.d}</span></button>`
+    return `<button type="button" class="home-tile" data-trail-jump="${s.id}" style="--sec:${s.color}"><span class="big-ico">${s.e}</span><b>${s.t}</b><span>${done}/${items.length} ★ · ${s.d}</span></button>`
   }).join('')}</div>`
 
   const secs = TRAIL_SECS.map((s) => {
@@ -151,10 +158,10 @@ export function trailListView(levelId) {
         return `<button ${open ? '' : 'disabled'} class="trail-item" data-phase="${i}" style="${open ? '' : 'opacity:.5'}"><span class="num">${i + 1}</span><span style="font-size:1.35rem;min-width:32px;text-align:center">${donePh ? '⭐' : open ? p.e : '🔒'}</span><span><b>${p.t.replace(/^Hiragana:\s*|^Katakana:\s*/, '')}</b><br><small style="color:var(--mu)">${p.d}${bestTxt}</small></span></button>`
       })
       .join('')
-    return `<div class="trail-sec${isOpen ? ' open' : ''}" data-sec="${s.id}"><button type="button" class="trail-sec-hd" data-trail-sec="${s.id}"><span style="font-size:1.4rem">${s.e}</span><span><b>${s.t}</b><br><small style="color:var(--mu)">${done}/${items.length} concluídas · ${s.d}</small></span><span class="chev">▸</span></button><div class="trail-sec-bd">${body}</div></div>`
+    return `<div class="trail-sec${isOpen ? ' open' : ''}" data-sec="${s.id}" style="--sec:${s.color}"><button type="button" class="trail-sec-hd" data-trail-sec="${s.id}"><span style="font-size:1.4rem;color:var(--sec)">${s.e}</span><span><b>${s.t}</b><br><small style="color:var(--mu)">${done}/${items.length} concluídas · ${s.d}</small></span><span class="chev">▸</span></button><div class="trail-sec-bd">${body}</div></div>`
   }).join('')
 
-  return `<div class="panel" style="text-align:left"><b>Trilha ${levelId.toUpperCase()}</b><p class="sub">${doneN}/${phases.length} fases ★ · escolha um conjunto (estilo Kanji Study). Fases liberadas por enquanto.</p>${cont}${home}${secs}</div>`
+  return `<div class="panel" style="text-align:left"><b>Trilha ${levelId.toUpperCase()}</b><p class="sub">${doneN}/${phases.length} fases ★ · caminho principal do N5 (${FURI.areas}). Use o menu ☰ para mudar o tema de cores.</p>${cont}${home}${secs}</div>`
 }
 
 export function levelTabsHtml(selected = 'n5') {

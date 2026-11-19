@@ -7,3 +7,13 @@ export { PQ, GQ, LQ, P1, P2, P3, P4, P5, RQ } from './quiz-banks.js';
 export { PH } from './phases-n5.js';
 export { LEVELS } from './levels.js';
 export { getKanjiList, KANJI_BY_LEVEL, KANJI_LEVEL_IDS, toLegacyTuple } from './kanji/index.js';
+export {
+  N5_CATEGORIES,
+  N5_VERBS,
+  N5_NOUN_CHUNKS,
+  N5_I_ADJ,
+  N5_NA_ADJ,
+  N5_GRAMMAR,
+  N5_CHOUKAI,
+  N5_DOKKAI,
+} from './n5/index.js';

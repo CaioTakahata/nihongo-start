@@ -199,4 +199,100 @@ export const LS = [
     "b": "<p><b>Estrutura:</b> vocabulário (~800 palavras), kanji (~100), gramática e leitura, compreensão auditiva. Nota total 180; precisa de nota mínima geral e por bloco.</p><p><b>Nesta trilha:</b> kana → gramática → vocabulário temático da prova → kanji → simulados. Faça até o fim e revise os erros.</p><p><b>Plano:</b> 1–2 semanas kana; depois 1 fase por dia; no fim, 1 simulado por semana.</p>",
     "v": "もんだい|mondai|questão;こたえ|kotae|resposta;ぶんぽう|bunpou|gramática;ごい|goi|vocabulário;どっかい|dokkai|leitura;ちょうかい|choukai|audição;じかん|jikan|tempo;てん|ten|pontos;ごうかく|goukaku|aprovação"
   }
+,
+{
+    "t": "Verbos N5 (pacote A)",
+    "b": "<p>Verbos de alta frequência do N5 na forma <b>ます</b>. Ouça, repita e use em frases curtas. Conteúdo organizado para a prova — glosses em português do app.</p>",
+    "v": "あびます|abiru|shower;あげます|ageru|levantar / elevar;開ける|akeru|abrir;あきます|aku|abrir;あらいます|arau|lavar;あります|aru|;あるきます|aruku|andar;あそびます|asobu|brincar / jogar;あいます|au|encontrar;ちがいます|chigau|differ;だします|dasu|pegar;でかけます|dekakeru|sair;でます|deru|leave;ふきます|fuku|blow;ふります|furu|outono;はいります|hairu|entrar;はじまります|hajimaru|começar;はきます|haku|usar;はなします|hanasu|falar;はれます|hareru|sol;はります|haru|stick;はしります|hashiru|correr;はたらきます|hataraku|trabalhar;ひきます|hiku|pull;ひきます|hiku|brincar / jogar;いきます|iku|ir;いれます|ireru|colocar;います|iru|;いります|iru|sentar;いいます|iu|dizer;かえります|kaeru|ir;かえします|kaesu|voltar;かかります|kakaru|;かけます|kakeru|hang up;かきます|kaku|escrever;かります|kariru|pedir emprestado;かします|kasu|emprestar;かいます|kau|comprar;けします|kesu|off power;きえます|kieru|disappear;ききます|kiku|ouvir / perguntar;きります|kiru|cortar;きます|kiru|sentar;こまります|komaru|be troubled;こたえます|kotaeru|answer;くもります|kumoru|vir;きます|kuru|vir;まがります|magaru|;まちます|matsu|esperar;みがきます|migaku|polir;みます|miru|ver / assistir;みせます|miseru|mostrar;もちます|motsu|segurar"
+  },
+  {
+    "t": "Verbos N5 (pacote B)",
+    "b": "<p>Continue o pacote de verbos N5. Foque em contraste: <b>ます / ません / ました</b>.</p>",
+    "v": "なきます|naku|animal noise. to chirp;なくします|nakusu|lose;ならべます|naraberu|up;ならびます|narabu|line up;ならいます|narau|be taught;ねます|neru|dormir;のぼります|noboru|climb;のみます|nomu|beber;のります|noru|;ぬぎます|nugu|pegar;おぼえます|oboeru|lembrar;おきます|okiru|levantar-se;おきます|oku|colocar;おります|oriru|get off;おしえます|oshieru|ensinar;おします|osu|empurrar;おわります|owaru|terminar;およぎます|oyogu|nadar;りょうりをします|form|sentar;さきます|saku|bloom;さします|sasu|stretch out umbrella;しまります|shimaru|fechar;しめます|shimeru|tie;しめます|shimeru|fechar;しにます|shinu|morrer;しります|shiru|saber / conhecer;すみます|sumu|morar;すいます|suu|;すわります|suwaru|sentar;たべます|taberu|comer;たのみます|tanomu|ask;たちます|tatsu|ficar de pé;とびます|tobu|fly;とまります|tomaru|stop;とります|toru|pegar;とります|toru|pegar;つかれます|tsukareru|vermelho;つかいます|tsukau|usar;つけます|tsukeru|ligar (aparelho);つきます|tsuku|chegar;つくります|tsukuru|fazer;つとめます|tsutomeru|trabalhar;うまれます|umareru|nascer;うります|uru|vender;うたいます|utau|cantar;わかります|wakaru|entender;わすれます|wasureru|esquecer;わたります|wataru|ir;わたします|watasu|hand over;やります|yaru|fazer;やすみます|yasumu|descansar / faltar;よびます|yobu|chamar;よみます|yomu|ler"
+  },
+  {
+    "t": "Adjetivos N5 (い e な)",
+    "b": "<p>Adjetivos <b>い</b> e <b>な</b> do N5. Lembre: い muda (〜くない / 〜かった); な usa な antes do substantivo.</p>",
+    "v": "あつい|atsui|quente;さむい|samui|frio;あたたかい|atatakai|morno;すずしい|suzushii|fresco;あたらしい|atarashii|novo;ふるい|furui|velho;おおきい|ookii|grande;ちいさい|chiisai|pequeno;たかい|takai|alto / caro;やすい|yasui|barato;ながい|nagai|longo;みじかい|mijikai|curto;はやい|hayai|rápido / cedo;おそい|osoi|lento / tarde;おいしい|oishii|gostoso;まずい|mazui|ruim (sabor);たのしい|tanoshii|divertido;つまらない|tsumaranai|entediante;むずかしい|muzukashii|difícil;やさしい|yasashii|fácil / gentil;いそがしい|isogashii|ocupado;いい|ii|bom;わるい|warui|mau;すごい|sugoi|incrível;ちかい|chikai|perto;とおい|tooi|longe;あまい|amai|doce;からい|karai|picante;おもい|omoi|pesado;かるい|karui|leve;ひろい|hiroi|amplo;せまい|semai|estreito;うれしい|ureshii|feliz;かなしい|kanashii|triste;おもしろい|omoshiroi|interessante;あぶない|abunai|perigoso;だいじ|daiji|importante;べんり|benri|conveniente;だいじょうぶ|daijoubu|está bem;だいすき|daisuki|adorar;げんき|genki|saudável / animado;へた|heta|ruim em;ひま|hima|com tempo livre;ほんとう|hontou|verdade;いろいろ|iroiro|vários;いや|iya|desagradável;じょうぶ|joubu|resistente;じょうず|jouzu|bom em;けっこう|kekkou|bastante / ok;きらい|kirai|não gostar;きれい|kirei|bonito / limpo;まっすぐ|massugu|reto / em frente;にぎやか|nigiyaka|movimentado;りっぱ|rippa|esplêndido;しずか|shizuka|quieto;すき|suki|gostar;たぶん|tabun|talvez;たいへん|taihen|puxado / difícil;たいせつ|taisetsu|importante;たくさん|takusan|muito / muitos;ゆうめい|yuumei|famoso"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 1",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "あか|aka|vermelho;あき|aki|outono;あめ|ame|doce / bala;あめ|ame|chuva;あね|ane|irmã mais velha;あに|ani|irmão mais velho;あお|ao|azul;アパート|apaato|apartamento;あさ|asa|manhã;あさごはん|asagohan|breakfast;あさって|asatte|amanhã;あし|ashi|foot;あした|ashita|amanhã;あたま|atama|head;あと|ato|behind;ばんごはん|bangohan|dinner;ばんごう|bangou|number;バス|basu|bus;バター|bataa|butter;ベッド|beddo|bed;べんきょう|benkyou|estudar;ボールペン|boorupen|ball-point pen;ボタン|botan|button https://jlptsensei.com/jlpt-n5-nouns-vocabulary-list/ N5 //  N5 Nouns List By: JLPT SENSEI;ぼうし|boushi|chapéu;ぶんしょう|bunshou|sentence;ぶたにく|butaniku|pork;びょういん|byouin|hospital;びょうき|byouki|illness"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 2",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "ちゃいろ|chairo|brown;ちゃわん|chawan|arroz;ちち|chichi|pai;ちかてつ|chikatetsu|subway;ちず|chizu|map;だいどころ|daidokoro|kitchen;だいがく|daigaku|sentar;でぐち|deguchi|sair;でんき|denki|electricity;でんしゃ|densha|chuva;でんわ|denwa|telefone;デパート|depaato|loja;ドア|doa|porta;どなた|donata|who;どうぶつ|doubutsu|animal;どようび|doyoubi|Saturday;え|picture|e;ええ|ee|yes;えいが|eiga|filme;えいがかん|eigakan|comer;えいご|eigo|idioma;えき|eki|estação;えんぴつ|enpitsu|pencil;エレベーター|erebeetaa|elevator;フィルム|firumu|film;フォーク|fooku|fork;ふく|fuku|roupa;ふたり|futari|two people"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 3",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "ふたつ|futatsu|two;ふつか|futsuka|mês;ふうとう|fuutou|envelope;ふゆ|fuyu|inverno;がいこく|gaikoku|país;がいこくじん|gaikokujin|foreigner;がっこう|gakkou|escola;がくせい|gakusei|estudante;げんかん|genkan|entrance;げんき|genki|morar;げつようび|getsuyoubi|Monday;ぎんこう|ginkou|banco;ギター|gitaa|guitar;ご|go|five;ごご|gogo|afternoon;ごはん|gohan|arroz;ごぜん|gozen|manhã;グラム|guramu|gram;ぎゅうにく|gyuuniku|beef;ぎゅうにゅう|gyuunyuu|leite;は|ha|tooth https://jlptsensei.com/jlpt-n5-nouns-vocabulary-list/ N5 //  N5 Nouns List By: JLPT SENSEI;はち|hachi|eight: 8;はがき|hagaki|carro;はは|haha|mãe;はい|hai|yes;はいざら|haizara|ashtray;はこ|hako|box;はん|han|half"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 4",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "はな|hana|flor;はな|hana|nose;はなし|hanashi|talk;はんぶん|hanbun|half;ハンカチ|hankachi|handkerchief;はれ|hare|comer;はる|haru|primavera;はし|hashi|chopsticks;はし|hashi|bridge;はたち|hatachi|ano;はつか|hatsuka|mês;へん|hen|area;へた|heta|unskillful;へや|heya|room;ひだり|hidari|left;ひがし|higashi|east;ひこうき|hikouki|airplane;ひま|hima|tempo;ひる|hiru|noon;ひるごはん|hirugohan|lunch https://jlptsensei.com/jlpt-n5-nouns-vocabulary-list/ N5 //  N5 Nouns List By: JLPT SENSEI;ひと|hito|pessoa;ひとり|hitori|pessoa;ひとつ|hitotsu|one thing;ほか|hoka|other (place;ほん|hon|livro;ほんだな|hondana|livro;ほんとう|hontou|truth;ホテル|hoteru|hotel"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 5",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "ひゃく|hyaku|100;いち|ichi|one;いちばん|ichiban|number one;いちにち|ichinichi|one day;いえ|ie|usar;いけ|ike|pond;いくら|ikura|how much?;いま|ima|now;いみ|imi|meaning;いもうと|imouto|younger sister;いぬ|inu|cachorro;いりぐち|iriguchi|entrance;いろ|iro|colour;いろいろ|iroiro|various;いしゃ|isha|(medical) doctor;いっしょ|issho|together;いす|isu|cadeira;いつか|itsuka|mês;いつつ|itsutsu|five;いや|iya|unpleasant;じびき|jibiki|dictionary;じどうしゃ|jidousha|automobile;じかん|jikan|tempo;じしょ|jisho|dictionary;じてんしゃ|jitensha|bicycle;じょうず|jouzu|skillful;じゅぎょう|jugyou|lesson;じゅう|juu|ten"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 6",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "かばん|kaban|bolsa;かびん|kabin|a vase;かど|kado|a corner;かぎ|kagi|key;かいだん|kaidan|stairs;かいもの|kaimono|shopping;かいしゃ|kaisha|company;カメラ|kamera|camera;かみ|kami|paper;かんじ|kanji|;カップ|kappu|cup;からだ|karada|body;カレー|karee|curry;カレンダー|karendaa|calendar;かさ|kasa|umbrella;かた|kata|way of doing something;かてい|katei|usar;かわ|kawa|river;かようび|kayoubi|Tuesday;かぜ|kaze|a cold;かぜ|kaze|vento;かぞく|kazoku|família;けいかん|keikan|homem;けっこん|kekkon|marriage;けっこう|kekkou|splendid;けさ|kesa|manhã;き|ki|árvore;きのう|kinou|ontem"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 7",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "きんようび|kinyoubi|Friday;きっぷ|kippu|ticket;きらい|kirai|odiar;キログラム|kiro guramu|kilogram;キロメートル|kiro meetoru|kilometer;きっさてん|kissaten|café;きた|kita|north;きって|kitte|stamp (postage);こっち|kocchi|pessoa;こちら|kochira|this way;こども|kodomo|criança;こえ|koe|voice;ここのか|kokonoka|mês;ここのつ|kokonotsu|nine;こんばん|konban|noite;こんげつ|kongetsu|mês;こんしゅう|konshuu|semana;コーヒー|koohii|café;コート|kooto|coat;コピー|kopii|copy;コップ|koppu|beber;ことば|kotoba|word;ことし|kotoshi|ano;こうばん|kouban|police box;こうちゃ|koucha|preto;こうえん|kouen|park;こうさてん|kousaten|intersection;くち|kuchi|mouth"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 8",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "くだもの|kudamono|fruit;くもり|kumori|cloudiness;くに|kuni|país;クラス|kurasu|class;くろ|kuro|preto;くるま|kuruma|carro;くすり|kusuri|remédio;くつ|kutsu|sapatos;くつした|kutsushita|socks;きょねん|kyonen|ano;きょう|kyou|hoje;きょうだい|kyoudai|siblings;きょうしつ|kyoushitsu|classroom;きゅう|kyuu|nine;マッチ|macchi|match;まち|machi|town;まど|mado|vento;まえ|mae|previous;まいあさ|maiasa|manhã;まいばん|maiban|noite;まいにち|mainichi|every day;まいしゅう|maishuu|semana;まいとし|maitoshi|ano;まいつき|maitsuki|mês;まん|man|10;まんねんひつ|mannenhitsu|fountain pen;まっすぐ|massugu|straight ahead;め|me|eye"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 9",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "メートル|meetoru|metre;めがね|megane|óculos;みち|michi|road;みどり|midori|verde;みぎ|migi|right;みっか|mikka|mês;みみ|mimi|ear;みなみ|minami|south;みなさん|minasan|everyone;みんな|minna|all;みせ|mise|loja;みつ|mitsu|three;みず|mizu|água;もくようび|mokuyoubi|Thursday;もん|mon|gate https://jlptsensei.com/jlpt-n5-nouns-vocabulary-list/ N5 //  N5 Nouns List By: JLPT SENSEI;もんだい|mondai|problem;もの|mono|thing;むいか|muika|mês;むこう|mukou|over there;むら|mura|village;むっつ|muttsu|six;ナイフ|naifu|knife;なか|naka|inside;なまえ|namae|nome;ななつ|nanatsu|seven;なのか|nanoka|mês;なつ|natsu|verão;なつやすみ|natsuyasumi|gato"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 10",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "ねこ|neko|gato;ネクタイ|nekutai|tie;に|ni|two;にちようび|nichiyoubi|sol;にっき|nikki|diary;にく|niku|comer;にもつ|nimotsu|luggage;にし|nishi|west;にわ|niwa|garden;のみもの|nomimono|beber;ノート|nooto|livro;ニュース|nyuusu|news;おばあさん|obaasan|mãe;おばさん|obasan|aunt;おべんとう|obentou|lunch box;おちゃ|ocha|chá;おふろ|ofuro|bath;おじさん|ojisan|uncle;おかあさん|okaasan|mãe;おかね|okane|dinheiro;おかし|okashi|confections;おくさん|okusan|wife;おまわりさん|omawari san|police officer;おなじ|onaji|same;おなか|onaka|stomach;おねえさん|oneesan|irmã mais velha;おんがく|ongaku|música;おにいさん|oniisan|irmão mais velho"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 11",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "おんな|onna|homem;おんなのこ|onnanoko|girl;おおぜい|oozei|crowd of people;おさけ|osake|alcohol;おさら|osara|plate;おてあらい|otearai|toilet;おとこ|otoko|homem;おとこのこ|otokonoko|boy;おとな|otona|adult;おととい|ototoi|ontem;おととし|ototoshi|ano;おとうさん|otousan|pai;おとうと|otouto|younger brother https://jlptsensei.com/jlpt-n5-nouns-vocabulary-list/ N5 //  N5 Nouns List By: JLPT SENSEI;パーティー|paatii|party;パン|pan|ler;ページ|peeji|page;ペン|pen|;ペット|petto|pet;ポケット|poketto|pocket;ポスト|posuto|post;プール|puuru|nadar;らいげつ|raigetsu|mês;らいねん|rainen|ano;らいしゅう|raishuu|semana;ラジオ|rajiio|radio;れい|rei|zero;れいぞうこ|reizouko|refrigerator;レコード|rekoodo|record"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 12",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "れんしゅう|renshuu|practice;レストラン|resutoran|restaurant;ろく|roku|six;ろうか|rouka|corridor;りょこう|ryokou|travel;りょうり|ryouri|cuisine;りょうしん|ryoushin|parents;りゅうがくせい|ryuugakusei|estudante;さいふ|saifu|purse;さかな|sakana|peixe;さき|saki|previous;さくぶん|sakubun|writing;さん|san|three;さんぽ|sanpo|andar;さらいねん|sarainen|ano;さとう|satou|sugar;せ|se|height;せびろ|sebiro|business suit;セーター|seetaa|comer;せいと|seito|pupil;せっけん|sekken|soap;せん|sen|1;せんげつ|sengetsu|mês;せんせい|sensei|ensinar;せんしゅう|senshuu|semana;せんたく|sentaku|lavar;しゃしん|shashin|foto;シャツ|shatsu|shirt"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 13",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "シャワー|shawaa|shower;し|shi|four;しち|shichi|seven;しごと|shigoto|trabalhar;しんぶん|shinbun|jornal;しお|shio|salt;しろ|shiro|branco;した|shita|below;しつもん|shitsumon|question;しょくどう|shokudou|cafeteria;しょうゆ|shouyu|soy sauce https://jlptsensei.com/jlpt-n5-nouns-vocabulary-list/ N5 //  N5 Nouns List By: JLPT SENSEI;しゅくだい|shukudai|trabalhar;そば|soba|near;そら|sora|sky;そと|soto|outside;そうじ|souji|clean;すいようび|suiyoubi|Wednesday;スカート|sukaato|skirt;すき|suki|gostar;すこし|sukoshi|a little (bit);スポーツ|supootsu|sport;スプーン|supuun|spoon;スリッパ|surippa|slipper;ストーブ|sutoobu|comer;たばこ|tabako|tobacco;たいへん|taihen|very;たいせつ|taisetsu|important;たいしかん|taishikan|embassy"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 14",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "たくさん|takusan|homem;タクシー|takushii|taxi;たまご|tamago|ovo;たんじょうび|tanjoubi|birthday;たて|tate|length;たてもの|tatemono|building;て|te|hand;テーブル|teeburu|table;テープ|teepu|tape;テープレコーダー|teepu rekoodaa|tape recorder https://jlptsensei.com/jlpt-n5-nouns-vocabulary-list/ N5 //  N5 Nouns List By: JLPT SENSEI;てがみ|tegami|carta;てんき|tenki|comer;テレビ|terebi|televisão;テスト|tesuto|examination;と|to|Japão;トイレ|toire|toilet;とけい|tokei|watch;とき|toki|tempo;ときどき|tokidoki|tempo;ところ|tokoro|place;ともだち|tomodachi|amigo(a);となり|tonari|porta;とおか|tooka|mês;とり|tori|pássaro;とりにく|toriniku|comer;とし|toshi|ano;としょかん|toshokan|library;つぎ|tsugi|next"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 15",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "ついたち|tsuitachi|mês;つくえ|tsukue|mesa;うえ|ue|above;うみ|umi|sea;うしろ|ushiro|back;うた|uta|song;うわぎ|uwagi|coat;ワイシャツ|wai shatsu|shirt;やま|yama|mountain;やおや|yaoya|verde;やさい|yasai|vegetable;やすみ|yasumi|rest;やっつ|yattsu|eight: 8;よっか|yokka|mês;よこ|yoko|beside;よる|yoru|evening;よつ|yotsu|four;ようふく|youfuku|roupa;ようか|youka|mês;ゆき|yuki|neve;ゆうべ|yuube|noite;ゆうびんきょく|yuubinkyoku|post office;ゆうがた|yuugata|evening;ゆうはん|yuuhan|evening meal;ゆうめい|yuumei|famous;ざっし|zasshi|revista;ぜんぶ|zenbu|all;ゼロ|zero|"
+  },
+  {
+    "t": "Vocabulário N5 · bloco 16",
+    "b": "<p>Bloco de substantivos do escopo N5. Revise em voz alta e depois treine na trilha / exercícios.</p>",
+    "v": "ズボン|zubon|usar"
+  }
 ];

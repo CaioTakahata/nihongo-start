@@ -214,10 +214,91 @@ nav button.on { background: var(--ac); color: #fff; border-color: var(--ac); }
   padding: 14px;
   text-align: left;
   min-height: 88px;
+  border-color: color-mix(in srgb, var(--sec, var(--ac)) 45%, var(--bd));
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--sec, var(--ac)) 16%, var(--card)), var(--card));
 }
 .home-tile b { font-size: 1.05rem; }
 .home-tile span { color: var(--mu); font-size: .8rem; }
-.home-tile .big-ico { font-size: 1.6rem; margin-bottom: 2px; }
+.home-tile .big-ico {
+  font-size: 1.6rem;
+  margin-bottom: 2px;
+  color: var(--sec, var(--ac));
+}
+.trail-sec {
+  border-color: color-mix(in srgb, var(--sec, var(--bd)) 35%, var(--bd));
+}
+.trail-sec-hd {
+  border-left: 3px solid var(--sec, var(--ac));
+}
+
+.theme-picker {
+  margin: 0 0 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--bd);
+}
+.theme-label {
+  font-size: .75rem;
+  color: var(--mu);
+  letter-spacing: .04em;
+  margin-bottom: 8px;
+}
+.theme-dots {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+button.theme-dot,
+.drawer-nav button.theme-dot,
+.drawer-foot button.theme-dot {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px;
+  max-width: 26px;
+  padding: 0 !important;
+  margin: 0;
+  border-radius: 50% !important;
+  border: 2px solid color-mix(in srgb, var(--swatch, var(--ac)) 70%, var(--bd));
+  background: var(--swatch, var(--ac)) !important;
+  box-shadow: none;
+  display: inline-block;
+  flex: 0 0 26px;
+}
+button.theme-dot.on,
+.drawer-foot button.theme-dot.on {
+  outline: 2px solid var(--tx);
+  outline-offset: 2px;
+  border-color: var(--tx);
+}
+button.theme-dot:hover {
+  background: var(--swatch, var(--ac)) !important;
+  transform: scale(1.08);
+}
+
+/* Furigana acima do kanji (categorias da trilha) */
+ruby {
+  ruby-align: center;
+  ruby-position: over;
+}
+rt {
+  font-size: .45em;
+  font-weight: 500;
+  color: var(--mu);
+  letter-spacing: 0;
+  user-select: none;
+}
+.home-tile ruby,
+.trail-sec-hd ruby,
+.drawer-nav ruby,
+.panel > .sub ruby,
+#xpb ruby {
+  font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+}
+#xpb rt { font-size: .4em; }
+.home-tile {
+  padding-top: 18px; /* espaço para a furigana */
+}
 .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .cell {
   background: var(--card);

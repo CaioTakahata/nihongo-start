@@ -1,6 +1,15 @@
+import { ruby } from './furigana.js'
+
 const KEYS = { lessons: 'nh', xp: 'nhxp', speed: 'nhspd' }
 
-const TITLES = ['初心者 Iniciante', '見習い Aprendiz', '学生 Estudante', '勉強家 Dedicado', '達人 Veterano', 'N5 Mestre']
+const TITLES = [
+  `${ruby('初心者', 'しょしんしゃ')} Iniciante`,
+  `<ruby>見<rp>(</rp><rt>み</rt><rp>)</rp>習<rp>(</rp><rt>なら</rt><rp>)</rp></ruby>い Aprendiz`,
+  `${ruby('学生', 'がくせい')} Estudante`,
+  `${ruby('勉強家', 'べんきょうか')} Dedicado`,
+  `${ruby('達人', 'たつじん')} Veterano`,
+  'N5 Mestre',
+]
 
 function readJson(key, fallback) {
   try {
@@ -155,7 +164,7 @@ export function renderXpBar() {
     b = document.createElement('div')
     b.id = 'xpb'
     b.style.cssText =
-      'background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;margin-bottom:12px'
+      'background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px 8px;margin-bottom:12px'
     const view = document.querySelector('#view')
     if (view) view.before(b)
     else document.querySelector('main')?.prepend(b)
