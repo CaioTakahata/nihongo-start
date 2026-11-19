@@ -199,7 +199,7 @@ export function trResult() {
   return (
     `<div class='panel' style='${st}'><h2 style='margin:0 0 6px'>${ok ? '⭐ Fase concluída!' : 'Quase lá'}</h2><p>${ex.s}/${
       ex.l.length
-    } (${pct}%) · ${ok ? 'próxima fase liberada' : 'você precisa de 70% para avançar'}</p>${
+    } (${pct}%) · ${ok ? 'fase concluída ★' : 'continue praticando (70% marca a estrela)'}</p>${
       ex.w.length ? '<b>Para revisar:</b>' : ''
     }` +
     ex.w

@@ -107,7 +107,11 @@ export function setTrailBest(i, pct) {
   return state.tr[i]
 }
 
+/** Temporary: while the trail is edited often, keep every phase open so people are not locked out after resets. Set false to restore 70% unlock. */
+export const UNLOCK_ALL_PHASES = true
+
 export function isPhaseOpen(i) {
+  if (UNLOCK_ALL_PHASES) return true
   if (i === 0) return true
   return (state.tr[i - 1] || 0) >= 70
 }

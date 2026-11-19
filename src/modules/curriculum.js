@@ -103,7 +103,7 @@ export function trailListView(levelId) {
     cont = `<p style="margin:0 0 10px"><button type="button" data-phase="${nxt}" style="background:var(--ac);color:#fff">▶ Continuar fase ${nxt + 1}</button></p>`
   }
   const doneN = phases.filter((_, i) => isPhaseDone(i)).length
-  return `<div class="panel" style="text-align:left"><b>Trilha ${levelId.toUpperCase()}</b><p class="sub">${doneN}/${phases.length} fases ★ · cobre o N5 da prova (kana, gramática, ~500+ palavras, kanji e simulados). 70% libera a próxima. Progresso salvo neste navegador.</p>${cont}${phases
+  return `<div class="panel" style="text-align:left"><b>Trilha ${levelId.toUpperCase()}</b><p class="sub">${doneN}/${phases.length} fases ★ · cobre o N5 da prova (kana, gramática, ~500+ palavras, kanji e simulados). Todas as fases estão liberadas por enquanto (em edição). Progresso e melhor nota ainda são salvos neste navegador.</p>${cont}${phases
     .map((p, i) => {
       const done = isPhaseDone(i)
       const open = isPhaseOpen(i)
