@@ -1,5 +1,12 @@
 import { H, R, Kt, KG, KKG, PH, LS, PQ, GQ } from '../../data/index.js'
-import { N5_PARTICLES, N5_SENTENCE_BUILDS } from '../../data/n5/particles.js'
+import { knownLexemes } from '../../data/known-lexemes.js'
+import {
+  N5_PARTICLES,
+  N5_SENTENCE_BUILDS,
+  N5_WA_WORDS,
+  N5_WA_PHRASES,
+  N5_WA_BUILDS,
+} from '../../data/n5/particles.js'
 import { getKanjiList } from '../../data/kanji/index.js'
 import { setKanjiLevel, currentKanji } from '../kanji-store.js'
 import { say } from '../audio.js'
@@ -16,7 +23,7 @@ import {
   setTrailBest,
   xpOnce,
 } from '../progress.js'
-import { state, hooks, render, sh } from '../state.js'
+import { state, hooks, render, sh, uq } from '../state.js'
 import { Q, exView, mkG, mkGs, mkPs, mkR, mkS, mkV } from './exercises.js'
 import { kMode, kOpen } from './kanji.js'
 import { kwOpen } from './writing.js'
@@ -62,7 +69,14 @@ export function kanaPackOf(P) {
 export function kanaQ(g, pack = KG) {
   const from = g >= 10 ? g : 0
   const cum = pack.slice(from, g + 1).flatMap((x) => [...x.k])
-  const W = pack.slice(from, g + 1).flatMap((x) => x.w.split(';').map((s) => s.split('|')))
+  const parseW = (row) =>
+    String(row.w || '')
+      .split(';')
+      .map((s) => s.split('|'))
+      .filter((r) => r[0] && r[2])
+  const W = pack.slice(from, g + 1).flatMap(parseW)
+  const Wcur = parseW(pack[g])
+  const meaningPool = uq([...W, ...Wcur].map((x) => x[2]))
   const wr = (k, pool) => sh(pool.filter((x) => x !== k)).slice(0, 3)
   const qa = (k) =>
     Q(
@@ -77,23 +91,52 @@ export function kanaQ(g, pack = KG) {
     )
   const qb = (k) => Q(KR[k], k, wr(k, cum), KR[k] + ' = ' + k)
   const qc = (k) => Q('🔊 Qual caractere você ouviu?', k, wr(k, cum), KR[k] + ' = ' + k, k)
+  /** Palavra → significado (as mesmas da tela “Palavras”). */
   const qw = (w) =>
     Q(
       w[0],
       w[2],
-      sh(W.filter((x) => x[2] !== w[2]))
-        .slice(0, 3)
-        .map((x) => x[2]),
-      w[0] + ' (' + w[1] + ')',
+      wr(w[2], meaningPool),
+      w[0] + ' (' + w[1] + ') = ' + w[2],
+      w[0],
+    )
+  /** Significado → palavra. */
+  const qwRev = (w) =>
+    Q(
+      w[2],
+      w[0],
+      wr(
+        w[0],
+        W.map((x) => x[0]),
+      ),
+      w[0] + ' (' + w[1] + ') = ' + w[2],
+      w[0],
+    )
+  /** Ouvir a palavra. */
+  const qwListen = (w) =>
+    Q(
+      '🔊 Qual palavra você ouviu?',
+      w[0],
+      wr(
+        w[0],
+        W.map((x) => x[0]),
+      ),
+      w[0] + ' (' + w[1] + ') = ' + w[2],
       w[0],
     )
   const chars = [...pack[g].k]
-  return [
+  const wordQs = [
+    ...Wcur.map(qw),
+    ...Wcur.map(qwRev),
+    ...sh(Wcur).slice(0, Math.min(3, Wcur.length)).map(qwListen),
+  ]
+  // Sempre aleatório: caracteres + palavras misturados a cada tentativa
+  return sh([
     ...chars.map(qa),
     ...sh(cum).slice(0, Math.min(3, cum.length)).map(qb),
     ...sh(cum).slice(0, Math.min(3, cum.length)).map(qc),
-    ...sh(W).slice(0, 2).map(qw),
-  ]
+    ...wordQs,
+  ])
 }
 
 export function trQ(i) {
@@ -103,12 +146,13 @@ export function trQ(i) {
   // Kanji lessons live at the end of the N5 pack (see lessons-n5.js).
   const KANJI0 = 36
   const KANJI1 = 39
+  const known = knownLexemes(i)
   const G = {
     v: () => mkV(P.v[0], P.v[1], 0, 12),
     l: () => mkV(P.v[0], P.v[1], 1, 12),
-    s: () => mkS(12),
-    r: () => mkR(12),
-    p: () => mkPs(P.p),
+    s: () => mkS(12, known),
+    r: () => mkR(12, known),
+    p: () => mkPs(P.p || [0, 14], known),
     g: () => mkGs(P.g),
     k: () => mkV(P.k?.[0] ?? KANJI0, P.k?.[1] ?? KANJI1, 0, 12),
   }
@@ -246,6 +290,7 @@ export function trWrite() {
 
 export function learnClose() {
   state.learnI = null
+  state.sb = null
   render()
 }
 
@@ -326,7 +371,7 @@ export function learnKanjiView(learnI) {
 
 export function isJoshiPhase(P) {
   if (!P) return false
-  return /助詞|Partícula|Frases:|Montar frases/i.test(P.t)
+  return /助詞|Partícula|Frases:|Frases úteis|Montar frases/i.test(P.t)
 }
 
 const PARTICLE_CHARS = new Set(['は', 'が', 'を', 'に', 'で', 'と', 'も', 'か', 'の', 'へ', 'や', 'ね', 'よ'])
@@ -363,20 +408,192 @@ function isParticleToken(tok) {
   return PARTICLE_CHARS.has(tok) || (tok.length <= 2 && /^[はがをにでともかのへやねよ]+$/.test(tok))
 }
 
+function particleFocusOf(P) {
+  if (/は e です|Montar frases com は|Frases úteis com は/i.test(P.t)) return 'は'
+  if (/か \(perguntas\)/i.test(P.t)) return 'か'
+  if (/が e は/i.test(P.t)) return 'が'
+  if (/を・に・で/i.test(P.t)) return 'を'
+  if (/の・と・も/i.test(P.t)) return 'の'
+  return null
+}
+
+function shuffleCopy(arr) {
+  return sh([...arr])
+}
+
+function buildsForLearnPhase() {
+  const P = state.learnI != null ? PH[state.learnI] : null
+  if (!P) return N5_WA_BUILDS
+  const focus = particleFocusOf(P)
+  if (focus === 'は' || /Montar frases com は|Frases úteis com は|は e です/i.test(P.t)) {
+    return N5_WA_BUILDS
+  }
+  const filtered = N5_SENTENCE_BUILDS.filter((s) => !focus || String(s.focus).includes(focus))
+  return filtered.length ? filtered : N5_SENTENCE_BUILDS
+}
+
+function sbInit(items) {
+  const list = items?.length ? items : buildsForLearnPhase()
+  state.sb = {
+    items: list,
+    i: 0,
+    picked: [],
+    pool: shuffleCopy(list[0].parts),
+    ok: null,
+  }
+}
+
+export function sbStart(items) {
+  sbInit(items)
+  render()
+}
+
+export function sbPick(i) {
+  const sb = state.sb
+  if (!sb || sb.done || sb.ok) return
+  const tok = sb.pool[i]
+  if (tok == null) return
+  sb.pool.splice(i, 1)
+  sb.picked.push(tok)
+  if (sb.picked.length === sb.items[sb.i].parts.length) sbCheck()
+  else render()
+}
+
+export function sbUndo() {
+  const sb = state.sb
+  if (!sb || sb.done || sb.ok || !sb.picked.length) return
+  sb.pool.push(sb.picked.pop())
+  render()
+}
+
+export function sbCheck() {
+  const sb = state.sb
+  if (!sb || sb.done) return
+  const want = sb.items[sb.i].parts
+  sb.ok = sb.picked.length === want.length && sb.picked.every((t, i) => t === want[i])
+  if (sb.ok) say(sb.items[sb.i].full)
+  render()
+}
+
+export function sbNext() {
+  const sb = state.sb
+  if (!sb || sb.done) return
+  if (sb.i + 1 >= sb.items.length) {
+    state.sb = { done: true }
+    render()
+    return
+  }
+  sb.i++
+  sb.picked = []
+  sb.pool = shuffleCopy(sb.items[sb.i].parts)
+  sb.ok = null
+  render()
+}
+
+export function sbReset() {
+  const sb = state.sb
+  if (!sb || sb.done) return
+  sb.picked = []
+  sb.pool = shuffleCopy(sb.items[sb.i].parts)
+  sb.ok = null
+  render()
+}
+
+function sentenceBuilderHtml() {
+  const sb = state.sb
+  if (sb?.done) {
+    return `<p class="sb-ok">Você montou todas as frases desta etapa!</p>
+      <p style="text-align:center;margin:12px 0">
+        <button type="button" class="duo-cta" style="width:auto;padding:12px 20px" onclick="sbStart()">🧩 Montar de novo</button>
+      </p>`
+  }
+  if (!sb) {
+    return `<p style="text-align:center;margin:12px 0">
+      <button type="button" class="duo-cta" style="width:auto;padding:12px 20px" onclick="sbStart()">🧩 Montar frases</button>
+    </p>`
+  }
+  const cur = sb.items[sb.i]
+  const picked = sb.picked.map((t) => `<span class="sent-chip${isParticleToken(t) ? ' is-particle' : ''}">${t}</span>`).join('')
+  const pool = sb.pool
+    .map(
+      (t, i) =>
+        `<button type="button" class="sent-chip${isParticleToken(t) ? ' is-particle' : ''}" data-sb-pick="${i}">${t}</button>`,
+    )
+    .join('')
+  let result = ''
+  if (sb.ok === true) {
+    result = `<p class="sb-ok">Correto! ${highlightParticles(cur.full)} — ${cur.pt}</p>
+      <p style="text-align:center"><button type="button" onclick="sbNext()">${sb.i + 1 >= sb.items.length ? 'Concluir montagem' : 'Próxima frase →'}</button></p>`
+  } else if (sb.ok === false) {
+    result = `<p class="sb-no">Quase. Ordem certa: ${highlightParticles(cur.full)}</p>
+      <p style="text-align:center"><button type="button" onclick="sbReset()">Tentar de novo</button></p>`
+  }
+  return `<div class="sb-box">
+    <div class="sent-goal">${sb.i + 1}/${sb.items.length} · ${cur.goal}</div>
+    <div class="sb-slot">${picked || '<span class="sub">Toque nas peças abaixo</span>'}</div>
+    <div class="sb-pool">${pool}</div>
+    <p style="text-align:center;margin:8px 0 0"><button type="button" onclick="sbUndo()">↩ Desfazer</button> <button type="button" onclick="sbReset()">Limpar</button></p>
+    ${result}
+  </div>`
+}
+
 /** Tela de estudo: partículas + montar frases (depois do kana). */
 export function learnParticlesView(learnI) {
   const P = PH[learnI]
-  const cards = N5_PARTICLES.map(
-    (p) => `<div class="part-card">
+  const focus = particleFocusOf(P)
+  const isWaTrack = focus === 'は' || /Montar frases com は|Frases úteis com は/i.test(P.t)
+
+  const particleList = isWaTrack
+    ? N5_PARTICLES.filter((p) => p.jp === 'は' || ( /か/.test(P.t) && p.jp === 'か'))
+    : focus
+      ? N5_PARTICLES.filter((p) => focus === 'を' ? /[をにで]/.test(p.jp) : focus === 'の' ? /[のとも]/.test(p.jp) : p.jp === focus || (focus === 'が' && p.jp === 'は'))
+      : N5_PARTICLES
+
+  const cards = particleList
+    .map(
+      (p) => `<div class="part-card">
       <div class="part-jp"><b class="particle">${p.jp}</b><small>${p.reading}</small></div>
       <div class="part-meta"><strong>${p.pt}</strong><span>${p.tip}</span></div>
       <button type="button" class="part-ex" data-say="${encodeURIComponent(p.ex)}">${highlightParticles(p.ex)} 🔊</button>
       <small class="part-ex-pt">${p.exPt}</small>
     </div>`,
-  ).join('')
+    )
+    .join('')
 
-  const builds = N5_SENTENCE_BUILDS.map(
-    (s) => `<div class="sent-build">
+  const wordBank = isWaTrack
+    ? `<h3 style="margin:16px 0 8px;text-align:center">Palavras desta etapa</h3>
+      <p class="sub" style="text-align:center">Só estas — nada de palavra nova escondida.</p>
+      <div class="vlearn-grid">${N5_WA_WORDS.map(
+        (w) => `<div class="vlearn-card">
+          <button type="button" class="vlearn-say" data-say="${encodeURIComponent(w.jp)}"><b>${isParticleToken(w.jp) ? `<span class="particle">${w.jp}</span>` : w.jp}</b> 🔊</button>
+          <span class="vlearn-pt">${w.pt}</span>
+          <small class="vlearn-romaji">${w.r}</small>
+        </div>`,
+      ).join('')}</div>`
+    : ''
+
+  const phraseList = isWaTrack
+    ? `<h3 style="margin:18px 0 8px;text-align:center">Frases para praticar</h3>
+      <div class="sent-list">${N5_WA_PHRASES.map(
+        (s) => `<div class="sent-build">
+          <button type="button" class="sent-full" data-say="${encodeURIComponent(s.full)}">${highlightParticles(s.full)} 🔊</button>
+          <small>${s.pt}</small>
+        </div>`,
+      ).join('')}</div>`
+    : ''
+
+  const buildsSrc = isWaTrack
+    ? N5_WA_BUILDS
+    : N5_SENTENCE_BUILDS.filter((s) => !focus || String(s.focus).includes(focus))
+  const showBuilder = /Montar frases/i.test(P.t) || /は e です/i.test(P.t)
+
+  // Auto-start builder on fases de montagem (não reinicia se já concluiu)
+  if (/Montar frases/i.test(P.t) && !state.sb) sbInit(buildsSrc)
+
+  const builds = !showBuilder
+    ? buildsSrc
+        .map(
+          (s) => `<div class="sent-build">
       <div class="sent-goal">${s.goal} · foco <b class="particle">${s.focus}</b></div>
       <div class="sent-parts">${s.parts
         .map((x) => `<span class="sent-chip${isParticleToken(x) ? ' is-particle' : ''}">${x}</span>`)
@@ -384,7 +601,9 @@ export function learnParticlesView(learnI) {
       <button type="button" class="sent-full" data-say="${encodeURIComponent(s.full)}">${highlightParticles(s.full)} 🔊</button>
       <small>${s.pt}</small>
     </div>`,
-  ).join('')
+        )
+        .join('')
+    : ''
 
   return `<div class="duo-lesson">
     <div class="duo-lesson-top">
@@ -392,12 +611,16 @@ export function learnParticlesView(learnI) {
       <div class="duo-bar"><i style="width:28%"></i></div>
     </div>
     <h2 style="margin:0;text-align:center">${P.e || ''} ${P.t}</h2>
-    <p class="sub" style="text-align:center">Depois do kana: aprenda <b>は・が・か</b> e monte frases. Depois vem o exercício.</p>
-    <h3 style="margin:14px 0 8px;text-align:center">${ruby('助詞', 'じょし')}</h3>
-    <div class="part-grid">${cards}</div>
-    <h3 style="margin:18px 0 8px;text-align:center">Montar frases</h3>
-    <p class="sub" style="text-align:center">Veja as peças → ouça a frase completa → repita em voz alta.</p>
-    <div class="sent-list">${builds}</div>
+    <p class="sub" style="text-align:center">${
+      isWaTrack
+        ? 'Depois do kana: use só palavras que você já viu. Monte frases com <span class="particle">は</span>.'
+        : 'Estude a partícula e monte frases. Depois vem o exercício.'
+    }</p>
+    ${cards ? `<h3 style="margin:14px 0 8px;text-align:center">${ruby('助詞', 'じょし')}</h3><div class="part-grid">${cards}</div>` : ''}
+    ${wordBank}
+    ${phraseList}
+    ${showBuilder ? `<h3 style="margin:18px 0 8px;text-align:center">Montar a frase</h3>${sentenceBuilderHtml()}` : ''}
+    ${builds ? `<h3 style="margin:18px 0 8px;text-align:center">Exemplos</h3><div class="sent-list">${builds}</div>` : ''}
     <div class="duo-footer"><button type="button" class="duo-cta" onclick="trGo(${learnI})">COMEÇAR EXERCÍCIO</button></div>
   </div>`
 }

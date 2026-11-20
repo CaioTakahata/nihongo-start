@@ -93,7 +93,7 @@ function phaseSection(p) {
   if (/^Kanji|漢字/i.test(p.t)) return 'kanji'
   if (/聴解|Choukai|Audição/i.test(p.t)) return 'choukai'
   if (/読解|Dokkai|Leitura:/i.test(p.t)) return 'dokkai'
-  if (/助詞|Partícula|Frases:|Montar frases/i.test(p.t)) return 'joshi'
+  if (/助詞|Partícula|Frases:|Frases úteis|Montar frases/i.test(p.t)) return 'joshi'
   if (/語彙|Verbos N5|Adjetivos N5|Substantivos|Vocabulário|Família|Números grandes|Corpo|Roupas|Comida|Casa|Escola|Transporte|Direções|Trabalho|Tempo e clima|Compras|Sentimentos|Natureza|Expressões/i.test(p.t))
     return 'goi'
   if (/文法|Bunpou|Forma|Negativo|Comparações|Adjetivos e|Existência|Calendário|Cumprimentos|Demonstrativos|Verbos na|Verbos:/i.test(p.t))
@@ -105,7 +105,7 @@ function phaseSection(p) {
 const TRAIL_SECS = [
   { id: 'hira', e: 'あ', t: 'Hiragana', d: 'Linhas + dakuten', color: '#5b9fd4' },
   { id: 'kata', e: 'ア', t: 'Katakana', d: 'Linhas + palavras estrangeiras', color: '#5ecf98' },
-  { id: 'joshi', e: 'は', t: FURI.joshi, d: 'は・が・か · montar frases', color: '#f0a060' },
+  { id: 'joshi', e: 'は', t: FURI.joshi, d: 'は ・ が ・ か ・ montar frases', color: '#f0a060' },
   { id: 'goi', e: '語', t: FURI.goi, d: 'Estudar palavras → exercício', color: '#e0a04a' },
   { id: 'bunpou', e: '文', t: FURI.bunpou, d: 'Estudar regras → exercício', color: '#c97bdb' },
   { id: 'choukai', e: '聴', t: FURI.choukai, d: 'Revisar → ouvir', color: '#4db8c4' },

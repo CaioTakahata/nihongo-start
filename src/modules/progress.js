@@ -1,6 +1,9 @@
 import { ruby } from './furigana.js'
 
 const KEYS = { lessons: 'nh', xp: 'nhxp', speed: 'nhspd' }
+const TRAIL_SCHEMA = 2
+const SCHEMA_KEY = 'nh-trail-schema'
+const SCHEMA_NOTICE_KEY = 'nh-trail-schema-notice'
 
 const TITLES = [
   `${ruby('初心者', 'しょしんしゃ')} Iniciante`,
@@ -32,13 +35,52 @@ function writeJson(key, value) {
 /** @type {{ xp: number, once: string[], tr: Record<string, number>, resume: object|null }} */
 let state = { xp: 0, once: [], tr: {}, resume: null }
 
+function readTrailSchema() {
+  const n = Number(localStorage.getItem(SCHEMA_KEY))
+  return Number.isFinite(n) ? n : 0
+}
+
+function migrateTrailSchema(saved) {
+  const prev = readTrailSchema()
+  if (prev >= TRAIL_SCHEMA) return { tr: saved.tr && typeof saved.tr === 'object' ? { ...saved.tr } : {}, migrated: false }
+  // Índices de fase mudaram — zera scores da trilha (mantém XP).
+  try {
+    localStorage.setItem(SCHEMA_KEY, String(TRAIL_SCHEMA))
+    if (prev > 0 || (saved.tr && Object.keys(saved.tr).length)) {
+      localStorage.setItem(SCHEMA_NOTICE_KEY, '1')
+    }
+  } catch {
+    /* ignore */
+  }
+  return { tr: {}, migrated: true }
+}
+
+/** Aviso único após reset de progresso da trilha (schema bump). */
+export function consumeTrailSchemaNotice() {
+  try {
+    if (localStorage.getItem(SCHEMA_NOTICE_KEY) !== '1') return null
+    localStorage.removeItem(SCHEMA_NOTICE_KEY)
+    return 'A trilha N5 foi reorganizada. Seu progresso por fase foi reiniciado (XP mantido).'
+  } catch {
+    return null
+  }
+}
+
 export function loadProgress() {
   const saved = readJson(KEYS.xp, {})
+  const { tr } = migrateTrailSchema(saved)
   state = {
     xp: Number(saved.xp) || 0,
     once: Array.isArray(saved.once) ? saved.once : [],
-    tr: saved.tr && typeof saved.tr === 'object' ? { ...saved.tr } : {},
+    tr,
     resume: saved.resume && typeof saved.resume === 'object' ? { ...saved.resume } : null,
+  }
+  if (!localStorage.getItem(SCHEMA_KEY)) {
+    try {
+      localStorage.setItem(SCHEMA_KEY, String(TRAIL_SCHEMA))
+    } catch {
+      /* ignore */
+    }
   }
   return state
 }
@@ -116,11 +158,24 @@ export function setTrailBest(i, pct) {
   return state.tr[i]
 }
 
-/** Temporary: while the trail is edited often, keep every phase open so people are not locked out after resets. Set false to restore 70% unlock. */
+/**
+ * Trilha aberta: o aluno segue no ritmo dele (sem cadeado).
+ * A progressão “só palavras conhecidas” fica no filtro dos exercícios, não no bloqueio de fase.
+ * Para forçar bloqueio 70%: localStorage nh-lock-phases=1
+ */
+export function unlockAllPhasesEnabled() {
+  try {
+    return localStorage.getItem('nh-lock-phases') !== '1'
+  } catch {
+    return true
+  }
+}
+
+/** Default: todas as fases abertas (sem cadeado). */
 export const UNLOCK_ALL_PHASES = true
 
 export function isPhaseOpen(i) {
-  if (UNLOCK_ALL_PHASES) return true
+  if (unlockAllPhasesEnabled()) return true
   if (i === 0) return true
   return (state.tr[i - 1] || 0) >= 70
 }

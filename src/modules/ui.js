@@ -1,7 +1,7 @@
 import { T, H, Kt } from '../data/index.js'
 import { say, mountSpeedControl } from './audio.js'
 import { finishLesson } from './curriculum.js'
-import { loadProgress, renderXpBar } from './progress.js'
+import { loadProgress, renderXpBar, consumeTrailSchemaNotice, toast } from './progress.js'
 import { state, hooks, $ } from './state.js'
 import { exView, exStart, exContinue, exAns, exNext, exQuit, exSay } from './practice/exercises.js'
 import { kanaGrid } from './practice/kana-grid.js'
@@ -18,6 +18,12 @@ import {
   learnClose,
   learnKanjiWrite,
   learnKanjiStroke,
+  sbStart,
+  sbPick,
+  sbUndo,
+  sbCheck,
+  sbNext,
+  sbReset,
 } from './practice/trail.js'
 import {
   pD,
@@ -203,6 +209,12 @@ function exposeWindowHandlers() {
     learnClose,
     learnKanjiWrite,
     learnKanjiStroke,
+    sbStart,
+    sbPick,
+    sbUndo,
+    sbCheck,
+    sbNext,
+    sbReset,
     // kanji
     kC,
     kOpen,
@@ -260,6 +272,7 @@ function wireDelegation() {
     }
     if ((b = el.closest('[data-trail-sec]'))) return toggleTrailSec(b.dataset.trailSec)
     if ((b = el.closest('[data-say]'))) return say(decodeURIComponent(b.dataset.say))
+    if ((b = el.closest('[data-sb-pick]'))) return sbPick(+b.dataset.sbPick)
     if ((b = el.closest('[data-lesson]'))) {
       state.cl = +b.dataset.lesson
       render()
@@ -320,6 +333,8 @@ export function boot() {
   renderXpBar()
   exposeWindowHandlers()
   wireDelegation()
+  const schemaNote = consumeTrailSchemaNotice()
+  if (schemaNote) setTimeout(() => toast(schemaNote), 400)
   const lang = $('#lang')
   if (lang) {
     lang.value = state.L

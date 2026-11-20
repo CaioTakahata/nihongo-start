@@ -427,7 +427,7 @@ export function kwShow() {
     return
   }
   const c = kw.l[kw.i]
-  const N = SC[c]
+  const N = SC[c] || 3
   const last = kw.i + 1 >= kw.l.length
   let s = `<div style='${box}'><div style='display:flex;justify-content:space-between;align-items:center'><b>${
     t ? '📝 Teste de escrita' : '✍ Aprender a escrever'
@@ -437,7 +437,7 @@ export function kwShow() {
     t ? 'Escreva o caractere:' : 'Escreva seguindo o modelo:'
   }<br><b style='font-size:${t ? '2rem' : '1.2rem'}'>${KRm[c]}</b> · ${N} traço${
     N > 1 ? 's' : ''
-  } <button onclick='say("${c}")'>🔊</button></p><svg id='kwsv' viewBox='0 0 100 100' width='260' height='260' style='${SVG_STYLE}' onpointerdown='kwD(event)' onpointermove='kwM(event)' onpointerup='kwU(event)' onpointerleave='kwU(event)'><path d='M50 0V100M0 50H100' stroke='var(--bd)' stroke-dasharray='3 3'/>`
+  } <button onclick='say("${c}")'>🔊</button></p><svg id='kwsv' viewBox='0 0 100 100' width='260' height='260' style='${SVG_STYLE};touch-action:none' onpointerdown='kwD(event)' onpointermove='kwM(event)' onpointerup='kwU(event)' onpointerleave='kwU(event)' onpointercancel='kwU(event)'><path d='M50 0V100M0 50H100' stroke='var(--bd)' stroke-dasharray='3 3'/>`
   if (!t || kw.res)
     s += `<text x='50' y='78' font-size='80' text-anchor='middle' fill='var(--tx)' opacity='.18'>${c}</text>`
   kw.done.forEach(
@@ -502,7 +502,7 @@ export function kwU() {
     return
   }
   const c = kw.l[kw.i]
-  const N = SC[c]
+  const N = SC[c] || 3
   const d = pathOf(a)
   if (kw.m === 't') {
     if (kw.done.length < N + 3) {
@@ -544,7 +544,7 @@ export function kwU() {
 export function kwCheck() {
   const { kw } = state
   const c = kw.l[kw.i]
-  const N = SC[c]
+  const N = SC[c] || 3
   if (!kw.done.length) return
   const good = kw.pts.map((a) => dirOK(a) && strokePrec(a, c) >= 0.7)
   const cv = kwCov(c)

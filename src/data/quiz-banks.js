@@ -3,33 +3,37 @@ import { N5_DOKKAI } from './n5/dokkai.js'
 import { N5_GRAMMAR_QUIZ } from './n5/grammar.js'
 import { N5_SENTENCE_QUIZ } from './n5/particles.js'
 
-export const PQ = [
-  "わたし＿ ほんです。|の|の indica posse: わたしの ほん = meu livro",
-  "ごはん＿ たべます。|を|を marca o objeto direto",
-  "がっこう＿ いきます。|に|に indica o destino",
-  "いえ＿ ごはんを たべます。|で|で indica o local da ação",
-  "ともだち＿ えいがを みます。|と|と = com (ou e)",
-  "わたし＿ がくせいです。(eu também)|も|も = também",
-  "これ＿ なんですか。|は|は marca o tópico da frase",
-  "つくえの うえ＿ ほんが あります。|に|existência de um lugar usa に",
-  "バス＿ いきます。|で|で indica o meio de transporte",
-  "８じ＿ おきます。|に|hora exata usa に",
-  "みず＿ のみます。|を|を marca o objeto direto",
-  "ねこ＿ すきです。|が|すき usa が para o que se gosta",
-  "９じ＿ ５じまで はたらきます。|から|から = a partir de / de",
-  "あした ともだち＿ あいます。|に|あいます usa に para a pessoa",
-  "ほん＿ よみます。|を|objeto direto com を",
-  "うち＿ べんきょうします。|で|local da ação com で",
-  "せんせい＿ ききます。|に|perguntar a alguém usa に",
-  "きょう＿ あついです。|は|tópico do dia com は",
-  "えき＿ ちかくに あります。|の|の liga substantivos: えきの ちかく",
-  "にほんご＿ わかります。|が|わかります usa が",
-  "デパート＿ ふくを かいました。|で|local da compra com で",
-  "うち＿ でます。|を|sair de um lugar usa を",
-  "としょかん＿ ほんが あります。|に|existência no lugar com に",
-  "ともだち＿ でんわを します。|に|ligar para alguém usa に",
-  ...N5_SENTENCE_QUIZ,
-];
+const PQ_EARLY = [
+  { s: 'わたし＿ ほんです。|の|は,が,を|の indica posse: わたしの ほん = meu livro', requires: ['わたし', 'ほん', 'です', 'の'] },
+  { s: 'ごはん＿ たべます。|を|は,が,に|を marca o objeto direto', requires: ['ごはん', 'たべます', 'を'] },
+  { s: 'がっこう＿ いきます。|に|を,で,も|に indica o destino', requires: ['がっこう', 'いきます', 'に'] },
+  { s: 'いえ＿ ごはんを たべます。|で|に,を,は|で indica o local da ação', requires: ['いえ', 'ごはん', 'たべます', 'で', 'を'] },
+  { s: 'ともだち＿ えいがを みます。|と|に,で,を|と = com (ou e)', requires: ['ともだち', 'と', 'を'] },
+  { s: 'わたし＿ がくせいです。(eu também)|も|は,が,を|も = também', requires: ['わたし', 'がくせい', 'です', 'も'] },
+  { s: 'これ＿ なんですか。|は|が,を,に|は marca o tópico da frase', requires: ['これ', 'は', 'です', 'か'] },
+  { s: 'みず＿ のみます。|を|は,が,で|を marca o objeto direto', requires: ['みず', 'のみます', 'を'] },
+  { s: 'ねこ＿ すきです。|が|を,は,で|すき usa が', requires: ['ねこ', 'が', 'です'] },
+  { s: 'ほん＿ よみます。|を|は,が,に|objeto direto com を', requires: ['ほん', 'よみます', 'を'] },
+  { s: 'せんせい＿ ききます。|に|を,で,は|perguntar a alguém usa に', requires: ['せんせい', 'ききます', 'に'] },
+  { s: 'きょう＿ あついです。|は|が,を,に|tópico do dia com は', requires: ['きょう', 'は', 'です'] },
+]
+
+const PQ_LATE = [
+  { s: 'つくえの うえ＿ ほんが あります。|に|で,を,は|existência de um lugar usa に', requires: ['ほん', 'が', 'あります', 'に'] },
+  { s: 'バス＿ いきます。|で|に,を,は|で indica o meio de transporte', requires: ['バス', 'いきます', 'で'] },
+  { s: '８じ＿ おきます。|に|で,を,は|hora exata usa に', requires: ['に'] },
+  { s: '９じ＿ ５じまで はたらきます。|から|に,で,を|から = a partir de / de', requires: ['から'] },
+  { s: 'あした ともだち＿ あいます。|に|を,で,と|あいます usa に para a pessoa', requires: ['あした', 'ともだち', 'に'] },
+  { s: 'うち＿ べんきょうします。|で|に,を,は|local da ação com で', requires: ['で', 'します'] },
+  { s: 'えき＿ ちかくに あります。|の|は,が,を|の liga substantivos: えきの ちかく', requires: ['えき', 'の', 'ちかく', 'に', 'あります'] },
+  { s: 'にほんご＿ わかります。|が|を,は,に|わかります usa が', requires: ['にほんご', 'が', 'わかります'] },
+  { s: 'デパート＿ ふくを かいました。|で|に,を,は|local da compra com で', requires: ['デパート', 'で', 'を'] },
+  { s: 'うち＿ でます。|を|に,で,は|sair de um lugar usa を', requires: ['を'] },
+  { s: 'としょかん＿ ほんが あります。|に|で,を,は|existência no lugar com に', requires: ['ほん', 'が', 'あります', 'に'] },
+  { s: 'ともだち＿ でんわを します。|に|を,で,と|ligar para alguém usa に', requires: ['ともだち', 'に', 'します'] },
+]
+
+export const PQ = [...N5_SENTENCE_QUIZ, ...PQ_EARLY, ...PQ_LATE]
 
 export const GQ = [
   "O negativo educado de たべます é?|たべません|たべない,たべました,たべませんでした|ます vira ません",

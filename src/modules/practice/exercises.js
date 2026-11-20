@@ -1,4 +1,5 @@
 import { LS, PQ, GQ, LQ, RQ } from '../../data/index.js'
+import { requiresSatisfied, pickWithRepeat } from '../../data/known-lexemes.js'
 import { say } from '../audio.js'
 import { saveResume, clearResume, getResume } from '../progress.js'
 import { state, hooks, render, sh, uq, xp } from '../state.js'
@@ -31,7 +32,17 @@ export function mkV(a, b, lis, n) {
     })
 }
 
-const particleQ = (s) => {
+function particleRaw(item) {
+  return typeof item === 'string' ? item : item?.s
+}
+
+function particleRequires(item) {
+  return typeof item === 'string' ? null : item?.requires
+}
+
+const particleQ = (item) => {
+  const s = particleRaw(item)
+  if (!s) return null
   const parts = s.split('|')
   // q|a|wrong1,wrong2,wrong3|explain  OR  legacy q|a|explain
   if (parts.length >= 4) {
@@ -56,30 +67,64 @@ const grammarQ = (s) => {
   return Q(q, a, w.split(','), e)
 }
 
-export const mkP = (n) => sh(PQ).slice(0, n).map(particleQ)
+export const mkP = (n) => sh(PQ).slice(0, n).map(particleQ).filter(Boolean)
 export const mkG = (n) => sh(GQ).slice(0, n).map(grammarQ)
-export const mkPs = (r) => sh(PQ.slice(r[0], r[1])).map(particleQ)
+export const mkPs = (r, known) => {
+  const slice = PQ.slice(r[0], r[1])
+  if (!known) return sh(slice).map(particleQ).filter(Boolean)
+  const eligible = slice.filter((item) => {
+    const req = particleRequires(item)
+    if (!req) return true
+    return requiresSatisfied(req, known)
+  })
+  return pickWithRepeat(eligible.length ? eligible : slice.filter((i) => !particleRequires(i)), slice.length || 1, sh)
+    .map(particleQ)
+    .filter(Boolean)
+}
 export const mkGs = (r) => sh(GQ.slice(r[0], r[1])).map(grammarQ)
 
-export const mkS = (n) =>
-  sh(LQ)
-    .slice(0, n)
-    .map((s) => {
-      const [j, a, w] = s.split('|')
-      return Q('🔊 O que você ouviu?', a, w.split(','), j + ' = ' + a, j)
-    })
+function choukaiLine(item) {
+  return typeof item === 'string' ? item : item?.s
+}
 
-export const mkR = (n) =>
-  sh(RQ)
-    .slice(0, n)
-    .map((r) =>
-      Q(
-        `<span style="display:block;font-size:1.05rem;text-align:left;line-height:1.7;margin-bottom:8px">${r[0]}</span><b style="font-size:1rem">${r[1]}</b>`,
-        r[2],
-        r[3].split(','),
-        'Resposta: ' + r[2],
-      ),
+function choukaiRequires(item) {
+  return typeof item === 'string' ? null : item?.requires
+}
+
+function dokkaiFields(item) {
+  if (Array.isArray(item)) return { text: item[0], q: item[1], a: item[2], w: item[3], requires: null }
+  return { text: item.text, q: item.q, a: item.a, w: item.w, requires: item.requires }
+}
+
+/** @param {number} n @param {Set<string>|null} [known] */
+export const mkS = (n, known = null) => {
+  const eligible = known
+    ? LQ.filter((item) => requiresSatisfied(choukaiRequires(item), known))
+    : LQ
+  const picked = known ? pickWithRepeat(eligible, n, sh) : sh([...eligible]).slice(0, n)
+  return picked.map((item) => {
+    const s = choukaiLine(item)
+    const [j, a, w] = s.split('|')
+    return Q('🔊 O que você ouviu?', a, w.split(','), j + ' = ' + a, j)
+  })
+}
+
+/** @param {number} n @param {Set<string>|null} [known] */
+export const mkR = (n, known = null) => {
+  const eligible = known
+    ? RQ.filter((item) => requiresSatisfied(dokkaiFields(item).requires, known))
+    : RQ
+  const picked = known ? pickWithRepeat(eligible, n, sh) : sh([...eligible]).slice(0, n)
+  return picked.map((item) => {
+    const r = dokkaiFields(item)
+    return Q(
+      `<span style="display:block;font-size:1.05rem;text-align:left;line-height:1.7;margin-bottom:8px">${r.text}</span><b style="font-size:1rem">${r.q}</b>`,
+      r.a,
+      String(r.w).split(','),
+      'Resposta: ' + r.a,
     )
+  })
+}
 
 /** Lições: 0–35 base, 36–38 kanji, 39 plano, 40+ pacotes N5 (verbos/adj/substantivos). */
 const VOCAB_END = 36

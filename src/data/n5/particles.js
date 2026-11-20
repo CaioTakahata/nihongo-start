@@ -1,6 +1,6 @@
 /**
  * 助詞 + primeiras frases — depois de hiragana/katakana.
- * Conteúdo próprio do app (não copia ebook).
+ * Começa só com palavras já vistas (kana + apresentação).
  */
 
 /** Cartões das partículas essenciais. */
@@ -80,29 +80,79 @@ export const N5_PARTICLES = [
 ]
 
 /**
- * Montagem de frases: peças na ordem → frase + tradução.
- * Usado na tela de aprendizado (antes do quiz).
+ * Palavras “seguras” logo após kana + apresentação.
+ * Só estas entram nas primeiras montagens com は.
+ */
+export const N5_WA_WORDS = [
+  { jp: 'わたし', r: 'watashi', pt: 'eu' },
+  { jp: 'あなた', r: 'anata', pt: 'você' },
+  { jp: 'がくせい', r: 'gakusei', pt: 'estudante' },
+  { jp: 'せんせい', r: 'sensei', pt: 'professor(a)' },
+  { jp: 'ブラジルじん', r: 'burajirujin', pt: 'brasileiro(a)' },
+  { jp: 'にほんじん', r: 'nihonjin', pt: 'japonês / japonesa' },
+  { jp: 'です', r: 'desu', pt: 'é / sou / está (educado)' },
+  { jp: 'は', r: 'wa', pt: 'tópico (partícula)' },
+  { jp: 'か', r: 'ka', pt: 'pergunta (partícula)' },
+  { jp: 'はい', r: 'hai', pt: 'sim' },
+  { jp: 'いいえ', r: 'iie', pt: 'não' },
+]
+
+/** Frases modelo para memorizar (só com as palavras acima). */
+export const N5_WA_PHRASES = [
+  { full: 'わたしは がくせいです。', pt: 'Eu sou estudante.', parts: ['わたし', 'は', 'がくせい', 'です'] },
+  { full: 'わたしは せんせいです。', pt: 'Eu sou professor(a).', parts: ['わたし', 'は', 'せんせい', 'です'] },
+  { full: 'あなたは がくせいです。', pt: 'Você é estudante.', parts: ['あなた', 'は', 'がくせい', 'です'] },
+  { full: 'わたしは ブラジルじんです。', pt: 'Eu sou brasileiro(a).', parts: ['わたし', 'は', 'ブラジルじん', 'です'] },
+  { full: 'わたしは にほんじんです。', pt: 'Eu sou japonês / japonesa.', parts: ['わたし', 'は', 'にほんじん', 'です'] },
+  { full: 'あなたは がくせいですか。', pt: 'Você é estudante?', parts: ['あなた', 'は', 'がくせい', 'です', 'か'] },
+  { full: 'はい、がくせいです。', pt: 'Sim, sou estudante.', parts: ['はい', 'がくせい', 'です'] },
+  { full: 'いいえ、せんせいです。', pt: 'Não, sou professor(a).', parts: ['いいえ', 'せんせい', 'です'] },
+]
+
+/**
+ * Montagens interativas só com palavras conhecidas (pós-は).
+ */
+export const N5_WA_BUILDS = N5_WA_PHRASES.map((p, i) => ({
+  id: 'wa-' + i,
+  goal: p.pt,
+  parts: p.parts,
+  full: p.full,
+  pt: p.pt,
+  focus: 'は',
+}))
+
+/**
+ * Montagem geral (outras partículas) — ainda com palavras de início do curso.
  */
 export const N5_SENTENCE_BUILDS = [
-  {
-    id: 'wa-desu',
-    goal: 'Apresentar quem você é',
-    parts: ['わたし', 'は', 'がくせい', 'です'],
-    full: 'わたしは がくせいです。',
-    pt: 'Eu sou estudante.',
-    focus: 'は',
-  },
+  ...N5_WA_BUILDS,
   {
     id: 'ka-q',
-    goal: 'Fazer uma pergunta com か',
+    goal: 'Perguntar com か',
     parts: ['あなた', 'は', 'せんせい', 'です', 'か'],
     full: 'あなたは せんせいですか。',
     pt: 'Você é professor(a)?',
     focus: 'か',
   },
   {
+    id: 'mo-too',
+    goal: 'Também com も',
+    parts: ['わたし', 'も', 'がくせい', 'です'],
+    full: 'わたしも がくせいです。',
+    pt: 'Eu também sou estudante.',
+    focus: 'も',
+  },
+  {
+    id: 'no-pos',
+    goal: 'Posse com の (palavra: ほん)',
+    parts: ['これ', 'は', 'わたし', 'の', 'ほん', 'です'],
+    full: 'これは わたしの ほんです。',
+    pt: 'Isto é o meu livro.',
+    focus: 'の',
+  },
+  {
     id: 'wo-verb',
-    goal: 'Objeto + verbo',
+    goal: 'Objeto com を (みず / のみます)',
     parts: ['わたし', 'は', 'みず', 'を', 'のみます'],
     full: 'わたしは みずを のみます。',
     pt: 'Eu bebo água.',
@@ -118,66 +168,47 @@ export const N5_SENTENCE_BUILDS = [
   },
   {
     id: 'de-place',
-    goal: 'Local da ação com で',
-    parts: ['うち', 'で', 'ごはん', 'を', 'たべます'],
-    full: 'うちで ごはんを たべます。',
+    goal: 'Local com で',
+    parts: ['いえ', 'で', 'ごはん', 'を', 'たべます'],
+    full: 'いえで ごはんを たべます。',
     pt: 'Como em casa.',
     focus: 'で',
   },
   {
-    id: 'no-pos',
-    goal: 'Posse com の',
-    parts: ['これ', 'は', 'わたし', 'の', 'ほん', 'です'],
-    full: 'これは わたしの ほんです。',
-    pt: 'Isto é o meu livro.',
-    focus: 'の',
-  },
-  {
     id: 'to-with',
     goal: 'Companhia com と',
-    parts: ['ともだち', 'と', 'えいが', 'を', 'みます'],
-    full: 'ともだちと えいがを みます。',
-    pt: 'Vejo um filme com um amigo.',
+    parts: ['ともだち', 'と', 'いきます'],
+    full: 'ともだちと いきます。',
+    pt: 'Vou com um amigo.',
     focus: 'と',
   },
   {
-    id: 'mo-too',
-    goal: 'Também com も',
-    parts: ['わたし', 'も', 'にほんご', 'を', 'べんきょうします'],
-    full: 'わたしも にほんごを べんきょうします。',
-    pt: 'Eu também estudo japonês.',
-    focus: 'も',
-  },
-  {
-    id: 'ga-suki',
-    goal: 'Gostar com が',
-    parts: ['わたし', 'は', 'ねこ', 'が', 'すき', 'です'],
-    full: 'わたしは ねこが すきです。',
-    pt: 'Eu gosto de gatos.',
+    id: 'ga-neko',
+    goal: 'Sujeito com が (ねこ do kana)',
+    parts: ['ねこ', 'が', 'います'],
+    full: 'ねこが います。',
+    pt: 'Tem um gato.',
     focus: 'が',
-  },
-  {
-    id: 'mix-1',
-    goal: 'Frase completa do dia a dia',
-    parts: ['あした', 'ともだち', 'と', 'こうえん', 'に', 'いきます'],
-    full: 'あした ともだちと こうえんに いきます。',
-    pt: 'Amanhã vou ao parque com um amigo.',
-    focus: 'と・に',
   },
 ]
 
-/** Quiz curto de montagem: escolha a ordem / a partícula certa. */
+const WA_REQ = ['わたし', 'あなた', 'がくせい', 'せんせい', 'です', 'は', 'か', 'はい', 'いいえ', 'にほんじん', 'ブラジルじん']
+const EARLY_REQ = [...WA_REQ, 'みず', 'を', 'のみます', 'がっこう', 'に', 'いきます', 'いえ', 'で', 'ごはん', 'たべます', 'ほん', 'の', 'ともだち', 'と', 'ねこ', 'が', 'います', 'も', 'これ']
+
+/** Quiz curto — com requires para gating na trilha. */
 export const N5_SENTENCE_QUIZ = [
-  'Complete: わたし＿ がくせいです。|は|が,を,に|は marca o tópico',
-  'Complete: みず＿ のみます。|を|は,が,で|を = objeto direto',
-  'Complete: がっこう＿ いきます。|に|を,で,も|に = destino',
-  'Complete: いえ＿ たべます。|で|に,を,は|で = local da ação',
-  'Complete: がくせいです＿。|か|は,が,を|か no fim = pergunta',
-  'Complete: わたし＿ ほんです。|の|は,が,を|の = posse',
-  'Complete: ともだち＿ いきます。|と|に,で,を|と = com',
-  'Complete: わたし＿ がくせいです。(também)|も|は,が,を|も = também',
-  'Complete: ねこ＿ すきです。|が|を,は,で|すき usa が',
-  'Qual frase está correta?|わたしは みずを のみます。|わたしを みずは のみます。,わたしが みずで のみます。,わたしに みずも のみます。|は (tópico) + を (objeto)',
-  'Qual é a pergunta?|がくせいですか。|がくせいです。,がくせいを。,がくせいの。|か transforma em pergunta',
-  '“Eu vou à escola” é:|わたしは がっこうに いきます。|わたしは がっこうを いきます。,わたしは がっこうで いきます。,わたしは がっこうが いきます。|destino = に',
+  { s: 'Complete: わたし＿ がくせいです。|は|が,を,に|は marca o tópico (lê-se wa)', requires: WA_REQ },
+  { s: 'Complete: あなた＿ せんせいです。|は|が,を,も|mesmo padrão: tópico + は', requires: WA_REQ },
+  { s: 'Complete: わたしは がくせい＿。|です|ます,だ,か|fecha a frase com です', requires: WA_REQ },
+  { s: '“Eu sou estudante” é:|わたしは がくせいです。|わたしが がくせいです。,わたしを がくせいです。,わたしに がくせいです。|は + です', requires: WA_REQ },
+  { s: '“Você é professor(a)?” é:|あなたは せんせいですか。|あなたは せんせいです。,あなたが せんせいですか。,あなたを せんせいですか。|pergunta: …ですか', requires: WA_REQ },
+  { s: 'Complete: がくせいです＿。|か|は,が,を|か no fim = pergunta', requires: WA_REQ },
+  { s: 'Complete: わたし＿ がくせいです。(também)|も|は,が,を|も = também', requires: [...WA_REQ, 'も'] },
+  { s: 'Complete: みず＿ のみます。|を|は,が,で|を = objeto direto', requires: EARLY_REQ },
+  { s: 'Complete: がっこう＿ いきます。|に|を,で,も|に = destino', requires: EARLY_REQ },
+  { s: 'Complete: いえ＿ たべます。|で|に,を,は|で = local da ação', requires: EARLY_REQ },
+  { s: 'Complete: わたし＿ ほんです。|の|は,が,を|の = posse', requires: EARLY_REQ },
+  { s: 'Complete: ともだち＿ いきます。|と|に,で,を|と = com', requires: EARLY_REQ },
+  { s: 'Complete: ねこ＿ います。|が|を,は,で|が marca o sujeito', requires: EARLY_REQ },
+  { s: 'Qual frase está correta?|わたしは がくせいです。|わたしを がくせいです。,わたしが がくせいは です。,わたしに がくせいです。|padrão: Aは Bです', requires: WA_REQ },
 ]

@@ -32,6 +32,8 @@ export const state = {
   // exercises / trail session
   ex: null,
   learnI: null,
+  /** Montar frase (peças): { items, i, picked, pool, ok } */
+  sb: null,
 
   // kanji
   kanjiLevel: 'n5',

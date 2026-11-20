@@ -623,6 +623,51 @@ svg text {
   border-radius: 12px;
   margin-bottom: 4px;
 }
+.sb-box {
+  background: var(--bg);
+  border: 1px solid var(--bd);
+  border-radius: 20px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.sb-slot {
+  min-height: 52px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 16px;
+  border: 2px dashed color-mix(in srgb, var(--ac) 35%, var(--bd));
+  background: color-mix(in srgb, var(--card) 80%, var(--bg));
+}
+.sb-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.sb-pool .sent-chip {
+  cursor: pointer;
+  border: none;
+  font: inherit;
+}
+.sb-pool .sent-chip:hover {
+  filter: brightness(1.08);
+}
+.sb-ok {
+  text-align: center;
+  color: #3dd68c;
+  margin: 10px 0 4px;
+  font-weight: 600;
+}
+.sb-no {
+  text-align: center;
+  color: #ff7b72;
+  margin: 10px 0 4px;
+}
 
 /* Learn-first: vocabulário / gramática (trilha) */
 .learn-note {
